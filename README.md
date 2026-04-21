@@ -1,2 +1,2 @@
 # creator
-App para criação de fichas de personagens para RPG de mesa.
+App de criação de fichas de personagens para RPG de mesa.
