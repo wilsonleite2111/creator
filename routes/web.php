@@ -18,3 +18,4 @@ Route::get('/', function () {
 });
 
 Route::resource('classes', App\Http\Controllers\ClasseController::class);
+Route::resource('racas', App\Http\Controllers\RacaController::class);

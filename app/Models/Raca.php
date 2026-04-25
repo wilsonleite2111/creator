@@ -12,6 +12,16 @@ class Raca extends Model
     protected $table = 'racas';
 
     protected $fillable = [
-        'nome'
+        'nome',
+        'versao',
+        'descricao',
+        'mod_forca',
+        'mod_destreza',
+        'mod_constituicao',
+        'mod_inteligencia',
+        'mod_sabedoria',
+        'mod_carisma',
+        'tamanho',
+        'deslocamento'
     ];
 }
