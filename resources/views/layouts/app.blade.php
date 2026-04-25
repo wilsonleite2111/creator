@@ -77,20 +77,85 @@
             box-shadow: 0 6px 12px -2px rgba(90, 70, 36, 0.3);
         }
     </style>
+    <script>
+        // Web Audio API Synthesizer para os efeitos sonoros sem precisar de arquivos .mp3
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        const audioCtx = new AudioContext();
+
+        window.sfx = {
+            playHover() {
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            },
+            playPage() {
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                const bufferSize = audioCtx.sampleRate * 0.15;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.1;
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = buffer;
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 800;
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(audioCtx.destination);
+                noise.start();
+            },
+            playSword() {
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            },
+            playMagic() {
+                if(audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(900, audioCtx.currentTime + 0.1);
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.2);
+                osc.frequency.setValueAtTime(1600, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.6);
+            }
+        };
+    </script>
 </head>
 <body class="font-lora min-h-screen flex flex-col" x-data="{
-    playHover() { document.getElementById('sound-hover').play().catch(()=>{}); },
-    playSword() { document.getElementById('sound-sword').play().catch(()=>{}); },
-    playMagic() { document.getElementById('sound-magic').play().catch(()=>{}); },
-    playPage() { document.getElementById('sound-page').play().catch(()=>{}); }
-}" x-init="playPage()">
-
-    <!-- Audio Elements -->
-    <!-- TODO: O usuário deve substituir os srcs abaixo pelos caminhos reais dos arquivos de áudio em public/sounds/ -->
-    <audio id="sound-hover" src="https://cdn.pixabay.com/audio/2022/03/15/audio_248557b4dc.mp3" preload="auto"></audio> <!-- Soft paper rustle / tick -->
-    <audio id="sound-sword" src="https://cdn.pixabay.com/audio/2022/03/24/audio_34b3edfb52.mp3" preload="auto"></audio> <!-- Sword draw / strike -->
-    <audio id="sound-magic" src="https://cdn.pixabay.com/audio/2021/08/04/audio_14fc0485a5.mp3" preload="auto"></audio> <!-- Fireball / Magic chime -->
-    <audio id="sound-page" src="https://cdn.pixabay.com/audio/2022/03/15/audio_9bc53e5e40.mp3" preload="auto"></audio> <!-- Page turn -->
+    playHover() { window.sfx.playHover(); },
+    playSword() { window.sfx.playSword(); },
+    playMagic() { window.sfx.playMagic(); },
+    playPage() { window.sfx.playPage(); }
+}">
 
     <nav class="glass-parchment py-4 sticky top-0 z-50 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
@@ -104,7 +169,9 @@
                 <a href="{{ route('classes.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
                     <i class="fa-solid fa-khanda mr-2"></i> Classes
                 </a>
-                <!-- Add other links here later -->
+                <a href="/racas" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-users mr-2"></i> Raças
+                </a>
             </div>
         </div>
     </nav>
