@@ -148,6 +148,15 @@
                 <a href="{{ route('pericias.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
                     <i class="fa-solid fa-book-journal-whills mr-2"></i> Perícias
                 </a>
+                <a href="{{ route('talentos.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-scroll mr-2"></i> Talentos
+                </a>
+                <a href="{{ route('divindades.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-sun mr-2"></i> Divindades
+                </a>
+                <a href="{{ route('tendencias.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-compass mr-2"></i> Tendências
+                </a>
             </div>
         </div>
     </nav>

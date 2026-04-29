@@ -65,8 +65,12 @@ O sistema deve suportar múltiplas edições através da coluna `versao` nos mod
 - **5.0**: Foco em bônus positivos e deslocamento em metros (conversão: 5ft = 1.5m).
 - **3.5**: Foco em modificadores de habilidade (incluindo negativos) e penalidades raciais.
 
-### Convenção de Modelos (Exemplo: Raca)
-- Atributos devem ser explícitos: `mod_forca`, `mod_destreza`, etc.
+### Convenção de Modelos
+- **Raca**: Atributos devem ser explícitos (`mod_forca`, `mod_destreza`, etc.).
+- **Pericia**: Deve conter `habilidade_chave` (ex: FOR, DES).
+- **Talento**: Deve conter `pre_requisitos`, `beneficio` e `tipo` (Combate, Geral, etc.).
+- **Divindade**: Deve conter `titulo`, `tendencia`, `dominios` e `arma_preferida`.
+- **Tendencia**: Deve conter `apelido`, `iniciais` (ex: LB, CN) e `descricao` filosófica.
 - Descrições devem ser ricas em lore (itálico e aspas na visualização).
 
 ---

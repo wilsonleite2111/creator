@@ -8,4 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Divindade extends Model
 {
     use HasFactory;
+
+    protected $table = 'divindades';
+
+    protected $fillable = [
+        'nome',
+        'titulo',
+        'versao',
+        'tendencia',
+        'dominios',
+        'arma_preferida',
+        'descricao'
+    ];
 }

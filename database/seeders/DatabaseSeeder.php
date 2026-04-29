@@ -15,6 +15,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RacaSeeder::class,
             PericiaSeeder::class,
+            TalentoSeeder::class,
+            DivindadeSeeder::class,
+            TendenciaSeeder::class,
         ]);
     }
 }
