@@ -157,6 +157,20 @@
                 <a href="{{ route('tendencias.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
                     <i class="fa-solid fa-compass mr-2"></i> Tendências
                 </a>
+                <div class="h-6 w-px bg-parchment-400 mx-2"></div>
+                <a href="{{ route('armas.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-sword mr-2"></i> Armas
+                </a>
+                <a href="{{ route('armaduras.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-shield-halved mr-2"></i> Armaduras
+                </a>
+                <a href="{{ route('equipamentos.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-sack-xmark mr-2"></i> Itens
+                </a>
+                <div class="h-6 w-px bg-parchment-400 mx-2"></div>
+                <a href="{{ route('fichas.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-scroll-torah mr-2"></i> Salão dos Heróis
+                </a>
             </div>
         </div>
     </nav>

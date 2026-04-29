@@ -60,18 +60,28 @@ Toda interação deve fornecer feedback sonoro para aumentar a imersão.
 
 ## 5. Padrões de Dados (D&D Core)
 
-### Modularidade de Versões
-O sistema deve suportar múltiplas edições através da coluna `versao` nos modelos.
-- **5.0**: Foco em bônus positivos e deslocamento em metros (conversão: 5ft = 1.5m).
-- **3.5**: Foco em modificadores de habilidade (incluindo negativos) e penalidades raciais.
+### Módulos Implementados
+- **Classes**: Definição de dado de vida, BBA, resistências base e perícias de classe.
+- **Raças**: Ajustes de atributos, tamanho e bônus específicos.
+- **Perícias**: Nome, habilidade chave e se permite uso sem treinamento.
+- **Talentos**: Nome, tipo, pré-requisitos e descrição de benefícios.
+- **Panteão (Divindades)**: Título, tendência, domínios e arma preferida.
+- **Tendências**: Iniciais (ex: LB, CN) e descrição filosófica.
+- **Arsenal (Armas)**: Dano (P/M), crítico, alcance, tipo e peso.
+- **Forja (Armaduras)**: Bônus de CA, Des. Máxima, Penalidade e Falha Arcana.
+- **Almoxarifado (Equipamentos)**: Itens gerais com peso e preço.
 
-### Convenção de Modelos
-- **Raca**: Atributos devem ser explícitos (`mod_forca`, `mod_destreza`, etc.).
-- **Pericia**: Deve conter `habilidade_chave` (ex: FOR, DES).
-- **Talento**: Deve conter `pre_requisitos`, `beneficio` e `tipo` (Combate, Geral, etc.).
-- **Divindade**: Deve conter `titulo`, `tendencia`, `dominios` e `arma_preferida`.
-- **Tendencia**: Deve conter `apelido`, `iniciais` (ex: LB, CN) e `descricao` filosófica.
-- Descrições devem ser ricas em lore (itálico e aspas na visualização).
+### Sistema de Inventário e Economia
+- **Ouro Dinâmico**: Dedução automática de preços ("PO", "PP", "PC") durante a criação da ficha.
+- **Relacionamentos Pivot**: Itens vinculados à ficha com atributos extras (ex: `quantidade`, `esta_equipado`).
+- **Carga**: Cálculo automático de peso total carregado.
+
+### Ficha de Personagem (3.5 Core)
+A ficha de exibição é uma réplica técnica da versão original, incluindo:
+- **Cálculo de CA**: Desmembramento em 10 + Armadura + Escudo + Des + Tam + Natural + Deflexão + Misc.
+- **Testes de Resistência**: Base + Modificador + Misc.
+- **Combate**: Suporte a ataques múltiplos, BBA e Modificador de Agarre.
+- **Biografia**: Divindade, XP, idiomas, tamanho, idade, sexo e aparência.
 
 ---
 
@@ -86,4 +96,8 @@ Sempre que possível, utilizar as classes utilitárias customizadas no Tailwind:
 ## 7. Melhores Práticas de Desenvolvimento
 1. **Não use Placeholders**: Para imagens, utilize o gerador de arte ou texturas reais.
 2. **Micro-animações**: Use transições suaves (`transition`, `hover:scale-105`) em todos os elementos interativos.
-3. **SEO & Semântica**: Use tags `<h1>` para títulos de página e IDs únicos em botões para facilitar testes automáticos.
+3. **SEO & Semântica**: Use tags `<h1>` para títulos de página e IDs únicos em botões.
+4. **Impressão**: A visualização da ficha (`show`) deve ter CSS de `@media print` para garantir que a ficha seja utilizável em mesa física.
+
+---
+*Atualizado em: 29 de Abril de 2026*

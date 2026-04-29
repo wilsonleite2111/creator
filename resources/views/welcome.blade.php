@@ -13,30 +13,46 @@
         </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-6xl">
         <!-- Card Classes -->
         <a href="{{ route('classes.index') }}" 
            class="glass-parchment rounded-xl border-2 border-parchment-400 p-8 transform hover:scale-105 hover:border-blood-600 transition duration-300 relative group cursor-pointer flex flex-col items-center text-center shadow-lg"
            @mouseenter="playHover()" @click="playPage()">
-            <div class="bg-parchment-200 rounded-full w-24 h-24 flex items-center justify-center border-4 border-parchment-400 shadow-inner mb-6 group-hover:border-blood-600 group-hover:shadow-blood-600/50 transition duration-300">
-                <i class="fa-solid fa-khanda text-4xl text-parchment-800 group-hover:text-blood-700 transition duration-300"></i>
+            <div class="bg-parchment-200 rounded-full w-20 h-20 flex items-center justify-center border-4 border-parchment-400 shadow-inner mb-6 group-hover:border-blood-600 group-hover:shadow-blood-600/50 transition duration-300">
+                <i class="fa-solid fa-khanda text-3xl text-parchment-800 group-hover:text-blood-700 transition duration-300"></i>
             </div>
-            <h2 class="text-3xl font-cinzel font-bold text-parchment-900 mb-4 group-hover:text-blood-700 transition duration-300">Grimório de Classes</h2>
-            <p class="text-parchment-800 font-lora italic leading-relaxed">
-                Defina as vocações dos heróis. Guerreiros destemidos, magos arcanos, ladinos sorrateiros e clérigos divinos aguardam para serem descritos em suas páginas.
+            <h2 class="text-2xl font-cinzel font-bold text-parchment-900 mb-4 group-hover:text-blood-700 transition duration-300">Classes</h2>
+            <p class="text-xs text-parchment-800 font-lora italic leading-relaxed">
+                Vocações dos heróis. Guerreiros, magos, ladinos e clérigos aguardam.
             </p>
+        </a>
+
+        <!-- Card Salão dos Heróis -->
+        <a href="{{ route('fichas.index') }}" 
+           class="glass-parchment rounded-xl border-2 border-blood-800 p-8 transform hover:scale-110 hover:border-blood-600 transition duration-300 relative group cursor-pointer flex flex-col items-center text-center shadow-2xl bg-parchment-100"
+           @mouseenter="playHover()" @click="playPage()">
+            <div class="bg-parchment-200 rounded-full w-24 h-24 flex items-center justify-center border-4 border-blood-800 shadow-inner mb-6 group-hover:border-blood-600 group-hover:shadow-blood-600/50 transition duration-300 animate-pulse group-hover:animate-none">
+                <i class="fa-solid fa-scroll-torah text-4xl text-blood-900 group-hover:text-blood-700 transition duration-300"></i>
+            </div>
+            <h2 class="text-3xl font-cinzel font-bold text-parchment-900 mb-4 group-hover:text-blood-700 transition duration-300">Salão dos Heróis</h2>
+            <p class="text-sm text-parchment-800 font-lora italic leading-relaxed font-bold">
+                Forje sua lenda agora. Crie, gerencie e visualize suas fichas de personagem completas.
+            </p>
+            <div class="mt-6 px-6 py-2 bg-blood-800 text-white font-cinzel rounded shadow-lg group-hover:bg-blood-600 transition">
+                ENTRAR NO SALÃO
+            </div>
         </a>
 
         <!-- Card Raças -->
         <a href="/racas" 
            class="glass-parchment rounded-xl border-2 border-parchment-400 p-8 transform hover:scale-105 hover:border-magic-600 transition duration-300 relative group cursor-pointer flex flex-col items-center text-center shadow-lg"
            @mouseenter="playHover()" @click="playPage()">
-            <div class="bg-parchment-200 rounded-full w-24 h-24 flex items-center justify-center border-4 border-parchment-400 shadow-inner mb-6 group-hover:border-magic-600 group-hover:shadow-magic-600/50 transition duration-300">
-                <i class="fa-solid fa-users text-4xl text-parchment-800 group-hover:text-magic-600 transition duration-300"></i>
+            <div class="bg-parchment-200 rounded-full w-20 h-20 flex items-center justify-center border-4 border-parchment-400 shadow-inner mb-6 group-hover:border-magic-600 group-hover:shadow-magic-600/50 transition duration-300">
+                <i class="fa-solid fa-users text-3xl text-parchment-800 group-hover:text-magic-600 transition duration-300"></i>
             </div>
-            <h2 class="text-3xl font-cinzel font-bold text-parchment-900 mb-4 group-hover:text-magic-600 transition duration-300">Tomos de Raças</h2>
-            <p class="text-parchment-800 font-lora italic leading-relaxed">
-                Descreva as origens dos aventureiros. Humanos versáteis, elfos graciosos, anões robustos e outras linhagens ancestrais que habitam este mundo.
+            <h2 class="text-2xl font-cinzel font-bold text-parchment-900 mb-4 group-hover:text-magic-600 transition duration-300">Raças</h2>
+            <p class="text-xs text-parchment-800 font-lora italic leading-relaxed">
+                Origens ancestrais. Humanos, elfos, anões e outras linhagens lendárias.
             </p>
         </a>
     </div>
