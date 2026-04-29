@@ -37,7 +37,7 @@
                         <form action="{{ route('classes.destroy', $classe->id) }}" method="POST" class="inline" onsubmit="return confirm('Tem certeza que deseja apagar esta classe do grimório?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-parchment-800 hover:text-blood-700 bg-parchment-200 p-2 rounded-full shadow-sm border border-parchment-300" @click="playSword()" title="Destruir pergaminho">
+                            <button type="submit" class="text-parchment-800 hover:text-blood-700 bg-parchment-200 p-2 rounded-full shadow-sm border border-parchment-300" @click="playExplosion()" title="Destruir pergaminho">
                                 <i class="fa-solid fa-fire"></i>
                             </button>
                         </form>

@@ -78,83 +78,56 @@
         }
     </style>
     <script>
-        // Web Audio API Synthesizer para os efeitos sonoros sem precisar de arquivos .mp3
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        const audioCtx = new AudioContext();
-
+        // Gerenciador de efeitos sonoros com arquivos reais
         window.sfx = {
+            sounds: {
+                hover: new Audio('/audio/hover.mp3'),
+                page: new Audio('/audio/page.mp3'),
+                sword: new Audio('/audio/sword.mp3'),
+                magic: new Audio('/audio/magic.mp3'),
+                explosion: new Audio('/audio/explosion.mp3')
+            },
             playHover() {
-                if(audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.05);
-                gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
+                this.sounds.hover.currentTime = 0;
+                this.sounds.hover.volume = 0.15;
+                this.sounds.hover.play().catch(e => {});
             },
             playPage() {
-                if(audioCtx.state === 'suspended') audioCtx.resume();
-                const bufferSize = audioCtx.sampleRate * 0.15;
-                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-                const data = buffer.getChannelData(0);
-                for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * 0.1;
-                const noise = audioCtx.createBufferSource();
-                noise.buffer = buffer;
-                const filter = audioCtx.createBiquadFilter();
-                filter.type = 'lowpass';
-                filter.frequency.value = 800;
-                const gain = audioCtx.createGain();
-                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
-                noise.connect(filter);
-                filter.connect(gain);
-                gain.connect(audioCtx.destination);
-                noise.start();
+                this.sounds.page.currentTime = 0;
+                this.sounds.page.volume = 0.4;
+                this.sounds.page.play().catch(e => {});
             },
             playSword() {
-                if(audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.2);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.3);
+                this.sounds.sword.currentTime = 0;
+                this.sounds.sword.volume = 0.5;
+                this.sounds.sword.play().catch(e => {});
             },
             playMagic() {
-                if(audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime);
-                osc.frequency.setValueAtTime(900, audioCtx.currentTime + 0.1);
-                osc.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.2);
-                osc.frequency.setValueAtTime(1600, audioCtx.currentTime + 0.3);
-                gain.gain.setValueAtTime(0, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.1);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.6);
+                this.sounds.magic.currentTime = 0;
+                this.sounds.magic.volume = 0.5;
+                this.sounds.magic.play().catch(e => {});
+            },
+            playExplosion() {
+                this.sounds.explosion.currentTime = 0;
+                this.sounds.explosion.volume = 0.5;
+                this.sounds.explosion.play().catch(e => {});
             }
         };
+        
+        // Pré-carregar os sons assim que a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            Object.values(window.sfx.sounds).forEach(audio => {
+                audio.load();
+            });
+        });
     </script>
 </head>
 <body class="font-lora min-h-screen flex flex-col" x-data="{
     playHover() { window.sfx.playHover(); },
     playSword() { window.sfx.playSword(); },
     playMagic() { window.sfx.playMagic(); },
-    playPage() { window.sfx.playPage(); }
+    playPage() { window.sfx.playPage(); },
+    playExplosion() { window.sfx.playExplosion(); }
 }">
 
     <nav class="glass-parchment py-4 sticky top-0 z-50 shadow-md">
@@ -169,8 +142,11 @@
                 <a href="{{ route('classes.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
                     <i class="fa-solid fa-khanda mr-2"></i> Classes
                 </a>
-                <a href="/racas" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                <a href="{{ route('racas.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
                     <i class="fa-solid fa-users mr-2"></i> Raças
+                </a>
+                <a href="{{ route('pericias.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-book-journal-whills mr-2"></i> Perícias
                 </a>
             </div>
         </div>
