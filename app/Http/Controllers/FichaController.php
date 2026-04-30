@@ -13,6 +13,8 @@ use App\Models\Armadura;
 use App\Models\Equipamento;
 use Illuminate\Http\Request;
 
+use Inertia\Inertia;
+
 class FichaController extends Controller
 {
     /**
@@ -21,7 +23,9 @@ class FichaController extends Controller
     public function index()
     {
         $fichas = Ficha::with(['raca', 'classe'])->get();
-        return view('fichas.index', compact('fichas'));
+        return inertia('Fichas/Index', [
+            'fichas' => $fichas
+        ]);
     }
 
     /**
@@ -38,7 +42,16 @@ class FichaController extends Controller
         $armaduras = Armadura::all();
         $equipamentos = Equipamento::all();
         
-        return view('fichas.create', compact('racas', 'classes', 'tendencias', 'divindades', 'pericias', 'armas', 'armaduras', 'equipamentos'));
+        return inertia('Fichas/Create', [
+            'racas' => $racas,
+            'classes' => $classes,
+            'tendencias' => $tendencias,
+            'divindades' => $divindades,
+            'pericias' => $pericias,
+            'armas' => $armas,
+            'armaduras' => $armaduras,
+            'equipamentos' => $equipamentos,
+        ]);
     }
 
     /**
@@ -141,7 +154,9 @@ class FichaController extends Controller
     public function show(Ficha $ficha)
     {
         $ficha->load(['raca', 'classe', 'tendencia', 'pericias']);
-        return view('fichas.show', compact('ficha'));
+        return inertia('Fichas/Show', [
+            'ficha' => $ficha
+        ]);
     }
 
     /**
@@ -158,10 +173,20 @@ class FichaController extends Controller
         $armaduras = Armadura::all();
         $equipamentos = Equipamento::all();
 
-        // Carregar relações para o Alpine.js
+        // Carregar relações para o Vue
         $ficha->load(['pericias', 'armas', 'armaduras', 'equipamentos']);
 
-        return view('fichas.edit', compact('ficha', 'racas', 'classes', 'tendencias', 'divindades', 'pericias', 'armas', 'armaduras', 'equipamentos'));
+        return Inertia::render('Fichas/Edit', [
+            'ficha' => $ficha,
+            'racas' => $racas,
+            'classes' => $classes,
+            'tendencias' => $tendencias,
+            'divindades' => $divindades,
+            'pericias' => $pericias,
+            'armas' => $armas,
+            'armaduras' => $armaduras,
+            'equipamentos' => $equipamentos,
+        ]);
     }
 
     /**

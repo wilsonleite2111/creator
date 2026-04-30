@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Raca;
 use Illuminate\Http\Request;
 
+use Inertia\Inertia;
+
 class RacaController extends Controller
 {
     /**
@@ -13,7 +15,9 @@ class RacaController extends Controller
     public function index()
     {
         $racas = Raca::all();
-        return view('racas.index', compact('racas'));
+        return Inertia::render('Racas/Index', [
+            'racas' => $racas
+        ]);
     }
 
     /**
@@ -21,7 +25,7 @@ class RacaController extends Controller
      */
     public function create()
     {
-        return view('racas.create');
+        return Inertia::render('Racas/Create');
     }
 
     /**
@@ -53,7 +57,9 @@ class RacaController extends Controller
      */
     public function show(Raca $raca)
     {
-        return view('racas.show', compact('raca'));
+        return Inertia::render('Racas/Show', [
+            'raca' => $raca
+        ]);
     }
 
     /**
@@ -61,7 +67,9 @@ class RacaController extends Controller
      */
     public function edit(Raca $raca)
     {
-        return view('racas.edit', compact('raca'));
+        return Inertia::render('Racas/Edit', [
+            'raca' => $raca
+        ]);
     }
 
     /**

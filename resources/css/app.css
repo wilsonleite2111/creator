@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+:root {
+    --parchment-100: #fdf6e3;
+    --parchment-200: #f4e8c1;
+    --parchment-300: #e8d5a5;
+    --parchment-400: #d1b882;
+    --parchment-800: #5a4624;
+    --parchment-900: #3d2b14;
+    --blood-700: #b91c1c;
+    --magic-600: #7c3aed;
+}
+
+@theme {
+  --color-parchment-100: #fdf6e3;
+  --color-parchment-200: #f4e8c1;
+  --color-parchment-300: #e8d5a5;
+  --color-parchment-400: #d1b882;
+  --color-parchment-800: #5a4624;
+  --color-parchment-900: #3d2b14;
+  
+  --color-blood-700: #b91c1c;
+  --color-magic-600: #7c3aed;
+
+  --font-cinzel: "Cinzel", serif;
+  --font-lora: "Lora", serif;
+}
+
+body {
+    background-color: var(--parchment-200) !important;
+    color: var(--parchment-900);
+    font-family: var(--font-lora);
+    margin: 0;
+    padding: 0;
+}
+
+.font-cinzel {
+    font-family: var(--font-cinzel) !important;
+}
+
+.glass-parchment {
+    background: rgba(253, 246, 227, 0.85);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(209, 184, 130, 0.5);
+}
+
+.bg-parchment-pattern {
+    background-image: url('https://www.transparenttextures.com/patterns/aged-paper.png');
+}

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Classe;
 use Illuminate\Http\Request;
 
+use Inertia\Inertia;
+
 class ClasseController extends Controller
 {
     /**
@@ -13,7 +15,9 @@ class ClasseController extends Controller
     public function index()
     {
         $classes = Classe::all();
-        return view('classes.index', compact('classes'));
+        return Inertia::render('Classes/Index', [
+            'classes' => $classes
+        ]);
     }
 
     /**
@@ -21,7 +25,7 @@ class ClasseController extends Controller
      */
     public function create()
     {
-        return view('classes.create');
+        return Inertia::render('Classes/Create');
     }
 
     /**
@@ -49,19 +53,21 @@ class ClasseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Classe $class) // Laravel uses the singular name for variable, but we used $class because $classe is just variable. Wait, route model binding matches parameter name with the singular resource name. The resource is 'classes', so the parameter is usually 'class'. Let's use $classe to be safe and match the parameter in route, actually it will be 'class'.
+    public function show(Classe $class)
     {
-        $classe = $class; // Laravel route parameter for 'classes' is 'class'.
-        return view('classes.show', compact('classe'));
+        return Inertia::render('Classes/Show', [
+            'classe' => $class
+        ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Classe $class) // Parameter might be $class
+    public function edit(Classe $class)
     {
-        $classe = $class;
-        return view('classes.edit', compact('classe'));
+        return Inertia::render('Classes/Edit', [
+            'classe' => $class
+        ]);
     }
 
     /**

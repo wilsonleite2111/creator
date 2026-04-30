@@ -6,19 +6,26 @@ use App\Models\Magia;
 use App\Models\Classe;
 use Illuminate\Http\Request;
 
+use Inertia\Inertia;
+
 class MagiaController extends Controller
 {
     public function index(Request $request)
     {
         $versao = $request->get('versao', '3.5');
         $magias = Magia::where('versao', $versao)->with('classes')->get();
-        return view('magias.index', compact('magias', 'versao'));
+        return inertia('Magias/Index', [
+            'magias' => $magias,
+            'versao' => $versao
+        ]);
     }
 
     public function create()
     {
         $classes = Classe::all();
-        return view('magias.create', compact('classes'));
+        return inertia('Magias/Create', [
+            'classes' => $classes
+        ]);
     }
 
     public function store(Request $request)
@@ -52,14 +59,19 @@ class MagiaController extends Controller
     public function show(Magia $magia)
     {
         $magia->load('classes');
-        return view('magias.show', compact('magia'));
+        return Inertia::render('Magias/Show', [
+            'magia' => $magia
+        ]);
     }
 
     public function edit(Magia $magia)
     {
         $classes = Classe::all();
         $magia->load('classes');
-        return view('magias.edit', compact('magia', 'classes'));
+        return Inertia::render('Magias/Edit', [
+            'magia' => $magia,
+            'classes' => $classes
+        ]);
     }
 
     public function update(Request $request, Magia $magia)

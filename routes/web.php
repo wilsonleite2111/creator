@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MagiaController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('fichas.index');
 });
 
 Route::resource('magias', MagiaController::class);
