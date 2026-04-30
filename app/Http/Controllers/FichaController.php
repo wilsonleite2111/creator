@@ -29,11 +29,11 @@ class FichaController extends Controller
      */
     public function create()
     {
-        $racas = Raca::all();
-        $classes = Classe::all();
+        $racas = Raca::where('versao', '3.5')->get();
+        $classes = Classe::where('versao', '3.5')->get();
         $tendencias = Tendencia::all();
-        $divindades = Divindade::all();
-        $pericias = Pericia::all();
+        $divindades = Divindade::where('versao', '3.5')->get();
+        $pericias = Pericia::where('versao', '3.5')->get();
         $armas = Arma::all();
         $armaduras = Armadura::all();
         $equipamentos = Equipamento::all();
@@ -79,16 +79,27 @@ class FichaController extends Controller
             'deslocamento' => 'required|string',
             'iniciativa_misc' => 'required|integer',
             'ca_natural' => 'required|integer',
+            'ca_armadura' => 'required|integer',
+            'ca_escudo' => 'required|integer',
+            'ca_tamanho' => 'required|integer',
             'ca_deflexao' => 'required|integer',
             'ca_misc' => 'required|integer',
             'fortitude_misc' => 'required|integer',
+            'fortitude_magia' => 'required|integer',
             'reflexos_misc' => 'required|integer',
+            'reflexos_magia' => 'required|integer',
             'vontade_misc' => 'required|integer',
+            'vontade_magia' => 'required|integer',
             'agarre_misc' => 'required|integer',
+            'agarre_tamanho' => 'required|integer',
             'talentos_descricao' => 'nullable|string',
             'habilidades_especiais' => 'nullable|string',
             'idiomas' => 'nullable|string',
             'notas_combate' => 'nullable|string',
+            'dinheiro_pc' => 'required|integer',
+            'dinheiro_pp' => 'required|integer',
+            'dinheiro_pl' => 'required|integer',
+            'xp_proximo' => 'required|integer',
         ]);
 
         $validated['pv_atual'] = $validated['pv_max'];
@@ -138,7 +149,19 @@ class FichaController extends Controller
      */
     public function edit(Ficha $ficha)
     {
-        // Implementação futura ou se necessário
+        $racas = Raca::where('versao', '3.5')->get();
+        $classes = Classe::where('versao', '3.5')->get();
+        $tendencias = Tendencia::all();
+        $divindades = Divindade::where('versao', '3.5')->get();
+        $pericias = Pericia::where('versao', '3.5')->get();
+        $armas = Arma::all();
+        $armaduras = Armadura::all();
+        $equipamentos = Equipamento::all();
+
+        // Carregar relações para o Alpine.js
+        $ficha->load(['pericias', 'armas', 'armaduras', 'equipamentos']);
+
+        return view('fichas.edit', compact('ficha', 'racas', 'classes', 'tendencias', 'divindades', 'pericias', 'armas', 'armaduras', 'equipamentos'));
     }
 
     /**
@@ -146,7 +169,88 @@ class FichaController extends Controller
      */
     public function update(Request $request, Ficha $ficha)
     {
-        //
+        $validated = $request->validate([
+            'versao' => 'required|string',
+            'nome_personagem' => 'required|string|max:100',
+            'nome_jogador' => 'required|string|max:100',
+            'raca_id' => 'required|exists:racas,id',
+            'classe_id' => 'required|exists:classes,id',
+            'tendencia_id' => 'required|exists:tendencias,id',
+            'divindade' => 'nullable|string',
+            'tamanho' => 'nullable|string',
+            'idade' => 'nullable|integer',
+            'sexo' => 'nullable|string',
+            'altura' => 'nullable|numeric',
+            'peso' => 'nullable|numeric',
+            'olhos' => 'nullable|string',
+            'cabelos' => 'nullable|string',
+            'pele' => 'nullable|string',
+            'nivel' => 'required|integer|min:1',
+            'ouro' => 'required|numeric',
+            'forca_base' => 'required|integer',
+            'destreza_base' => 'required|integer',
+            'constituicao_base' => 'required|integer',
+            'inteligencia_base' => 'required|integer',
+            'sabedoria_base' => 'required|integer',
+            'carisma_base' => 'required|integer',
+            'pv_max' => 'required|integer',
+            'bab' => 'required|integer',
+            'fortitude_base' => 'required|integer',
+            'reflexos_base' => 'required|integer',
+            'vontade_base' => 'required|integer',
+            'xp_atual' => 'required|integer',
+            'deslocamento' => 'required|string',
+            'iniciativa_misc' => 'required|integer',
+            'ca_natural' => 'required|integer',
+            'ca_armadura' => 'required|integer',
+            'ca_escudo' => 'required|integer',
+            'ca_tamanho' => 'required|integer',
+            'ca_deflexao' => 'required|integer',
+            'ca_misc' => 'required|integer',
+            'fortitude_misc' => 'required|integer',
+            'fortitude_magia' => 'required|integer',
+            'reflexos_misc' => 'required|integer',
+            'reflexos_magia' => 'required|integer',
+            'vontade_misc' => 'required|integer',
+            'vontade_magia' => 'required|integer',
+            'agarre_misc' => 'required|integer',
+            'agarre_tamanho' => 'required|integer',
+            'talentos_descricao' => 'nullable|string',
+            'habilidades_especiais' => 'nullable|string',
+            'idiomas' => 'nullable|string',
+            'notas_combate' => 'nullable|string',
+            'dinheiro_pc' => 'required|integer',
+            'dinheiro_pp' => 'required|integer',
+            'dinheiro_pl' => 'required|integer',
+            'xp_proximo' => 'required|integer',
+        ]);
+
+        $ficha->update($validated);
+
+        // Sincronizar Perícias
+        $periciasData = [];
+        if ($request->has('pericias')) {
+            foreach ($request->pericias as $periciaId => $graduacoes) {
+                if ($graduacoes > 0) {
+                    $periciasData[$periciaId] = ['graduacoes' => $graduacoes];
+                }
+            }
+        }
+        $ficha->pericias()->sync($periciasData);
+
+        // Sincronizar Inventário
+        $ficha->armas()->sync($request->input('armas', []));
+        $ficha->armaduras()->sync($request->input('armaduras', []));
+        
+        $equipData = [];
+        if ($request->has('equipamentos')) {
+            foreach ($request->equipamentos as $itemId) {
+                $equipData[$itemId] = ['quantidade' => 1]; // Simplificado por enquanto
+            }
+        }
+        $ficha->equipamentos()->sync($equipData);
+
+        return redirect()->route('fichas.show', $ficha)->with('success', 'Ficha atualizada com sucesso!');
     }
 
     /**

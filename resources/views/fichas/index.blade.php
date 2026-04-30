@@ -34,6 +34,9 @@
                         <a href="{{ route('fichas.show', $ficha->id) }}" class="text-parchment-800 hover:text-magic-600 bg-parchment-200 p-2 rounded-full shadow-sm border border-parchment-300" @click="playPage()">
                             <i class="fa-solid fa-eye"></i>
                         </a>
+                        <a href="{{ route('fichas.edit', $ficha->id) }}" class="text-parchment-800 hover:text-blood-700 bg-parchment-200 p-2 rounded-full shadow-sm border border-parchment-300" @click="playPage()">
+                            <i class="fa-solid fa-pencil"></i>
+                        </a>
                         <form action="{{ route('fichas.destroy', $ficha->id) }}" method="POST" class="inline" onsubmit="return confirm('Deseja realmente apagar esta ficha?');">
                             @csrf
                             @method('DELETE')

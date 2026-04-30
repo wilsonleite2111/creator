@@ -122,7 +122,8 @@
         });
     </script>
 </head>
-<body class="font-lora min-h-screen flex flex-col" x-data="{
+<body class="font-lora min-h-screen bg-parchment-pattern" x-data="{ 
+    mobileMenu: false,
     playHover() { window.sfx.playHover(); },
     playSword() { window.sfx.playSword(); },
     playMagic() { window.sfx.playMagic(); },
@@ -130,69 +131,111 @@
     playExplosion() { window.sfx.playExplosion(); }
 }">
 
-    <nav class="glass-parchment py-4 sticky top-0 z-50 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-            <div class="flex items-center space-x-4">
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Botão Mobile -->
+        <div class="md:hidden glass-parchment p-4 sticky top-0 z-50 flex justify-between items-center shadow-md">
+            <a href="/" class="text-xl font-cinzel font-bold text-parchment-900 flex items-center">
+                <i class="fa-solid fa-dragon mr-2 text-blood-700"></i>
+                Creator RPG
+            </a>
+            <button @click="mobileMenu = !mobileMenu" class="text-parchment-900 text-2xl">
+                <i class="fa-solid" :class="mobileMenu ? 'fa-xmark' : 'fa-bars'"></i>
+            </button>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="w-full md:w-64 lg:w-72 glass-parchment md:h-screen md:sticky md:top-0 z-40 overflow-y-auto border-r border-parchment-400 flex flex-col transition-all duration-300"
+            :class="mobileMenu ? 'block' : 'hidden md:flex'">
+            
+            <div class="p-6 border-b border-parchment-300 hidden md:block">
                 <a href="/" class="text-2xl font-cinzel font-bold text-parchment-900 flex items-center hover:text-parchment-800 transition" @mouseenter="playHover()" @click="playPage()">
                     <i class="fa-solid fa-dragon mr-2 text-blood-700"></i>
                     Creator RPG
                 </a>
             </div>
-            <div class="flex space-x-6 font-cinzel font-bold">
-                <a href="{{ route('classes.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-khanda mr-2"></i> Classes
+
+            <nav class="flex-grow p-4 space-y-2 font-cinzel font-bold overflow-y-auto">
+                <p class="text-[10px] uppercase text-parchment-700 tracking-widest mb-2 px-2 border-b border-parchment-300 pb-1 mt-4">Essenciais</p>
+                
+                <a href="{{ route('fichas.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-scroll-torah w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Salão dos Heróis</span>
                 </a>
-                <a href="{{ route('racas.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-users mr-2"></i> Raças
+
+                <p class="text-[10px] uppercase text-parchment-700 tracking-widest mb-2 px-2 border-b border-parchment-300 pb-1 mt-6">Criação</p>
+
+                <a href="{{ route('classes.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-khanda w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Classes</span>
                 </a>
-                <a href="{{ route('pericias.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-book-journal-whills mr-2"></i> Perícias
+                <a href="{{ route('racas.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-users w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Raças</span>
                 </a>
-                <a href="{{ route('talentos.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-scroll mr-2"></i> Talentos
+                <a href="{{ route('pericias.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-book-journal-whills w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Perícias</span>
                 </a>
-                <a href="{{ route('divindades.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-sun mr-2"></i> Divindades
+                <a href="{{ route('talentos.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-scroll w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Talentos</span>
                 </a>
-                <a href="{{ route('tendencias.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-compass mr-2"></i> Tendências
+                <a href="{{ route('divindades.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-sun w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Divindades</span>
                 </a>
-                <div class="h-6 w-px bg-parchment-400 mx-2"></div>
-                <a href="{{ route('armas.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-sword mr-2"></i> Armas
+                <a href="{{ route('tendencias.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-compass w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Tendências</span>
                 </a>
-                <a href="{{ route('armaduras.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-shield-halved mr-2"></i> Armaduras
+
+                <p class="text-[10px] uppercase text-parchment-700 tracking-widest mb-2 px-2 border-b border-parchment-300 pb-1 mt-6">Equipamento & Grimório</p>
+
+                <a href="{{ route('magias.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-magic-600" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-wand-sparkles w-8 text-magic-600 group-hover:scale-110 transition"></i> 
+                    <span>Magias</span>
                 </a>
-                <a href="{{ route('equipamentos.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-sack-xmark mr-2"></i> Itens
+                <a href="{{ route('armas.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-sword w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Armas</span>
                 </a>
-                <div class="h-6 w-px bg-parchment-400 mx-2"></div>
-                <a href="{{ route('fichas.index') }}" class="text-parchment-900 hover:text-blood-700 transition flex items-center" @mouseenter="playHover()" @click="playPage()">
-                    <i class="fa-solid fa-scroll-torah mr-2"></i> Salão dos Heróis
+                <a href="{{ route('armaduras.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-shield-halved w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Armaduras</span>
                 </a>
+                <a href="{{ route('equipamentos.index') }}" class="group flex items-center p-3 rounded-lg hover:bg-parchment-300 text-parchment-900 transition-all border-l-4 border-transparent hover:border-blood-700" @mouseenter="playHover()" @click="playPage()">
+                    <i class="fa-solid fa-sack-xmark w-8 text-blood-700 group-hover:scale-110 transition"></i> 
+                    <span>Itens</span>
+                </a>
+            </nav>
+
+            <div class="p-4 border-t border-parchment-300 mt-auto">
+                <p class="text-xs text-parchment-800 font-cinzel text-center">&copy; {{ date('Y') }} RPG Forger</p>
             </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-grow flex flex-col min-h-screen overflow-x-hidden">
+            <main class="flex-grow p-4 md:p-8 lg:p-12">
+                @if(session('success'))
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6 font-lora" role="alert" x-data="{ show: true }" x-show="show" x-transition.opacity>
+                        <strong class="font-bold">Vitória!</strong>
+                        <span class="block sm:inline">{{ session('success') }}</span>
+                        <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
+                            <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
+                        </span>
+                    </div>
+                @endif
+
+                @yield('content')
+            </main>
+
+            <footer class="glass-parchment py-6 border-t border-parchment-400">
+                <div class="container mx-auto px-4 text-center text-parchment-800 font-cinzel text-xs">
+                    <p>Forged in the fires of imagination. Creator RPG &copy; {{ date('Y') }}</p>
+                </div>
+            </footer>
         </div>
-    </nav>
-
-    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        @if(session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-6 font-lora" role="alert" x-data="{ show: true }" x-show="show" x-transition.opacity>
-                <strong class="font-bold">Vitória!</strong>
-                <span class="block sm:inline">{{ session('success') }}</span>
-                <span class="absolute top-0 bottom-0 right-0 px-4 py-3" @click="show = false">
-                    <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 14.849a1.2 1.2 0 0 1-1.697 0L10 11.819l-2.651 3.029a1.2 1.2 0 1 1-1.697-1.697l2.758-3.15-2.759-3.152a1.2 1.2 0 1 1 1.697-1.697L10 8.183l2.651-3.031a1.2 1.2 0 1 1 1.697 1.697l-2.758 3.152 2.758 3.15a1.2 1.2 0 0 1 0 1.698z"/></svg>
-                </span>
-            </div>
-        @endif
-
-        @yield('content')
-    </main>
-
-    <footer class="glass-parchment py-6 mt-12">
-        <div class="container mx-auto px-4 text-center text-parchment-800 font-cinzel">
-            <p>&copy; {{ date('Y') }} Creator RPG - Forged in the fires of imagination.</p>
-        </div>
-    </footer>
+    </div>
 </body>
 </html>

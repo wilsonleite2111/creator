@@ -10,6 +10,9 @@
             <button onclick="window.print()" class="bg-parchment-800 text-white px-5 py-2 rounded font-cinzel hover:bg-parchment-900 transition flex items-center">
                 <i class="fa-solid fa-print mr-2"></i> IMPRIMIR
             </button>
+            <a href="{{ route('fichas.edit', $ficha) }}" class="bg-blood-700 text-white px-5 py-2 rounded font-cinzel hover:bg-blood-800 transition flex items-center">
+                <i class="fa-solid fa-pen-to-square mr-2"></i> EDITAR
+            </a>
             <a href="{{ route('fichas.index') }}" class="bg-magic-600 text-white px-5 py-2 rounded font-cinzel hover:bg-magic-700 transition flex items-center">
                 <i class="fa-solid fa-reply mr-2"></i> VOLTAR
             </a>
