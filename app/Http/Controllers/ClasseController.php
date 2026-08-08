@@ -14,7 +14,7 @@ class ClasseController extends Controller
      */
     public function index()
     {
-        $classes = Classe::all();
+        $classes = Classe::orderBy('nome')->get();
         return Inertia::render('Classes/Index', [
             'classes' => $classes
         ]);

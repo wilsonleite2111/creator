@@ -4,29 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Armadura;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ArmaduraController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $armaduras = Armadura::all();
-        return view('armaduras.index', compact('armaduras'));
+        return Inertia::render('Armaduras/Index', ['armaduras' => Armadura::orderBy('nome')->get()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('armaduras.create');
+        return Inertia::render('Armaduras/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -47,35 +38,39 @@ class ArmaduraController extends Controller
         return redirect()->route('armaduras.index')->with('success', 'Armadura forjada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Armadura $armadura)
     {
-        //
+        return Inertia::render('Armaduras/Edit', ['armadura' => $armadura]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Armadura $armadura)
     {
-        //
+        return Inertia::render('Armaduras/Edit', ['armadura' => $armadura]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Armadura $armadura)
     {
-        //
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'preco' => 'nullable|string',
+            'bonus_ca' => 'required|integer',
+            'destreza_max' => 'nullable|integer',
+            'penalidade_armadura' => 'nullable|integer',
+            'falha_arcana' => 'nullable|integer',
+            'deslocamento_9m' => 'nullable|string',
+            'deslocamento_6m' => 'nullable|string',
+            'peso' => 'nullable|numeric',
+            'tipo' => 'nullable|string',
+        ]);
+
+        $armadura->update($validated);
+
+        return redirect()->route('armaduras.index')->with('success', 'Armadura atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Armadura $armadura)
     {
-        //
+        $armadura->delete();
+        return redirect()->route('armaduras.index')->with('success', 'Armadura removida do arsenal!');
     }
 }

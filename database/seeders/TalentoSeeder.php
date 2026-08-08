@@ -7,98 +7,70 @@ use Illuminate\Database\Seeder;
 
 class TalentoSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $talentos = [
-            [
-                'nome' => 'Ataque Poderoso',
-                'versao' => '3.5',
-                'tipo' => 'Combate',
-                'pre_requisitos' => 'Força 13',
-                'beneficio' => 'O personagem pode subtrair um valor de sua jogada de ataque e adicioná-lo à sua jogada de dano (até o limite do seu BBA).',
-                'descricao' => 'Você é capaz de realizar ataques brutais sacrificando precisão por força bruta.',
-            ],
-            [
-                'nome' => 'Especialização em Combate',
-                'versao' => '3.5',
-                'tipo' => 'Combate',
-                'pre_requisitos' => 'Inteligência 13',
-                'beneficio' => 'O personagem pode subtrair um valor de sua jogada de ataque e adicioná-lo à sua CA como um bônus de esquiva.',
-                'descricao' => 'Você utiliza sua inteligência para lutar de forma defensiva e técnica.',
-            ],
-            [
-                'nome' => 'Esquiva',
-                'versao' => '3.5',
-                'tipo' => 'Combate',
-                'pre_requisitos' => 'Destreza 13',
-                'beneficio' => 'O personagem recebe +1 de bônus de esquiva na CA contra um oponente designado durante seu turno.',
-                'descricao' => 'Seus reflexos permitem que você evite ataques com facilidade.',
-            ],
-            [
-                'nome' => 'Iniciativa Aprimorada',
-                'versao' => '3.5',
-                'tipo' => 'Geral',
-                'pre_requisitos' => null,
-                'beneficio' => 'O personagem recebe +4 de bônus em testes de iniciativa.',
-                'descricao' => 'Você reage mais rápido que a maioria em situações de combate.',
-            ],
-            [
-                'nome' => 'Tiro Certeiro',
-                'versao' => '3.5',
-                'tipo' => 'Combate',
-                'pre_requisitos' => null,
-                'beneficio' => 'O personagem recebe +1 de bônus nas jogadas de ataque e dano com armas de ataque à distância contra alvos a até 9 metros.',
-                'descricao' => 'Sua precisão com armas de longo alcance é excepcional em distâncias curtas.',
-            ],
-            [
-                'nome' => 'Vitalidade',
-                'versao' => '3.5',
-                'tipo' => 'Geral',
-                'pre_requisitos' => null,
-                'beneficio' => 'O personagem recebe +3 pontos de vida.',
-                'descricao' => 'Você é mais resistente e durão que a média.',
-            ],
-            [
-                'nome' => 'Vontade de Ferro',
-                'versao' => '3.5',
-                'tipo' => 'Geral',
-                'pre_requisitos' => null,
-                'beneficio' => 'O personagem recebe +2 de bônus em todos os testes de resistência de Vontade.',
-                'descricao' => 'Sua mente é uma fortaleza contra influências externas.',
-            ],
-            [
-                'nome' => 'Grande Fortitude',
-                'versao' => '3.5',
-                'tipo' => 'Geral',
-                'pre_requisitos' => null,
-                'beneficio' => 'O personagem recebe +2 de bônus em todos os testes de resistência de Fortitude.',
-                'descricao' => 'Seu corpo é extremamente resiliente a venenos e exaustão.',
-            ],
-            [
-                'nome' => 'Reflexos Rápidos',
-                'versao' => '3.5',
-                'tipo' => 'Geral',
-                'pre_requisitos' => null,
-                'beneficio' => 'O personagem recebe +2 de bônus em todos os testes de resistência de Reflexos.',
-                'descricao' => 'Sua agilidade natural permite que você escape de perigos repentinos.',
-            ],
-            [
-                'nome' => 'Foco em Arma',
-                'versao' => '3.5',
-                'tipo' => 'Combate',
-                'pre_requisitos' => 'Proficiência com a arma escolhida, BBA +1',
-                'beneficio' => 'O personagem recebe +1 de bônus em todas as jogadas de ataque com a arma selecionada.',
-                'descricao' => 'Você se especializou no uso de uma arma específica.',
-            ],
+            // --- Gerais ---
+            ['nome' => 'Alerta',                          'tipo' => 'Geral',     'pre_requisitos' => null,                                                         'beneficio' => '+2 em Ouvir e +2 em Observar.',                                                                                   'descricao' => 'Seus sentidos aguçados tornam difícil surpreendê-lo.'],
+            ['nome' => 'Corrida',                         'tipo' => 'Geral',     'pre_requisitos' => null,                                                         'beneficio' => 'Corre 5 vezes seu deslocamento (em vez de 4). Não perde o bônus de DES na CA ao correr.',                          'descricao' => 'Você é capaz de correr com velocidade e controle excepcionais.'],
+            ['nome' => 'Grande Fortitude',                'tipo' => 'Geral',     'pre_requisitos' => null,                                                         'beneficio' => '+2 em todos os testes de resistência de Fortitude.',                                                               'descricao' => 'Seu corpo é extraordinariamente resistente a venenos, doenças e esforço extremo.'],
+            ['nome' => 'Iniciativa Aprimorada',           'tipo' => 'Geral',     'pre_requisitos' => null,                                                         'beneficio' => '+4 em testes de iniciativa.',                                                                                      'descricao' => 'Você reage mais rapidamente que a maioria em situações de combate.'],
+            ['nome' => 'Reflexos Rápidos',                'tipo' => 'Geral',     'pre_requisitos' => null,                                                         'beneficio' => '+2 em todos os testes de resistência de Reflexos.',                                                                'descricao' => 'Sua agilidade natural permite escapar de perigos repentinos.'],
+            ['nome' => 'Vigor',                           'tipo' => 'Geral',     'pre_requisitos' => null,                                                         'beneficio' => '+4 nos testes de Constituição feitos para resistir a privação (exaustão, desidratação, sufocamento).',             'descricao' => 'Você suporta esforços prolongados com facilidade incomum.'],
+            ['nome' => 'Vitalidade',                      'tipo' => 'Geral',     'pre_requisitos' => null,                                                         'beneficio' => '+3 pontos de vida permanentes.',                                                                                   'descricao' => 'Você é mais robusto e resistente que a média.'],
+            ['nome' => 'Vontade de Ferro',                'tipo' => 'Geral',     'pre_requisitos' => null,                                                         'beneficio' => '+2 em todos os testes de resistência de Vontade.',                                                                 'descricao' => 'Sua mente é uma fortaleza contra influências externas.'],
+
+            // --- Combate: ofensivos ---
+            ['nome' => 'Acuidade com Arma',              'tipo' => 'Combate',   'pre_requisitos' => 'BBA +1',                                                     'beneficio' => 'Usa o modificador de DES em vez de FOR nas jogadas de ataque com armas leves (e rapieira, corrente espigada, etc.).',   'descricao' => 'Sua destreza supera a força bruta quando empunha armas ágeis.'],
+            ['nome' => 'Ataque Poderoso',                'tipo' => 'Combate',   'pre_requisitos' => 'Força 13',                                                   'beneficio' => 'Subtrai até o BBA da jogada de ataque e adiciona o mesmo valor ao dano.',                                          'descricao' => 'Sacrifica precisão por força devastadora nos ataques.'],
+            ['nome' => 'Ataque Rápido',                  'tipo' => 'Combate',   'pre_requisitos' => 'BBA +1',                                                     'beneficio' => 'Saca ou guarda uma arma como ação livre em vez de ação de movimento.',                                              'descricao' => 'Você manuseia armas com velocidade surpreendente.'],
+            ['nome' => 'Carga Violenta',                 'tipo' => 'Combate',   'pre_requisitos' => 'BBA +1',                                                     'beneficio' => 'Ao realizar uma carga, pode mover até o dobro do seu deslocamento.',                                               'descricao' => 'Suas cargas são rápidas e furiosas.'],
+            ['nome' => 'Combate às Cegas',               'tipo' => 'Combate',   'pre_requisitos' => null,                                                         'beneficio' => 'Relança o dado de perda de chance por camuflagem total; inimigos invisíveis não ganham bônus de flanqueamento.',    'descricao' => 'Você luta bem mesmo sem visão, confiando em outros sentidos.'],
+            ['nome' => 'Combate com Duas Armas',         'tipo' => 'Combate',   'pre_requisitos' => 'Destreza 15',                                                'beneficio' => 'Reduz a penalidade de combate com duas armas: –2/–2 com arma leve na mão secundária.',                             'descricao' => 'Você maneja duas armas com habilidade e coordenação notáveis.'],
+            ['nome' => 'Combate com Duas Armas Aprimorado', 'tipo' => 'Combate','pre_requisitos' => 'Destreza 17, Combate com Duas Armas, BBA +6',               'beneficio' => 'Permite um segundo ataque com a mão secundária (a –5).',                                                          'descricao' => 'Seu domínio sobre o combate bimanual aumenta sua cadência de ataques.'],
+            ['nome' => 'Disparo a Longa Distância',      'tipo' => 'Combate',   'pre_requisitos' => 'Tiro Certeiro',                                              'beneficio' => 'Dobra o alcance incremental de armas de ataque à distância.',                                                     'descricao' => 'Você é capaz de atingir alvos a distâncias extraordinárias.'],
+            ['nome' => 'Disparo Rápido',                 'tipo' => 'Combate',   'pre_requisitos' => 'Destreza 13, Tiro Certeiro',                                 'beneficio' => 'Ataque extra com arma de ataque à distância por rodada, porém todos os ataques da rodada sofrem –2.',              'descricao' => 'Sua cadência de tiro ultrapassa a maioria dos arqueiros.'],
+            ['nome' => 'Foco em Arma',                   'tipo' => 'Combate',   'pre_requisitos' => 'Proficiência com a arma, BBA +1',                            'beneficio' => '+1 em todas as jogadas de ataque com a arma escolhida.',                                                          'descricao' => 'Você se especializou no uso de uma arma específica.'],
+            ['nome' => 'Foco em Arma Maior',             'tipo' => 'Combate',   'pre_requisitos' => 'Foco em Arma, Guerreiro 8',                                  'beneficio' => '+1 adicional nas jogadas de ataque com a arma escolhida (total +2).',                                             'descricao' => 'Seu domínio sobre a arma escolhida atinge um nível superior.'],
+            ['nome' => 'Golpe Atordoante',               'tipo' => 'Combate',   'pre_requisitos' => 'Destreza 13, Sabedoria 13, BBA +8 ou Monge 1',              'beneficio' => 'Declare antes do ataque desarmado: se acertar, o alvo faz Fortitude (CD 10 + metade do nível + mod SAB) ou fica atordoado por 1 rodada.', 'descricao' => 'Seu golpe desorientada o inimigo com precisão mortal.'],
+            ['nome' => 'Maestria em Combate',            'tipo' => 'Combate',   'pre_requisitos' => 'Destreza 13',                                                'beneficio' => 'Pode realizar ataques de oportunidade adicionais por rodada igual ao modificador de DES (mín. 1).',                'descricao' => 'Você explorar cada brecha na defesa do inimigo.'],
+            ['nome' => 'Especialização em Arma',         'tipo' => 'Combate',   'pre_requisitos' => 'Foco em Arma, Guerreiro 4',                                  'beneficio' => '+2 de dano nas jogadas de dano com a arma escolhida.',                                                            'descricao' => 'Você inflige ferimentos mais graves com sua arma especializada.'],
+            ['nome' => 'Tiro Certeiro',                  'tipo' => 'Combate',   'pre_requisitos' => null,                                                         'beneficio' => '+1 nas jogadas de ataque e de dano com armas de ataque à distância contra alvos a até 9 metros.',               'descricao' => 'Sua precisão em curta distância é extraordinária.'],
+            ['nome' => 'Tiro Preciso',                   'tipo' => 'Combate',   'pre_requisitos' => 'Tiro Certeiro',                                              'beneficio' => 'Pode atirar ou arremessar armas de ataque à distância em combate corpo a corpo sem penalidade de –4.',           'descricao' => 'Você seleciona seus alvos com precisão mesmo no caos do combate.'],
+
+            // --- Combate: defensivos ---
+            ['nome' => 'Combate Defensivo',              'tipo' => 'Combate',   'pre_requisitos' => 'Inteligência 13',                                            'beneficio' => 'Subtrai até 5 da jogada de ataque para adicionar o mesmo valor à CA como bônus de esquiva.',                    'descricao' => 'Você luta de forma técnica e defensiva, priorizando sua proteção.'],
+            ['nome' => 'Esquiva',                        'tipo' => 'Combate',   'pre_requisitos' => 'Destreza 13',                                                'beneficio' => '+1 de bônus de esquiva na CA contra um oponente designado por turno.',                                           'descricao' => 'Seus reflexos permitem desviar de ataques com facilidade.'],
+            ['nome' => 'Mobilidade',                     'tipo' => 'Combate',   'pre_requisitos' => 'Destreza 13, Esquiva',                                       'beneficio' => '+4 de bônus de esquiva na CA contra ataques de oportunidade provocados por movimento.',                          'descricao' => 'Você se move pelo campo de batalha com fluidez impecável.'],
+            ['nome' => 'Salto Feérico',                  'tipo' => 'Combate',   'pre_requisitos' => 'Destreza 13, Esquiva, Mobilidade, BBA +4',                  'beneficio' => 'Move-se até o deslocamento, realiza um único ataque corpo a corpo e continua movendo-se, tudo como ação padrão.',  'descricao' => 'Você ataca enquanto se move, tornando-se um alvo difícil de atingir.'],
+
+            // --- Habilidades de Classe ---
+            ['nome' => 'Expulsão Aprimorada',            'tipo' => 'Divino',    'pre_requisitos' => 'Capacidade de expulsar mortos-vivos',                        'beneficio' => '4 tentativas adicionais de expulsar mortos-vivos por dia.',                                                       'descricao' => 'Seu poder divino sobre os mortos-vivos é mais abundante.'],
+            ['nome' => 'Expulsão Potente',               'tipo' => 'Divino',    'pre_requisitos' => 'Capacidade de expulsar mortos-vivos, Carisma 21',            'beneficio' => 'Mortos-vivos afetados pela expulsão são destruídos em vez de afugentados.',                                        'descricao' => 'Sua fé aniquila completamente os servos da morte.'],
+
+            // --- Metamagia ---
+            ['nome' => 'Conjuração Aprimorada',          'tipo' => 'Metamagia', 'pre_requisitos' => null,                                                         'beneficio' => 'Aumenta efeitos variáveis de uma magia em 50%. Ocupa espaço de magia 2 níveis acima.',                            'descricao' => 'Seus feitiços liberam uma energia mágica mais intensa.'],
+            ['nome' => 'Conjuração Ágil',                'tipo' => 'Metamagia', 'pre_requisitos' => null,                                                         'beneficio' => 'Lança a magia como ação livre. Ocupa espaço de magia 4 níveis acima.',                                           'descricao' => 'Você condensa o tempo de conjuração a um instante.'],
+            ['nome' => 'Conjuração Discreta',            'tipo' => 'Metamagia', 'pre_requisitos' => null,                                                         'beneficio' => 'Remove o componente gestual de uma magia. Ocupa espaço de magia 1 nível acima.',                                 'descricao' => 'Você lança magias sem qualquer gesto perceptível.'],
+            ['nome' => 'Conjuração Extensa',             'tipo' => 'Metamagia', 'pre_requisitos' => null,                                                         'beneficio' => 'Dobra a duração de uma magia com duração que não seja instantânea ou permanente. Ocupa espaço 1 nível acima.',    'descricao' => 'Suas magias perduram por muito mais tempo.'],
+            ['nome' => 'Conjuração Maximizada',          'tipo' => 'Metamagia', 'pre_requisitos' => null,                                                         'beneficio' => 'Maximiza todos os efeitos variáveis de uma magia. Ocupa espaço de magia 3 níveis acima.',                         'descricao' => 'Seu feitiço alcança seu potencial máximo absoluto.'],
+            ['nome' => 'Conjuração Silenciosa',          'tipo' => 'Metamagia', 'pre_requisitos' => null,                                                         'beneficio' => 'Remove o componente verbal de uma magia. Ocupa espaço de magia 1 nível acima.',                                 'descricao' => 'Você lança magias sem pronunciar palavra alguma.'],
+            ['nome' => 'Foco em Conjuração',             'tipo' => 'Conjuração','pre_requisitos' => null,                                                         'beneficio' => '+1 na CD para resistir às magias de uma escola escolhida.',                                                       'descricao' => 'Suas magias de uma escola específica são mais difíceis de resistir.'],
+            ['nome' => 'Foco em Conjuração Maior',       'tipo' => 'Conjuração','pre_requisitos' => 'Foco em Conjuração',                                         'beneficio' => '+1 adicional na CD das magias da escola escolhida (total +2).',                                                   'descricao' => 'Seu domínio sobre essa escola de magia é incomparável.'],
+            ['nome' => 'Penetrar Resistência a Magia',   'tipo' => 'Conjuração','pre_requisitos' => null,                                                         'beneficio' => '+2 nas rolagens de nível de conjurador para superar a Resistência a Magia de criaturas.',                         'descricao' => 'Suas magias penetram as defesas mágicas com maior facilidade.'],
+
+            // --- Criação de Itens ---
+            ['nome' => 'Forja de Arma Mágica',          'tipo' => 'Criação',   'pre_requisitos' => 'Nível de conjurador 5',                                      'beneficio' => 'Pode criar armas e armaduras mágicas conforme as regras de itens mágicos.',                                      'descricao' => 'Você forja instrumentos de guerra imbuídos com poder arcano ou divino.'],
+            ['nome' => 'Forja de Anel',                  'tipo' => 'Criação',   'pre_requisitos' => 'Nível de conjurador 12',                                     'beneficio' => 'Pode criar anéis mágicos conforme as regras de itens mágicos.',                                                  'descricao' => 'Seus anéis canalizam poderes mágicos poderosos.'],
+            ['nome' => 'Forja de Varinha',               'tipo' => 'Criação',   'pre_requisitos' => 'Nível de conjurador 5',                                      'beneficio' => 'Pode criar varinhas mágicas contendo uma magia de nível 1 a 4.',                                                 'descricao' => 'Você imbuiu pedaços de madeira ou metal com poder mágico armazenado.'],
+            ['nome' => 'Forja de Maravilha',             'tipo' => 'Criação',   'pre_requisitos' => 'Nível de conjurador 3',                                      'beneficio' => 'Pode criar itens mágicos maravilhosos (capas, cintos, botas, amuletos etc.).',                                   'descricao' => 'Seus itens mágicos carregam encantamentos variados e poderosos.'],
+            ['nome' => 'Escrever Pergaminho',            'tipo' => 'Criação',   'pre_requisitos' => 'Nível de conjurador 1',                                      'beneficio' => 'Pode criar pergaminhos mágicos com magias que conhece.',                                                          'descricao' => 'Você registra magias em pergaminhos para uso posterior.'],
         ];
 
         foreach ($talentos as $talento) {
             Talento::updateOrCreate(
                 ['nome' => $talento['nome'], 'versao' => '3.5'],
-                $talento
+                array_merge($talento, ['versao' => '3.5'])
             );
         }
     }

@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Divindade;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DivindadeController extends Controller
 {
     public function index()
     {
-        $divindades = Divindade::all();
-        return view('divindades.index', compact('divindades'));
+        return Inertia::render('Divindades/Index', ['divindades' => Divindade::orderBy('nome')->get()]);
     }
 
     public function create()
     {
-        return view('divindades.create');
+        return Inertia::render('Divindades/Create');
     }
 
     public function store(Request $request)
@@ -35,9 +35,14 @@ class DivindadeController extends Controller
         return redirect()->route('divindades.index')->with('success', 'Divindade registrada no Panteão!');
     }
 
+    public function show(Divindade $divindade)
+    {
+        return Inertia::render('Divindades/Edit', ['divindade' => $divindade]);
+    }
+
     public function edit(Divindade $divindade)
     {
-        return view('divindades.edit', compact('divindade'));
+        return Inertia::render('Divindades/Edit', ['divindade' => $divindade]);
     }
 
     public function update(Request $request, Divindade $divindade)

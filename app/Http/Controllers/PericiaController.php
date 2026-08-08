@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Pericia;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PericiaController extends Controller
 {
     public function index()
     {
-        $pericias = Pericia::all();
-        return view('pericias.index', compact('pericias'));
+        return Inertia::render('Pericias/Index', ['pericias' => Pericia::orderBy('nome')->get()]);
     }
 
     public function create()
     {
-        return view('pericias.create');
+        return Inertia::render('Pericias/Create');
     }
 
     public function store(Request $request)
@@ -34,12 +34,12 @@ class PericiaController extends Controller
 
     public function show(Pericia $pericia)
     {
-        return view('pericias.show', compact('pericia'));
+        return Inertia::render('Pericias/Edit', ['pericia' => $pericia]);
     }
 
     public function edit(Pericia $pericia)
     {
-        return view('pericias.edit', compact('pericia'));
+        return Inertia::render('Pericias/Edit', ['pericia' => $pericia]);
     }
 
     public function update(Request $request, Pericia $pericia)

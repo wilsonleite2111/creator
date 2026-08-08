@@ -14,7 +14,7 @@ class RacaController extends Controller
      */
     public function index()
     {
-        $racas = Raca::all();
+        $racas = Raca::orderBy('nome')->get();
         return Inertia::render('Racas/Index', [
             'racas' => $racas
         ]);

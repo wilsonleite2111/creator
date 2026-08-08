@@ -13,10 +13,19 @@ class MagiaController extends Controller
     public function index(Request $request)
     {
         $versao = $request->get('versao', '3.5');
-        $magias = Magia::where('versao', $versao)->with('classes')->get();
+
+        $classes = Classe::orderBy('nome')
+            ->whereHas('magias', fn($q) => $q->where('versao', $versao))
+            ->with(['magias' => fn($q) => $q
+                ->where('versao', $versao)
+                ->orderByPivot('nivel')
+                ->orderBy('nome')
+            ])
+            ->get();
+
         return inertia('Magias/Index', [
-            'magias' => $magias,
-            'versao' => $versao
+            'classes' => $classes,
+            'versao'  => $versao,
         ]);
     }
 

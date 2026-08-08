@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Magia;
 
 class Classe extends Model
 {
@@ -26,5 +27,12 @@ class Classe extends Model
     public function ficha()
     {
         return $this->hasMany(Ficha::class);
+    }
+
+    public function magias()
+    {
+        return $this->belongsToMany(Magia::class, 'classe_magia')
+                    ->withPivot('nivel')
+                    ->withTimestamps();
     }
 }

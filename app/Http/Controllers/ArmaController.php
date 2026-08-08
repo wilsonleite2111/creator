@@ -4,29 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Arma;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ArmaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $armas = Arma::all();
-        return view('armas.index', compact('armas'));
+        return Inertia::render('Armas/Index', ['armas' => Arma::orderBy('nome')->get()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('armas.create');
+        return Inertia::render('Armas/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -47,35 +38,39 @@ class ArmaController extends Controller
         return redirect()->route('armas.index')->with('success', 'Arma forjada com sucesso!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Arma $arma)
     {
-        //
+        return Inertia::render('Armas/Edit', ['arma' => $arma]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Arma $arma)
     {
-        //
+        return Inertia::render('Armas/Edit', ['arma' => $arma]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Arma $arma)
     {
-        //
+        $validated = $request->validate([
+            'nome' => 'required|string|max:255',
+            'preco' => 'nullable|string',
+            'dano_p' => 'nullable|string',
+            'dano_m' => 'nullable|string',
+            'critico' => 'nullable|string',
+            'alcance' => 'nullable|string',
+            'peso' => 'nullable|numeric',
+            'tipo' => 'nullable|string',
+            'categoria' => 'nullable|string',
+            'uso' => 'nullable|string',
+        ]);
+
+        $arma->update($validated);
+
+        return redirect()->route('armas.index')->with('success', 'Arma atualizada com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Arma $arma)
     {
-        //
+        $arma->delete();
+        return redirect()->route('armas.index')->with('success', 'Arma removida do arsenal!');
     }
 }

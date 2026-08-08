@@ -4,18 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Models\Tendencia;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TendenciaController extends Controller
 {
     public function index()
     {
-        $tendencias = Tendencia::all();
-        return view('tendencias.index', compact('tendencias'));
+        return Inertia::render('Tendencias/Index', ['tendencias' => Tendencia::orderBy('nome')->get()]);
     }
 
     public function create()
     {
-        return view('tendencias.create');
+        return Inertia::render('Tendencias/Create');
     }
 
     public function store(Request $request)
@@ -32,9 +32,14 @@ class TendenciaController extends Controller
         return redirect()->route('tendencias.index')->with('success', 'Tendência registrada com sucesso!');
     }
 
+    public function show(Tendencia $tendencia)
+    {
+        return Inertia::render('Tendencias/Edit', ['tendencia' => $tendencia]);
+    }
+
     public function edit(Tendencia $tendencia)
     {
-        return view('tendencias.edit', compact('tendencia'));
+        return Inertia::render('Tendencias/Edit', ['tendencia' => $tendencia]);
     }
 
     public function update(Request $request, Tendencia $tendencia)

@@ -4,29 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Talento;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TalentoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $talentos = Talento::all();
-        return view('talentos.index', compact('talentos'));
+        return Inertia::render('Talentos/Index', ['talentos' => Talento::orderBy('nome')->get()]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        return view('talentos.create');
+        return Inertia::render('Talentos/Create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -43,25 +34,16 @@ class TalentoController extends Controller
         return redirect()->route('talentos.index')->with('success', 'Talento registrado nos tomos!');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Talento $talento)
     {
-        return view('talentos.show', compact('talento'));
+        return Inertia::render('Talentos/Edit', ['talento' => $talento]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Talento $talento)
     {
-        return view('talentos.edit', compact('talento'));
+        return Inertia::render('Talentos/Edit', ['talento' => $talento]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Talento $talento)
     {
         $validated = $request->validate([
@@ -78,13 +60,9 @@ class TalentoController extends Controller
         return redirect()->route('talentos.index')->with('success', 'Talento atualizado com sucesso!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Talento $talento)
     {
         $talento->delete();
-
         return redirect()->route('talentos.index')->with('success', 'Talento removido dos tomos!');
     }
 }
