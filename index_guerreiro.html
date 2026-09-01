@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guerreiro Fujão</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    body {
+      background: radial-gradient(ellipse at 50% 60%, #2a1a12 0%, #0a0603 100%);
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='56' viewBox='0 0 24 56'><defs><linearGradient id='b' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='%237a8593'/><stop offset='0.5' stop-color='%23fbfdff'/><stop offset='1' stop-color='%23c9d1dd'/></linearGradient></defs><polygon points='12,2 15,10 15,33 12,36 9,33 9,10' fill='url(%23b)' stroke='%23222a34' stroke-width='1'/><line x1='12' y1='10' x2='12' y2='32' stroke='%23ffffff' stroke-width='0.9' opacity='0.75'/><rect x='2' y='34' width='20' height='4.5' rx='1.2' fill='%23b8892b' stroke='%235c3a0f' stroke-width='0.9'/><circle cx='2.5' cy='36.2' r='2' fill='%23e4c060'/><circle cx='21.5' cy='36.2' r='2' fill='%23e4c060'/><rect x='9.5' y='38.5' width='5' height='11' fill='%234a2810' stroke='%23241206' stroke-width='0.6'/><path d='M9.5 40 L14.5 40 M9.5 43 L14.5 43 M9.5 46 L14.5 46' stroke='%231a0c04' stroke-width='0.5'/><circle cx='12' cy='52' r='3.2' fill='%23d1a13a' stroke='%23705010' stroke-width='0.9'/><circle cx='11' cy='51' r='1' fill='%23fce38a'/></svg>") 12 2, crosshair;
+    }
+    canvas { display: block; cursor: inherit; }
+    #hint {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255, 220, 180, 0.28);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 13px;
+      pointer-events: none;
+      letter-spacing: 1.4px;
+      user-select: none;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="hint">Aproxime a espada do guerreiro...</div>
+<script>
+'use strict';
+
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+const D      = Math.PI / 180;
+
+let W, H;
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+/* input */
+const mouse = { x: -9999, y: -9999 };
+window.addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+});
+window.addEventListener('mouseleave', () => {
+  mouse.x = -9999;
+  mouse.y = -9999;
+});
+
+/* character state — physics kept identical to original */
+const char = {
+  x: 0, y: 0,
+  vx: 0, vy: 0,
+  bodyAngle: 0,
+  walkPhase: 0,
+  scared: 0,
+  speed: 0,
+  lookX: 0, lookY: 0,
+  capePhase: 0,
+};
+
+function initPos() { char.x = W / 2; char.y = H / 2; }
+initPos();
+window.addEventListener('resize', initPos);
+
+const FLEE_R   = 250;
+const MAX_SPD  = 12;
+const FRICTION = 0.79;
+
+function update() {
+  const dx   = char.x - mouse.x;
+  const dy   = char.y - mouse.y;
+  const dist = Math.hypot(dx, dy);
+
+  if (dist < FLEE_R && dist > 0.5) {
+    const t     = 1 - dist / FLEE_R;
+    const force = t * t * 22;
+    char.vx += (dx / dist) * force;
+    char.vy += (dy / dist) * force;
+    char.scared += (t - char.scared) * 0.13;
+  } else {
+    char.scared += (0 - char.scared) * 0.04;
+  }
+
+  char.vx *= FRICTION;
+  char.vy *= FRICTION;
+
+  char.speed = Math.hypot(char.vx, char.vy);
+  if (char.speed > MAX_SPD) {
+    char.vx = char.vx / char.speed * MAX_SPD;
+    char.vy = char.vy / char.speed * MAX_SPD;
+    char.speed = MAX_SPD;
+  }
+
+  char.x += char.vx;
+  char.y += char.vy;
+
+  if (char.x < 45)     { char.x = 45;     char.vx =  Math.abs(char.vx) * 0.55; }
+  if (char.x > W - 45) { char.x = W - 45; char.vx = -Math.abs(char.vx) * 0.55; }
+  if (char.y < 125)    { char.y = 125;    char.vy =  Math.abs(char.vy) * 0.55; }
+  if (char.y > H - 75) { char.y = H - 75; char.vy = -Math.abs(char.vy) * 0.55; }
+
+  char.walkPhase += char.speed * 0.065;
+  char.bodyAngle += ((char.vx / MAX_SPD) * 0.30 - char.bodyAngle) * 0.1;
+  char.capePhase += 0.06 + char.speed * 0.035;
+
+  const ed = Math.hypot(dx, dy) || 1;
+  char.lookX += ((-dx / ed) * 4.5 - char.lookX) * 0.08;
+  char.lookY += ((-dy / ed) * 4.5 - char.lookY) * 0.08;
+}
+
+/* palette */
+const SKIN       = '#DBA37A';
+const SKIN_SHADE = '#B47B54';
+const SKIN_DARK  = '#7C4A2C';
+const HAIR       = '#7A3416';
+const HAIR_HL    = '#A94E22';
+const HAIR_DARK  = '#4A1E08';
+const FUR        = '#2E1B0A';
+const FUR_HL     = '#553318';
+const CAPE       = '#5A1616';
+const CAPE_SHADE = '#360A0A';
+const LEATHER    = '#402410';
+const LEATHER_DK = '#1E0F06';
+const GOLD       = '#B8892B';
+const GOLD_HL    = '#E4C060';
+const STEEL      = '#DDE2EA';
+const STEEL_DARK = '#8B929D';
+const STEEL_HL   = '#F8FAFC';
+
+/* helpers */
+function rrect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y,     x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x,     y + h, r);
+  ctx.arcTo(x,     y + h, x,     y,     r);
+  ctx.arcTo(x,     y,     x + w, y,     r);
+  ctx.closePath();
+}
+
+function limb(a1, a2, l1, l2, c1, c2, endFn) {
+  ctx.save();
+  ctx.rotate(a1);
+  ctx.fillStyle = c1; rrect(-5, 0, 10, l1, 5); ctx.fill();
+  // muscle highlight
+  ctx.fillStyle = SKIN_SHADE;
+  rrect(2.5, 2, 2, l1 - 4, 1); ctx.fill();
+  ctx.translate(0, l1);
+  ctx.rotate(a2);
+  ctx.fillStyle = c2; rrect(-4, 0, 8, l2, 4); ctx.fill();
+  ctx.fillStyle = SKIN_SHADE;
+  rrect(2, 2, 1.5, l2 - 4, 0.7); ctx.fill();
+  ctx.translate(0, l2);
+  if (endFn) endFn();
+  ctx.restore();
+}
+
+function drawBoot() {
+  // shin wrap
+  ctx.fillStyle = LEATHER;
+  rrect(-6, -14, 12, 14, 2); ctx.fill();
+  ctx.strokeStyle = LEATHER_DK;
+  ctx.lineWidth = 0.8;
+  for (let y = -12; y < 0; y += 3) {
+    ctx.beginPath(); ctx.moveTo(-6, y); ctx.lineTo(6, y); ctx.stroke();
+  }
+  // boot
+  ctx.fillStyle = LEATHER_DK;
+  ctx.beginPath();
+  ctx.ellipse(1, 5, 13, 7, 0.12, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = LEATHER;
+  ctx.beginPath();
+  ctx.ellipse(1, 3, 13, 5, 0.12, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawBlockFist() {
+  // wrist wrap
+  ctx.fillStyle = LEATHER;
+  rrect(-6, -8, 12, 8, 2); ctx.fill();
+  ctx.strokeStyle = LEATHER_DK;
+  ctx.lineWidth = 0.7;
+  ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(6, -4); ctx.stroke();
+  // clenched fist
+  ctx.fillStyle = SKIN;
+  ctx.beginPath(); ctx.arc(0, 3, 7, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = SKIN_SHADE;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(0, 3, 7, 0, Math.PI * 2); ctx.stroke();
+  // knuckles
+  ctx.fillStyle = SKIN_SHADE;
+  [-4, -1.3, 1.3, 4].forEach(kx => {
+    ctx.beginPath(); ctx.arc(kx, 0, 1.4, 0, Math.PI * 2); ctx.fill();
+  });
+}
+
+function drawSwordHand(sc) {
+  // wrist wrap
+  ctx.fillStyle = LEATHER;
+  rrect(-6, -8, 12, 8, 2); ctx.fill();
+  ctx.strokeStyle = LEATHER_DK;
+  ctx.lineWidth = 0.7;
+  ctx.beginPath(); ctx.moveTo(-6, -4); ctx.lineTo(6, -4); ctx.stroke();
+  // gripping fist
+  ctx.fillStyle = SKIN;
+  ctx.beginPath(); ctx.arc(0, 3, 7, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = SKIN_SHADE;
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.arc(0, 3, 7, 0, Math.PI * 2); ctx.stroke();
+
+  // sword — blade always points up; small forward tilt when defending
+  ctx.save();
+  const swordRot = -Math.PI + sc * 0.25;
+  ctx.rotate(swordRot);
+
+  // grip (through fist)
+  ctx.fillStyle = LEATHER_DK;
+  rrect(-3, -10, 6, 12, 1.5); ctx.fill();
+  ctx.strokeStyle = '#1A0C04';
+  ctx.lineWidth = 0.7;
+  for (let i = -8; i < 0; i += 2.4) {
+    ctx.beginPath(); ctx.moveTo(-3, i); ctx.lineTo(3, i); ctx.stroke();
+  }
+  // pommel (top of grip when sword-down)
+  ctx.fillStyle = GOLD;
+  ctx.beginPath(); ctx.arc(0, -13, 4, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = GOLD_HL;
+  ctx.beginPath(); ctx.arc(-1, -14, 1.5, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#5C3A0F';
+  ctx.lineWidth = 0.8;
+  ctx.beginPath(); ctx.arc(0, -13, 4, 0, Math.PI * 2); ctx.stroke();
+
+  // crossguard
+  ctx.fillStyle = GOLD;
+  rrect(-16, 2, 32, 6, 2); ctx.fill();
+  ctx.strokeStyle = '#5C3A0F';
+  ctx.lineWidth = 0.8;
+  ctx.strokeRect(-16, 2, 32, 6);
+  // guard tip ornaments
+  ctx.fillStyle = GOLD_HL;
+  ctx.beginPath(); ctx.arc(-16, 5, 2.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(16, 5, 2.5, 0, Math.PI * 2); ctx.fill();
+
+  // blade (extends +y from crossguard, so downward at rest, upward when flipped)
+  const bladeLen = 100;
+  const bladeTop = 8;
+  // base blade fill
+  ctx.fillStyle = STEEL;
+  ctx.beginPath();
+  ctx.moveTo(-6, bladeTop);
+  ctx.lineTo(6, bladeTop);
+  ctx.lineTo(5.5, bladeTop + bladeLen - 20);
+  ctx.lineTo(0, bladeTop + bladeLen);
+  ctx.lineTo(-5.5, bladeTop + bladeLen - 20);
+  ctx.closePath();
+  ctx.fill();
+  // right-edge shadow
+  ctx.fillStyle = STEEL_DARK;
+  ctx.beginPath();
+  ctx.moveTo(1, bladeTop);
+  ctx.lineTo(6, bladeTop);
+  ctx.lineTo(5.5, bladeTop + bladeLen - 20);
+  ctx.lineTo(0, bladeTop + bladeLen);
+  ctx.closePath();
+  ctx.fill();
+  // fuller (central groove)
+  ctx.strokeStyle = STEEL_HL;
+  ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  ctx.moveTo(0, bladeTop + 3);
+  ctx.lineTo(0, bladeTop + bladeLen - 14);
+  ctx.stroke();
+  // outline
+  ctx.strokeStyle = '#3A424E';
+  ctx.lineWidth = 0.9;
+  ctx.beginPath();
+  ctx.moveTo(-6, bladeTop);
+  ctx.lineTo(6, bladeTop);
+  ctx.lineTo(5.5, bladeTop + bladeLen - 20);
+  ctx.lineTo(0, bladeTop + bladeLen);
+  ctx.lineTo(-5.5, bladeTop + bladeLen - 20);
+  ctx.closePath();
+  ctx.stroke();
+  // gleam when defending
+  if (sc > 0.5) {
+    const g = (sc - 0.5) / 0.5;
+    ctx.fillStyle = `rgba(255,255,255,${g * 0.65})`;
+    ctx.beginPath();
+    ctx.ellipse(-2, bladeTop + 20, 1.6, 8, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+/* main draw */
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  const sc  = char.scared;
+  const sp  = Math.min(char.speed / MAX_SPD, 1);
+  const wp  = char.walkPhase;
+
+  const legSwing  = Math.sin(wp) * 35 * sp * D;
+  const kneeBend  = (Math.abs(Math.sin(wp)) * 20 + 5) * sp * D;
+  const armSwing  = -Math.sin(wp) * 40 * sp * D;
+  const armLift   = sc * 68 * D;
+  const armFlail  = Math.sin(wp * 2.2) * sc * 22 * D;
+  const bob       = Math.abs(Math.sin(wp * 2)) * 5 * sp;
+
+  ctx.save();
+  ctx.translate(char.x, char.y + bob);
+  ctx.rotate(char.bodyAngle);
+
+  /* ground shadow */
+  ctx.save();
+  ctx.translate(0, 60); ctx.scale(1, 0.22);
+  ctx.fillStyle = `rgba(0,0,0,${0.45 - sc * 0.1})`;
+  ctx.beginPath(); ctx.ellipse(0, 0, 38 + sp * 8, 15, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+
+  /* cape (behind everything) */
+  ctx.save();
+  ctx.translate(0, -60);
+  const capeFlare = 0.4 + sc * 0.7 + sp * 0.6;
+  const flap = Math.sin(char.capePhase) * (0.15 + sp * 0.35 + sc * 0.15);
+  ctx.fillStyle = CAPE_SHADE;
+  ctx.beginPath();
+  ctx.moveTo(-14, 0);
+  ctx.quadraticCurveTo(-24 - capeFlare * 8, 35 + flap * 12, -20 - capeFlare * 14, 72 + flap * 18);
+  ctx.lineTo(-6, 78 + flap * 10);
+  ctx.lineTo(0, 70);
+  ctx.lineTo(6, 78 - flap * 10);
+  ctx.lineTo(20 + capeFlare * 14, 72 - flap * 18);
+  ctx.quadraticCurveTo(24 + capeFlare * 8, 35 - flap * 12, 14, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = CAPE;
+  ctx.beginPath();
+  ctx.moveTo(-10, 0);
+  ctx.quadraticCurveTo(-17 - capeFlare * 5, 28 + flap * 6, -14 - capeFlare * 7, 60 + flap * 12);
+  ctx.lineTo(14 + capeFlare * 7, 60 - flap * 12);
+  ctx.quadraticCurveTo(17 + capeFlare * 5, 28 - flap * 6, 10, 0);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = GOLD;
+  ctx.beginPath(); ctx.arc(-11, 1, 3.2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(11, 1, 3.2, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+
+  /* legs */
+  ctx.save(); ctx.translate(-11, 0);
+  limb(legSwing,  kneeBend, 35, 28, SKIN, SKIN, drawBoot);
+  ctx.restore();
+  ctx.save(); ctx.translate(11, 0);
+  limb(-legSwing, kneeBend, 35, 28, SKIN, SKIN, drawBoot);
+  ctx.restore();
+
+  /* fur loincloth (over top of legs) */
+  ctx.save();
+  ctx.fillStyle = FUR;
+  ctx.beginPath();
+  ctx.moveTo(-22, -6);
+  ctx.lineTo(-24, 22);
+  ctx.lineTo(-17, 20);
+  ctx.lineTo(-12, 27);
+  ctx.lineTo(-6, 21);
+  ctx.lineTo(0, 29);
+  ctx.lineTo(6, 21);
+  ctx.lineTo(12, 27);
+  ctx.lineTo(17, 20);
+  ctx.lineTo(24, 22);
+  ctx.lineTo(22, -6);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = FUR_HL;
+  ctx.lineWidth = 1.2;
+  for (let i = -20; i <= 20; i += 3) {
+    ctx.beginPath();
+    ctx.moveTo(i, -2);
+    ctx.lineTo(i + ((i * 7) % 3 - 1) * 0.6, 14 + ((i * 5) % 6));
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  /* left arm — behind torso (block arm) */
+  ctx.save(); ctx.translate(-19, -46);
+  limb(armSwing  - armLift + armFlail - 0.28,  0.32 + sc * 0.88,
+       26, 22, SKIN, SKIN, drawBlockFist);
+  ctx.restore();
+
+  /* torso — bare, muscled */
+  ctx.save();
+  // base
+  ctx.fillStyle = SKIN;
+  rrect(-21, -60, 42, 60, 11); ctx.fill();
+  // outer shading (lats)
+  ctx.fillStyle = SKIN_SHADE;
+  ctx.beginPath();
+  ctx.moveTo(-21, -50);
+  ctx.quadraticCurveTo(-26, -18, -19, 2);
+  ctx.lineTo(-14, 2);
+  ctx.quadraticCurveTo(-17, -20, -15, -50);
+  ctx.closePath();
+  ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(21, -50);
+  ctx.quadraticCurveTo(26, -18, 19, 2);
+  ctx.lineTo(14, 2);
+  ctx.quadraticCurveTo(17, -20, 15, -50);
+  ctx.closePath();
+  ctx.fill();
+  // pecs
+  ctx.fillStyle = SKIN;
+  ctx.beginPath(); ctx.ellipse(-10, -46, 11, 8, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(10, -46, 11, 8, 0, 0, Math.PI * 2); ctx.fill();
+  // pec undershadow
+  ctx.strokeStyle = SKIN_SHADE;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath(); ctx.arc(-10, -40, 11, 0.1, Math.PI - 0.1); ctx.stroke();
+  ctx.beginPath(); ctx.arc(10, -40, 11, 0.1, Math.PI - 0.1); ctx.stroke();
+  // sternum
+  ctx.beginPath(); ctx.moveTo(0, -52); ctx.lineTo(0, -36); ctx.stroke();
+  // nipples
+  ctx.fillStyle = SKIN_DARK;
+  ctx.beginPath(); ctx.arc(-10, -43, 1.5, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(10, -43, 1.5, 0, Math.PI * 2); ctx.fill();
+  // abs
+  ctx.strokeStyle = SKIN_SHADE;
+  ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(0, -34); ctx.lineTo(0, -12); ctx.stroke();
+  [-26, -18, -8].forEach(y => {
+    ctx.beginPath(); ctx.moveTo(-10, y); ctx.lineTo(10, y); ctx.stroke();
+  });
+  // deltoids at shoulders
+  ctx.fillStyle = SKIN_SHADE;
+  ctx.beginPath(); ctx.ellipse(-19, -55, 6, 4, -0.4, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(19, -55, 6, 4, 0.4, 0, Math.PI * 2); ctx.fill();
+  // chest hair (deterministic strokes)
+  ctx.strokeStyle = HAIR_DARK;
+  ctx.lineWidth = 0.7;
+  const chestHairs = [
+    [-7,-48],[7,-48],[-3,-42],[3,-42],[-8,-32],[8,-32],
+    [-4,-24],[4,-24],[0,-18],[-6,-12],[6,-12],[0,-30],[-2,-8],[2,-8]
+  ];
+  chestHairs.forEach(([hx, hy]) => {
+    ctx.beginPath();
+    ctx.moveTo(hx, hy);
+    ctx.lineTo(hx + 0.4, hy + 3.2);
+    ctx.stroke();
+  });
+  // scar on chest
+  ctx.strokeStyle = '#8A4028';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(-14, -40); ctx.lineTo(-6, -18);
+  ctx.stroke();
+  ctx.restore();
+
+  /* belt */
+  ctx.fillStyle = LEATHER;
+  rrect(-23, -10, 46, 10, 3); ctx.fill();
+  ctx.strokeStyle = LEATHER_DK;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(-23, -10, 46, 10);
+  ctx.fillStyle = GOLD;
+  rrect(-8, -13, 16, 15, 2); ctx.fill();
+  ctx.strokeStyle = '#5C3A0F';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(-8, -13, 16, 15);
+  ctx.fillStyle = '#5C3A0F';
+  ctx.beginPath(); ctx.arc(0, -5.5, 2.4, 0, Math.PI * 2); ctx.fill();
+
+  /* head */
+  ctx.save();
+  ctx.translate(0, -70);
+
+  // neck
+  ctx.fillStyle = SKIN;
+  rrect(-7, -10, 14, 16, 3); ctx.fill();
+  ctx.fillStyle = SKIN_SHADE;
+  ctx.fillRect(-7, -3, 14, 3);
+
+  const headTilt = -char.bodyAngle * 0.5 + Math.sin(wp) * sp * 0.07;
+  ctx.rotate(headTilt);
+
+  // long mane (behind head)
+  ctx.fillStyle = HAIR_DARK;
+  ctx.beginPath();
+  ctx.moveTo(-30, -30);
+  ctx.quadraticCurveTo(-44, -8, -38, 26);
+  ctx.quadraticCurveTo(-26, 36, -14, 26);
+  ctx.lineTo(14, 26);
+  ctx.quadraticCurveTo(26, 36, 38, 26);
+  ctx.quadraticCurveTo(44, -8, 30, -30);
+  ctx.quadraticCurveTo(0, -52, -30, -30);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = HAIR;
+  ctx.beginPath();
+  ctx.moveTo(-26, -30);
+  ctx.quadraticCurveTo(-38, -6, -32, 22);
+  ctx.quadraticCurveTo(-22, 30, -12, 22);
+  ctx.lineTo(12, 22);
+  ctx.quadraticCurveTo(22, 30, 32, 22);
+  ctx.quadraticCurveTo(38, -6, 26, -30);
+  ctx.quadraticCurveTo(0, -48, -26, -30);
+  ctx.closePath();
+  ctx.fill();
+  // mane strands
+  ctx.strokeStyle = HAIR_HL;
+  ctx.lineWidth = 1.5;
+  [-27, -20, -12, 12, 20, 27].forEach(hx => {
+    ctx.beginPath();
+    ctx.moveTo(hx, -34 + Math.abs(hx) * 0.2);
+    ctx.quadraticCurveTo(hx * 1.1, -8, hx * 1.05, 22);
+    ctx.stroke();
+  });
+
+  // face
+  ctx.fillStyle = SKIN;
+  ctx.beginPath(); ctx.ellipse(0, -14, 23, 27, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = SKIN_SHADE; ctx.lineWidth = 1.2; ctx.stroke();
+
+  // hidden ears
+  ctx.fillStyle = SKIN_SHADE;
+  ctx.beginPath(); ctx.ellipse(-23, -14, 4, 7, -0.2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(23, -14, 4, 7, 0.2, 0, Math.PI * 2); ctx.fill();
+
+  // front fringe
+  ctx.fillStyle = HAIR;
+  ctx.beginPath();
+  ctx.moveTo(-23, -34);
+  ctx.quadraticCurveTo(-14, -44, -4, -36);
+  ctx.quadraticCurveTo(0, -42, 5, -34);
+  ctx.quadraticCurveTo(14, -44, 23, -34);
+  ctx.quadraticCurveTo(16, -24, 8, -28);
+  ctx.quadraticCurveTo(0, -32, -8, -28);
+  ctx.quadraticCurveTo(-16, -24, -23, -34);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = HAIR_HL;
+  ctx.lineWidth = 1.2;
+  [-14, -6, 4, 12].forEach(hx => {
+    ctx.beginPath();
+    ctx.moveTo(hx, -34);
+    ctx.lineTo(hx + 1, -22);
+    ctx.stroke();
+  });
+
+  /* eyes — narrow when angry */
+  const eyeH = Math.max(3, 8 - sc * 4);
+  const eyeW = 8;
+  const eyeY = -18;
+
+  ctx.fillStyle = '#F5EEE4';
+  ctx.beginPath(); ctx.ellipse(-9, eyeY, eyeW, eyeH, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(9, eyeY, eyeW, eyeH, 0, 0, Math.PI * 2); ctx.fill();
+
+  // bloodshot when angry
+  if (sc > 0.4) {
+    const b = (sc - 0.4) / 0.6;
+    ctx.strokeStyle = `rgba(190, 30, 20, ${b * 0.55})`;
+    ctx.lineWidth = 0.5;
+    ctx.beginPath(); ctx.moveTo(-14, eyeY - 1); ctx.lineTo(-4, eyeY + 1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-13, eyeY + 2); ctx.lineTo(-6, eyeY - 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(4, eyeY + 1); ctx.lineTo(14, eyeY - 1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(6, eyeY - 2); ctx.lineTo(13, eyeY + 2); ctx.stroke();
+  }
+
+  const irisR = eyeH * 0.78;
+  ctx.fillStyle = '#2F5218';
+  ctx.beginPath(); ctx.ellipse(-9 + char.lookX, eyeY + char.lookY * 0.4, irisR, irisR, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(9 + char.lookX, eyeY + char.lookY * 0.4, irisR, irisR, 0, 0, Math.PI * 2); ctx.fill();
+
+  const pupR = irisR * 0.55;
+  ctx.fillStyle = '#080808';
+  ctx.beginPath(); ctx.ellipse(-9 + char.lookX, eyeY + char.lookY * 0.4, pupR, pupR, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(9 + char.lookX, eyeY + char.lookY * 0.4, pupR, pupR, 0, 0, Math.PI * 2); ctx.fill();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.beginPath(); ctx.arc(-9 + char.lookX + 1.5, eyeY + char.lookY * 0.4 - 1.5, 1.4, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.arc(9 + char.lookX + 1.5, eyeY + char.lookY * 0.4 - 1.5, 1.4, 0, Math.PI * 2); ctx.fill();
+
+  // heavy upper lid
+  ctx.strokeStyle = '#1A0A02';
+  ctx.lineWidth = 1.3 + sc * 1.6;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-17, eyeY - eyeH * (0.5 + sc * 0.4));
+  ctx.quadraticCurveTo(-9, eyeY - eyeH - sc * 1.8, -1, eyeY - eyeH * (0.3 + sc * 0.6));
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(1, eyeY - eyeH * (0.3 + sc * 0.6));
+  ctx.quadraticCurveTo(9, eyeY - eyeH - sc * 1.8, 17, eyeY - eyeH * (0.5 + sc * 0.4));
+  ctx.stroke();
+
+  /* eyebrows — thick, angry V-shape when scared */
+  const browY     = eyeY - eyeH - 5;
+  const angerDrop = sc * 9;
+  const outerLift = sc * 3;
+  ctx.strokeStyle = HAIR_DARK;
+  ctx.lineWidth = 5;
+  ctx.lineCap    = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-19, browY - outerLift);
+  ctx.quadraticCurveTo(-11, browY + angerDrop * 0.35, -2, browY + angerDrop);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(2, browY + angerDrop);
+  ctx.quadraticCurveTo(11, browY + angerDrop * 0.35, 19, browY - outerLift);
+  ctx.stroke();
+  // highlight streak
+  ctx.strokeStyle = HAIR_HL;
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(-16, browY - outerLift + 0.5);
+  ctx.quadraticCurveTo(-9, browY + angerDrop * 0.35 - 1, -4, browY + angerDrop - 1);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(4, browY + angerDrop - 1);
+  ctx.quadraticCurveTo(9, browY + angerDrop * 0.35 - 1, 16, browY - outerLift + 0.5);
+  ctx.stroke();
+
+  /* forehead anger wrinkles */
+  if (sc > 0.35) {
+    const wa = (sc - 0.35) / 0.65;
+    ctx.strokeStyle = `rgba(70, 30, 15, ${0.55 * wa})`;
+    ctx.lineWidth = 0.9;
+    ctx.beginPath();
+    ctx.moveTo(-8, browY - 5 - outerLift);
+    ctx.quadraticCurveTo(0, browY - 8 - outerLift - wa * 2, 8, browY - 5 - outerLift);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-3, browY - 10 - outerLift);
+    ctx.quadraticCurveTo(0, browY - 12 - outerLift - wa * 2, 3, browY - 10 - outerLift);
+    ctx.stroke();
+    // vertical furrow between brows
+    ctx.beginPath();
+    ctx.moveTo(-1.5, browY + angerDrop - 4);
+    ctx.lineTo(-1.5, browY + angerDrop - 12);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(1.5, browY + angerDrop - 4);
+    ctx.lineTo(1.5, browY + angerDrop - 12);
+    ctx.stroke();
+  }
+
+  /* nose — broader, flared nostrils when angry */
+  ctx.fillStyle = SKIN_SHADE;
+  ctx.beginPath();
+  ctx.moveTo(-3.5, -12);
+  ctx.quadraticCurveTo(-5, -4, -4, -1);
+  ctx.lineTo(4, -1);
+  ctx.quadraticCurveTo(5, -4, 3.5, -12);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = SKIN;
+  ctx.beginPath();
+  ctx.moveTo(-2, -12);
+  ctx.quadraticCurveTo(-3, -4, -2.5, -1);
+  ctx.lineTo(2.5, -1);
+  ctx.quadraticCurveTo(3, -4, 2, -12);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = '#2A1408';
+  const nW = 1.3 + sc * 0.9;
+  const nH = 1 + sc * 0.4;
+  ctx.beginPath(); ctx.ellipse(-2.4, -2, nW, nH, -0.15, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(2.4, -2, nW, nH, 0.15, 0, Math.PI * 2); ctx.fill();
+
+  /* beard — full and thick */
+  ctx.fillStyle = HAIR_DARK;
+  ctx.beginPath();
+  ctx.moveTo(-22, -8);
+  ctx.quadraticCurveTo(-27, 6, -20, 22);
+  ctx.quadraticCurveTo(-12, 30, 0, 28);
+  ctx.quadraticCurveTo(12, 30, 20, 22);
+  ctx.quadraticCurveTo(27, 6, 22, -8);
+  ctx.quadraticCurveTo(15, -1, 10, 1);
+  ctx.quadraticCurveTo(0, 5, -10, 1);
+  ctx.quadraticCurveTo(-15, -1, -22, -8);
+  ctx.closePath();
+  ctx.fill();
+  ctx.fillStyle = HAIR;
+  ctx.beginPath();
+  ctx.moveTo(-20, -6);
+  ctx.quadraticCurveTo(-24, 4, -18, 18);
+  ctx.quadraticCurveTo(-10, 25, 0, 24);
+  ctx.quadraticCurveTo(10, 25, 18, 18);
+  ctx.quadraticCurveTo(24, 4, 20, -6);
+  ctx.quadraticCurveTo(14, 0, 10, 2);
+  ctx.quadraticCurveTo(0, 6, -10, 2);
+  ctx.quadraticCurveTo(-14, 0, -20, -6);
+  ctx.closePath();
+  ctx.fill();
+  // beard strands
+  ctx.strokeStyle = HAIR_HL;
+  ctx.lineWidth = 1;
+  [-15, -9, -4, 4, 9, 15].forEach(bx => {
+    ctx.beginPath();
+    ctx.moveTo(bx, 2);
+    ctx.quadraticCurveTo(bx * 1.05, 14, bx * 0.7, 24 + Math.abs(bx) * 0.15);
+    ctx.stroke();
+  });
+  // mustache
+  ctx.fillStyle = HAIR_DARK;
+  ctx.beginPath();
+  ctx.moveTo(-13, -2);
+  ctx.quadraticCurveTo(-7, 3, 0, 1);
+  ctx.quadraticCurveTo(7, 3, 13, -2);
+  ctx.quadraticCurveTo(7, 5, 0, 4);
+  ctx.quadraticCurveTo(-7, 5, -13, -2);
+  ctx.closePath();
+  ctx.fill();
+
+  /* mouth — clenched teeth (raiva) or hidden line (calm) */
+  if (sc > 0.15) {
+    const t = (sc - 0.15) / 0.85;
+    const mouthY = 7;
+    const mW = 9 + t * 2;
+    const mH = 3.5 + t * 3.5;
+    // dark interior
+    ctx.fillStyle = '#100600';
+    rrect(-mW, mouthY - mH / 2, mW * 2, mH, 1); ctx.fill();
+    // teeth rows
+    ctx.fillStyle = '#F0EAD8';
+    const teethTop = mouthY - mH / 2 + 0.4;
+    const teethBot = mouthY + mH / 2 - 0.4;
+    const midY = mouthY;
+    ctx.fillRect(-mW + 0.6, teethTop, mW * 2 - 1.2, mH / 2 - 0.4);
+    ctx.fillRect(-mW + 0.6, midY,     mW * 2 - 1.2, mH / 2 - 0.4);
+    // teeth divisions
+    ctx.strokeStyle = '#A89880';
+    ctx.lineWidth = 0.6;
+    for (let tx = -mW + 2; tx < mW; tx += 2.2) {
+      ctx.beginPath(); ctx.moveTo(tx, teethTop); ctx.lineTo(tx, teethBot); ctx.stroke();
+    }
+    // middle join between clenched rows
+    ctx.strokeStyle = '#4A2A16';
+    ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.moveTo(-mW + 0.6, midY); ctx.lineTo(mW - 0.6, midY); ctx.stroke();
+    // lip outline
+    ctx.strokeStyle = '#2A1408';
+    ctx.lineWidth = 1.3;
+    rrect(-mW, mouthY - mH / 2, mW * 2, mH, 1); ctx.stroke();
+    // snarl corners lifted
+    ctx.strokeStyle = '#2A1408';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(-mW - 1, mouthY);
+    ctx.lineTo(-mW - 3, mouthY - 2 - t * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(mW + 1, mouthY);
+    ctx.lineTo(mW + 3, mouthY - 2 - t * 2);
+    ctx.stroke();
+  } else {
+    ctx.strokeStyle = '#2A1408';
+    ctx.lineWidth = 1.4;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.moveTo(-6, 6);
+    ctx.quadraticCurveTo(0, 7.5, 6, 6);
+    ctx.stroke();
+  }
+
+  /* anger flush */
+  if (sc > 0.25) {
+    ctx.fillStyle = `rgba(180, 40, 30, ${(sc - 0.25) * 0.32})`;
+    ctx.beginPath(); ctx.ellipse(-14, -8, 8, 6, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(14, -8, 8, 6, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(0, browY - 5, 13, 5, 0, 0, Math.PI * 2); ctx.fill();
+  }
+
+  /* battle scar on cheek */
+  ctx.strokeStyle = '#8A4028';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(15, -22);
+  ctx.lineTo(18, -8);
+  ctx.stroke();
+
+  ctx.restore(); // head
+
+  /* right arm — drawn last so sword stays on top of head */
+  ctx.save(); ctx.translate(19, -46);
+  limb(-armSwing + armLift + armFlail + 0.28, -(0.32 + sc * 0.88),
+       26, 22, SKIN, SKIN, () => drawSwordHand(sc));
+  ctx.restore();
+
+  ctx.restore(); // character root
+}
+
+/* render loop */
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>

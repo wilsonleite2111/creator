@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Recurse \"E:\\\\www\\\\creator4\\\\resources\\\\js\\\\Pages\" -Directory)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "Bash(npm run *)",
+      "Bash(php artisan *)",
+      "Read(//e/Users/Wilson/.claude/**)",
+      "Read(//c/Users/Wilson/.claude/**)",
+      "Bash(cp E:/www/avatar/index.html E:/www/forjaDeAlmas/public/avatars/humano/)",
+      "Bash(cp E:/www/avatar/colinasverdes.jpg E:/www/forjaDeAlmas/public/avatars/humano/)",
+      "Bash(cp E:/www/avatar/assets/barbarian.fbx E:/www/avatar/assets/anim-idle.fbx E:/www/avatar/assets/anim-slash.fbx E:/www/avatar/assets/grass.jpg E:/www/forjaDeAlmas/public/avatars/humano/assets/)"
+    ]
+  }
+}

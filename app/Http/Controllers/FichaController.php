@@ -11,6 +11,7 @@ use App\Models\Pericia;
 use App\Models\Arma;
 use App\Models\Armadura;
 use App\Models\Equipamento;
+use App\Models\Talento;
 use Illuminate\Http\Request;
 
 use Inertia\Inertia;
@@ -33,21 +34,23 @@ class FichaController extends Controller
      */
     public function create()
     {
-        $racas = Raca::where('versao', '3.5')->get();
-        $classes = Classe::where('versao', '3.5')->get();
+        $racas = Raca::where('versao', '3.5')->orderBy('nome')->get();
+        $classes = Classe::where('versao', '3.5')->orderBy('nome')->get();
         $tendencias = Tendencia::all();
         $divindades = Divindade::where('versao', '3.5')->get();
-        $pericias = Pericia::where('versao', '3.5')->get();
+        $pericias = Pericia::where('versao', '3.5')->orderBy('nome')->get();
+        $talentos = Talento::where('versao', '3.5')->orderBy('tipo')->orderBy('nome')->get();
         $armas = Arma::all();
         $armaduras = Armadura::all();
         $equipamentos = Equipamento::all();
-        
+
         return inertia('Fichas/Create', [
             'racas' => $racas,
             'classes' => $classes,
             'tendencias' => $tendencias,
             'divindades' => $divindades,
             'pericias' => $pericias,
+            'talentos' => $talentos,
             'armas' => $armas,
             'armaduras' => $armaduras,
             'equipamentos' => $equipamentos,
@@ -113,6 +116,8 @@ class FichaController extends Controller
             'dinheiro_pp' => 'required|integer',
             'dinheiro_pl' => 'required|integer',
             'xp_proximo' => 'required|integer',
+            'talentos' => 'nullable|array',
+            'talentos.*' => 'integer|exists:talentos,id',
         ]);
 
         $validated['pv_atual'] = $validated['pv_max'];
@@ -125,6 +130,10 @@ class FichaController extends Controller
                     $ficha->pericias()->attach($pericia_id, ['graduacoes' => $graduacoes]);
                 }
             }
+        }
+
+        if ($request->filled('talentos')) {
+            $ficha->talentos()->sync($request->input('talentos', []));
         }
 
         if ($request->has('armas')) {

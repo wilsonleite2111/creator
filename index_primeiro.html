@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Boneco Fujão</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    body {
+      background: radial-gradient(ellipse at 50% 60%, #1c2a3a 0%, #080d15 100%);
+      cursor: crosshair;
+    }
+    canvas { display: block; }
+    #hint {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(200, 220, 255, 0.22);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 13px;
+      pointer-events: none;
+      letter-spacing: 1.2px;
+      user-select: none;
+      white-space: nowrap;
+    }
+    #cursor-glow {
+      position: fixed;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,60,60,0.55) 0%, transparent 70%);
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.2s;
+    }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="hint">Mova o mouse para assustar o boneco!</div>
+<div id="cursor-glow"></div>
+<script>
+'use strict';
+
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+const glow   = document.getElementById('cursor-glow');
+const D      = Math.PI / 180;
+
+let W, H;
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+/* ── input ──────────────────────────────────────────── */
+const mouse = { x: -9999, y: -9999 };
+window.addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+  glow.style.left = e.clientX + 'px';
+  glow.style.top  = e.clientY + 'px';
+});
+window.addEventListener('mouseleave', () => {
+  mouse.x = -9999;
+  mouse.y = -9999;
+});
+
+/* ── character state ─────────────────────────────────── */
+const char = {
+  x: 0, y: 0,
+  vx: 0, vy: 0,
+  bodyAngle: 0,
+  walkPhase: 0,
+  scared: 0,
+  speed: 0,
+  lookX: 0, lookY: 0,
+};
+
+function initPos() { char.x = W / 2; char.y = H / 2; }
+initPos();
+window.addEventListener('resize', initPos);
+
+const FLEE_R   = 250;
+const MAX_SPD  = 12;
+const FRICTION = 0.79;
+
+/* ── physics ─────────────────────────────────────────── */
+function update() {
+  const dx   = char.x - mouse.x;
+  const dy   = char.y - mouse.y;
+  const dist = Math.hypot(dx, dy);
+
+  if (dist < FLEE_R && dist > 0.5) {
+    const t     = 1 - dist / FLEE_R;
+    const force = t * t * 22;
+    char.vx += (dx / dist) * force;
+    char.vy += (dy / dist) * force;
+    char.scared += (t - char.scared) * 0.13;
+  } else {
+    char.scared += (0 - char.scared) * 0.04;
+  }
+
+  char.vx *= FRICTION;
+  char.vy *= FRICTION;
+
+  char.speed = Math.hypot(char.vx, char.vy);
+  if (char.speed > MAX_SPD) {
+    char.vx = char.vx / char.speed * MAX_SPD;
+    char.vy = char.vy / char.speed * MAX_SPD;
+    char.speed = MAX_SPD;
+  }
+
+  char.x += char.vx;
+  char.y += char.vy;
+
+  // wall bounce (asymmetric: head is taller than feet)
+  if (char.x < 45)     { char.x = 45;     char.vx =  Math.abs(char.vx) * 0.55; }
+  if (char.x > W - 45) { char.x = W - 45; char.vx = -Math.abs(char.vx) * 0.55; }
+  if (char.y < 125)    { char.y = 125;     char.vy =  Math.abs(char.vy) * 0.55; }
+  if (char.y > H - 75) { char.y = H - 75; char.vy = -Math.abs(char.vy) * 0.55; }
+
+  char.walkPhase += char.speed * 0.065;
+  char.bodyAngle += ((char.vx / MAX_SPD) * 0.30 - char.bodyAngle) * 0.1;
+
+  // eyes look toward mouse
+  const ed = Math.hypot(dx, dy) || 1;
+  char.lookX += ((-dx / ed) * 4.5 - char.lookX) * 0.08;
+  char.lookY += ((-dy / ed) * 4.5 - char.lookY) * 0.08;
+}
+
+/* ── draw helpers ─────────────────────────────────────── */
+function rrect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y,     x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x,     y + h, r);
+  ctx.arcTo(x,     y + h, x,     y,     r);
+  ctx.arcTo(x,     y,     x + w, y,     r);
+  ctx.closePath();
+}
+
+// 2-bone limb: a1 = bone-1 angle from straight-down, a2 = bone-2 relative to bone-1
+function limb(a1, a2, l1, l2, c1, c2, endFn) {
+  ctx.save();
+  ctx.rotate(a1);
+  ctx.fillStyle = c1; rrect(-4, 0, 8, l1, 4); ctx.fill();
+  ctx.translate(0, l1);
+  ctx.rotate(a2);
+  ctx.fillStyle = c2; rrect(-3.5, 0, 7, l2, 3.5); ctx.fill();
+  ctx.translate(0, l2);
+  if (endFn) endFn();
+  ctx.restore();
+}
+
+function drawFoot() {
+  ctx.fillStyle = '#111';
+  ctx.beginPath();
+  ctx.ellipse(1, 4, 11, 5, 0.12, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawHand(sc) {
+  ctx.fillStyle = '#F5C5A3';
+  ctx.beginPath(); ctx.arc(0, 3, 5.5, 0, Math.PI * 2); ctx.fill();
+  if (sc > 0.35) {
+    const s = (sc - 0.35) / 0.65;
+    ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#F5C5A3';
+    for (let i = -1; i <= 1; i++) {
+      ctx.beginPath();
+      ctx.moveTo(i * 3.5, 0);
+      ctx.lineTo(i * 6 * (1 + s * 0.3), -8 * s);
+      ctx.stroke();
+    }
+  }
+}
+
+/* ── main draw ────────────────────────────────────────── */
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+
+  const sc  = char.scared;
+  const sp  = Math.min(char.speed / MAX_SPD, 1);
+  const wp  = char.walkPhase;
+
+  const legSwing  = Math.sin(wp) * 35 * sp * D;
+  const kneeBend  = (Math.abs(Math.sin(wp)) * 20 + 5) * sp * D;
+  const armSwing  = -Math.sin(wp) * 40 * sp * D;
+  const armLift   = sc * 68 * D;
+  const armFlail  = Math.sin(wp * 2.2) * sc * 22 * D;
+  const bob       = Math.abs(Math.sin(wp * 2)) * 5 * sp;
+
+  ctx.save();
+  ctx.translate(char.x, char.y + bob);
+  ctx.rotate(char.bodyAngle);
+
+  /* ground shadow */
+  ctx.save();
+  ctx.translate(0, 60); ctx.scale(1, 0.22);
+  ctx.fillStyle = `rgba(0,0,0,${0.35 - sc * 0.1})`;
+  ctx.beginPath(); ctx.ellipse(0, 0, 32 + sp * 8, 12, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.restore();
+
+  /* ── legs ─────────────────────────────────────────── */
+  ctx.save(); ctx.translate(-11, 0);
+  limb(legSwing,  kneeBend, 35, 28, '#2C3E50', '#34495E', drawFoot);
+  ctx.restore();
+  ctx.save(); ctx.translate(11, 0);
+  limb(-legSwing, kneeBend, 35, 28, '#2C3E50', '#34495E', drawFoot);
+  ctx.restore();
+
+  /* ── arms (before torso = visually behind) ─────────── */
+  ctx.save(); ctx.translate(-19, -44);
+  limb(armSwing  - armLift + armFlail - 0.28,  0.32 + sc * 0.88,
+       25, 20, '#4A90D9', '#F5C5A3', () => drawHand(sc));
+  ctx.restore();
+
+  ctx.save(); ctx.translate(19, -44);
+  limb(-armSwing + armLift + armFlail + 0.28, -(0.32 + sc * 0.88),
+       25, 20, '#4A90D9', '#F5C5A3', () => drawHand(sc));
+  ctx.restore();
+
+  /* ── torso ────────────────────────────────────────── */
+  ctx.fillStyle = '#4A90D9';
+  rrect(-18, -56, 36, 56, 9); ctx.fill();
+  ctx.strokeStyle = '#3A7BC8'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  // shirt buttons
+  ctx.fillStyle = 'white';
+  [0, 1, 2].forEach(i => {
+    ctx.beginPath(); ctx.arc(0, -44 + i * 12, 2.2, 0, Math.PI * 2); ctx.fill();
+  });
+
+  // belt
+  ctx.fillStyle = '#5D3A1A'; rrect(-18, -8, 36, 7, 2); ctx.fill();
+  ctx.fillStyle = '#C8A010'; rrect(-5, -10, 10, 11, 2); ctx.fill();
+
+  /* ── head ─────────────────────────────────────────── */
+  ctx.save();
+  ctx.translate(0, -68);
+
+  // neck
+  ctx.fillStyle = '#F5C5A3'; rrect(-5, -9, 10, 15, 3); ctx.fill();
+
+  const headTilt = -char.bodyAngle * 0.5 + Math.sin(wp) * sp * 0.07;
+  ctx.rotate(headTilt);
+
+  // head (big, munchkin-style)
+  ctx.fillStyle = '#F5C5A3';
+  ctx.beginPath(); ctx.ellipse(0, -17, 25, 29, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.strokeStyle = '#E8A882'; ctx.lineWidth = 1.5; ctx.stroke();
+
+  // ears
+  ctx.fillStyle = '#EDAC80';
+  ctx.beginPath(); ctx.ellipse(-25, -15, 6.5, 9.5, -0.2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(25, -15, 6.5, 9.5, 0.2, 0, Math.PI * 2); ctx.fill();
+  // inner ear
+  ctx.fillStyle = '#D8907A';
+  ctx.beginPath(); ctx.ellipse(-25, -15, 3, 5.5, -0.2, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(25, -15, 3, 5.5, 0.2, 0, Math.PI * 2); ctx.fill();
+
+  // hair (messy munchkin)
+  ctx.fillStyle = '#5C2E00';
+  ctx.beginPath(); ctx.ellipse(0, -42, 23, 11, 0, 0, Math.PI * 2); ctx.fill();
+  [-16, -8, 0, 8, 16].forEach(tx => {
+    ctx.beginPath();
+    ctx.ellipse(tx, -50 + Math.abs(tx) * 0.12, 5.5, 9, tx * 0.03, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // ── eyes ──
+  const eyeR = 8 + sc * 5.5;
+  const eyeY = -21;
+
+  ctx.fillStyle = 'white';
+  ctx.beginPath(); ctx.ellipse(-10, eyeY, eyeR, eyeR, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(10, eyeY, eyeR, eyeR, 0, 0, Math.PI * 2); ctx.fill();
+
+  // iris
+  const irisR = eyeR * 0.60;
+  ctx.fillStyle = '#4a7a20';
+  ctx.beginPath(); ctx.ellipse(-10 + char.lookX, eyeY + char.lookY, irisR, irisR, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(10 + char.lookX, eyeY + char.lookY, irisR, irisR, 0, 0, Math.PI * 2); ctx.fill();
+
+  // pupil
+  const pupR = irisR * 0.56;
+  ctx.fillStyle = '#111';
+  ctx.beginPath(); ctx.ellipse(-10 + char.lookX, eyeY + char.lookY, pupR, pupR, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(10 + char.lookX, eyeY + char.lookY, pupR, pupR, 0, 0, Math.PI * 2); ctx.fill();
+
+  // eye shine
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.beginPath(); ctx.ellipse(-10 + char.lookX + 2.5, eyeY + char.lookY - 2.5, 2.8, 2.8, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(10 + char.lookX + 2.5, eyeY + char.lookY - 2.5, 2.8, 2.8, 0, 0, Math.PI * 2); ctx.fill();
+
+  // eye outline
+  ctx.strokeStyle = '#bbb'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.ellipse(-10, eyeY, eyeR, eyeR, 0, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.ellipse(10, eyeY, eyeR, eyeR, 0, 0, Math.PI * 2); ctx.stroke();
+
+  // ── eyebrows ──
+  const browY     = eyeY - eyeR - 3 - sc * 8;
+  const innerLift = sc * 5;
+  ctx.strokeStyle = '#5C2E00'; ctx.lineWidth = 2.8; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(-17, browY + 2 + innerLift);
+  ctx.quadraticCurveTo(-10, browY, -3, browY - innerLift * 0.6);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(3, browY - innerLift * 0.6);
+  ctx.quadraticCurveTo(10, browY, 17, browY + 2 + innerLift);
+  ctx.stroke();
+
+  // ── nose ──
+  ctx.fillStyle = '#E9A07A';
+  ctx.beginPath(); ctx.arc(0, -10, 4.5, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#C87050';
+  ctx.beginPath(); ctx.ellipse(-2, -8, 1.5, 1, 0, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(2, -8, 1.5, 1, 0, 0, Math.PI * 2); ctx.fill();
+
+  // ── blush ──
+  if (sc > 0.2) {
+    ctx.fillStyle = `rgba(255,100,100,${(sc - 0.2) * 0.3})`;
+    ctx.beginPath(); ctx.ellipse(-16, -8, 8, 5.5, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(16, -8, 8, 5.5, 0, 0, Math.PI * 2); ctx.fill();
+  }
+
+  // ── mouth ──
+  const mouthY = -1;
+  if (sc > 0.25) {
+    const open = (sc - 0.25) / 0.75;
+    const mW   = 5 + open * 7;
+    const mH   = 3 + open * 8;
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(0, mouthY + 2, mW, mH, 0, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.fillStyle = '#1A0500';
+    ctx.fillRect(-mW - 1, mouthY + 2 - mH - 1, (mW + 1) * 2, (mH + 1) * 2);
+    ctx.fillStyle = '#E8E8E8';
+    ctx.fillRect(-mW, mouthY + 2 - mH, mW * 2, mH * 0.5);
+    ctx.restore();
+  } else {
+    ctx.strokeStyle = '#8B4513'; ctx.lineWidth = 2.2; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(0, mouthY - 3, 7, 0.28, Math.PI - 0.28); ctx.stroke();
+  }
+
+  // ── sweat drops ──
+  if (sc > 0.55) {
+    const alpha = (sc - 0.55) / 0.45;
+    const t     = performance.now() * 0.001;
+    ctx.fillStyle = `rgba(110, 175, 255, ${alpha * 0.78})`;
+    [[-24, -32, 0], [24, -32, 0.6]].forEach(([bx, by, offset]) => {
+      const fall = ((t * 0.45 + offset) % 1) * 20;
+      ctx.save();
+      ctx.translate(bx, by + fall);
+      ctx.beginPath(); ctx.arc(0, 0, 3.8, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(-2.8, 3); ctx.lineTo(2.8, 3); ctx.lineTo(0, 10);
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+    });
+  }
+
+  ctx.restore(); // head
+  ctx.restore(); // character root
+}
+
+/* ── render loop ─────────────────────────────────────── */
+function loop() {
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>

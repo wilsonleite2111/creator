@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bárbaro Nórdico</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #0a0603; }
+    body {
+      cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='56' viewBox='0 0 24 56'><defs><linearGradient id='b' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='%237a8593'/><stop offset='0.5' stop-color='%23fbfdff'/><stop offset='1' stop-color='%23c9d1dd'/></linearGradient></defs><polygon points='12,2 15,10 15,33 12,36 9,33 9,10' fill='url(%23b)' stroke='%23222a34' stroke-width='1'/><line x1='12' y1='10' x2='12' y2='32' stroke='%23ffffff' stroke-width='0.9' opacity='0.75'/><rect x='2' y='34' width='20' height='4.5' rx='1.2' fill='%23b8892b' stroke='%235c3a0f' stroke-width='0.9'/><circle cx='2.5' cy='36.2' r='2' fill='%23e4c060'/><circle cx='21.5' cy='36.2' r='2' fill='%23e4c060'/><rect x='9.5' y='38.5' width='5' height='11' fill='%234a2810' stroke='%23241206' stroke-width='0.6'/><path d='M9.5 40 L14.5 40 M9.5 43 L14.5 43 M9.5 46 L14.5 46' stroke='%231a0c04' stroke-width='0.5'/><circle cx='12' cy='52' r='3.2' fill='%23d1a13a' stroke='%23705010' stroke-width='0.9'/><circle cx='11' cy='51' r='1' fill='%23fce38a'/></svg>") 12 2, crosshair;
+    }
+    canvas { display: block; cursor: inherit; }
+    #loading, #hint, #status {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      color: rgba(255,220,180,0.6);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      letter-spacing: 1px;
+      user-select: none;
+      pointer-events: none;
+    }
+    #loading {
+      top: 50%; transform: translate(-50%, -50%);
+      font-size: 20px;
+      background: rgba(0,0,0,0.55);
+      padding: 16px 28px;
+      border-radius: 8px;
+    }
+    #hint { bottom: 22px; font-size: 13px; opacity: 0.4; white-space: nowrap; }
+    #status { top: 12px; font-size: 12px; opacity: 0.5; }
+    .err { color: #ff9080 !important; }
+  </style>
+</head>
+<body>
+<div id="loading">Carregando bárbaro...</div>
+<div id="hint">Aproxime a espada — o guerreiro observa o cursor</div>
+<div id="status"></div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+
+/* ───────────── DOM ───────────── */
+const loadingEl = document.getElementById('loading');
+const statusEl  = document.getElementById('status');
+function fatal(msg) { loadingEl.className = 'err'; loadingEl.textContent = msg; }
+
+/* ─────── Proximity (only) ─────── */
+let W = window.innerWidth, H = window.innerHeight;
+const FLEE_R = 250;
+const SCALE  = 0.008; // pixel → world meter
+
+const char  = { scared: 0 };
+const mouse = { x: -9999, y: -9999 };
+
+function updateProximity() {
+  const dx = W / 2 - mouse.x;
+  const dy = H / 2 - mouse.y;
+  const dist = Math.hypot(dx, dy);
+  if (mouse.x > -9000 && dist < FLEE_R) {
+    const t = 1 - dist / FLEE_R;
+    char.scared += (t - char.scared) * 0.13;
+  } else {
+    char.scared += (0 - char.scared) * 0.04;
+  }
+}
+
+/* ───────────── Scene ───────────── */
+const scene = new THREE.Scene();
+window.__scene = scene;
+window.__THREE = THREE;
+window.__char = char;
+scene.background = new THREE.Color(0x151a22);
+scene.fog        = new THREE.Fog(0x2a3a25, 12, 34);
+
+const bgTex = new THREE.TextureLoader().load('colinasverdes.jpg', () => {
+  bgTex.colorSpace = THREE.SRGBColorSpace;
+  scene.background = bgTex;
+});
+
+const camera = new THREE.PerspectiveCamera(45, W / H, 0.1, 100);
+camera.position.set(0, 2.4, 4.6);
+camera.lookAt(0, 1.3, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(W, H);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type    = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace  = THREE.SRGBColorSpace;
+renderer.toneMapping       = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.5;
+document.body.appendChild(renderer.domElement);
+
+/* ───────────── Lights ───────────── */
+scene.add(new THREE.HemisphereLight(0xbccde0, 0x3a2818, 1.4));
+scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+
+const sun = new THREE.DirectionalLight(0xfff2d0, 3.4);
+sun.position.set(3, 8, 6);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.camera.left   = -6;
+sun.shadow.camera.right  =  6;
+sun.shadow.camera.top    =  6;
+sun.shadow.camera.bottom = -6;
+sun.shadow.camera.near   = 0.5;
+sun.shadow.camera.far    = 25;
+sun.shadow.bias          = -0.0005;
+scene.add(sun);
+
+const rim = new THREE.DirectionalLight(0x6a80a8, 1.6);
+rim.position.set(-5, 4, -3);
+scene.add(rim);
+
+const front = new THREE.DirectionalLight(0xffe8c8, 1.2);
+front.position.set(0, 2.5, 6);
+scene.add(front);
+
+/* ───────────── Ground ───────────── */
+const groundTex = new THREE.TextureLoader().load('assets/grass.jpg');
+groundTex.wrapS = groundTex.wrapT = THREE.RepeatWrapping;
+groundTex.repeat.set(24, 24);
+groundTex.colorSpace = THREE.SRGBColorSpace;
+groundTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(60, 60),
+  new THREE.MeshStandardMaterial({ map: groundTex, roughness: 0.95 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+/* ─────── Mouse → world plane ─────── */
+const raycaster  = new THREE.Raycaster();
+const ndc        = new THREE.Vector2();
+// Cursor plane at eye-level (~1.55m). Projecting on y=0 caused atan2 to jump
+// ±π when the cursor crossed the character's midline, snapping the head to
+// the yaw clamp. On y=1.55 the intersection stays in front of the head.
+const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), -1.55);
+const mouseWorld = new THREE.Vector3();
+
+const worldToPhysX = (wx) => wx / SCALE + W / 2;
+const worldToPhysZ = (wz) => wz / SCALE + H / 2;
+
+window.addEventListener('mousemove', (e) => {
+  ndc.x =  (e.clientX / W) * 2 - 1;
+  ndc.y = -(e.clientY / H) * 2 + 1;
+  raycaster.setFromCamera(ndc, camera);
+  if (raycaster.ray.intersectPlane(groundPlane, mouseWorld)) {
+    mouse.x = worldToPhysX(mouseWorld.x);
+    mouse.y = worldToPhysZ(mouseWorld.z);
+  }
+});
+window.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
+
+/* ─────── Character + animations ─────── */
+const loader = new FBXLoader();
+let character   = null;
+let mixer       = null;
+let idleAction  = null;
+let slashAction = null;
+let ready       = false;
+let headBone    = null;
+let footBone    = null;
+let slashActive = false;
+
+const CHAR_SCALE = 0.011;
+const FORWARD_OFFSET = 0; // this character already faces the camera at rest
+
+function stripHipTranslation(clip) {
+  clip.tracks = clip.tracks.filter(t => !/(mixamorig)?hips\.position/i.test(t.name));
+  return clip;
+}
+
+loader.load('assets/barbarian.fbx',
+  (fbx) => {
+    character = fbx;
+    character.scale.setScalar(CHAR_SCALE);
+    const boneNames = [];
+    character.traverse((c) => {
+      if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; }
+      if (c.isBone) {
+        boneNames.push(c.name);
+        // head bone — the actual head, not "HeadTop_End"
+        if (!headBone && /head/i.test(c.name) && !/end$/i.test(c.name) && !/top/i.test(c.name)) {
+          headBone = c;
+        }
+        // foot bone — prefer toe (touches ground) over ankle
+        if (!footBone && /lefttoebase$/i.test(c.name)) footBone = c;
+      }
+    });
+    // Fallback: any foot bone
+    if (!footBone) {
+      character.traverse((c) => {
+        if (!footBone && c.isBone && /leftfoot$/i.test(c.name)) footBone = c;
+      });
+    }
+    console.log(`bones (${boneNames.length}):`, boneNames.slice(0, 60).join(', '));
+    console.log('head bone:', headBone ? headBone.name : 'NOT FOUND');
+    console.log('foot bone:', footBone ? footBone.name : 'NOT FOUND');
+
+    character.rotation.y = FORWARD_OFFSET;
+    scene.add(character);
+    mixer = new THREE.AnimationMixer(character);
+    mixer.addEventListener('finished', (e) => {
+      if (e.action !== slashAction || !idleAction) return;
+      // Three.js disables an action once its cross-fade interpolant reaches 0
+      // (see AnimationAction._updateWeight). Without re-enabling, the fade back
+      // is a no-op and the character freezes on slash's clamped last frame.
+      idleAction.enabled = true;
+      idleAction.play();
+      slashAction.crossFadeTo(idleAction, 0.2, false);
+      slashActive = false;
+      statusEl.textContent = 'proximidade: ' + char.scared.toFixed(2);
+    });
+    window.__character = character;
+    window.__mixer = mixer;
+    window.__headBone = headBone;
+
+    let loaded = 0;
+    const total = 2;
+    const onOneLoaded = () => {
+      loaded++;
+      if (loaded < total) return;
+      // Sample the animated idle pose and anchor via foot bone (more reliable
+      // than a full-scene bbox, which can be off due to helper geometry).
+      mixer.update(0.001);
+      character.updateMatrixWorld(true);
+      let offset = 0;
+      if (footBone) {
+        const p = new THREE.Vector3();
+        footBone.getWorldPosition(p);
+        offset = -p.y;
+        console.log('foot world Y:', p.y.toFixed(4), '→ offset:', offset.toFixed(4));
+      } else {
+        const bbox = new THREE.Box3().setFromObject(character);
+        offset = -bbox.min.y;
+        console.log('bbox min Y:', bbox.min.y.toFixed(4), '→ offset:', offset.toFixed(4));
+      }
+      character.position.y = offset;
+      ready = true;
+      loadingEl.style.display = 'none';
+      statusEl.textContent = 'proximidade: 0.00';
+    };
+
+    loader.load('assets/anim-idle.fbx',
+      (anim) => {
+        const clip = anim.animations[0];
+        if (!clip) { fatal('anim-idle sem clip'); return; }
+        stripHipTranslation(clip);
+        idleAction = mixer.clipAction(clip);
+        idleAction.setLoop(THREE.LoopRepeat, Infinity);
+        idleAction.play();
+        onOneLoaded();
+      },
+      undefined,
+      (err) => { console.error(err); fatal('Falha ao carregar anim-idle.fbx'); }
+    );
+
+    loader.load('assets/anim-slash.fbx',
+      (anim) => {
+        const clip = anim.animations[0];
+        if (!clip) { console.warn('anim-slash sem clip'); onOneLoaded(); return; }
+        stripHipTranslation(clip);
+        slashAction = mixer.clipAction(clip);
+        slashAction.setLoop(THREE.LoopOnce, 1);
+        slashAction.clampWhenFinished = true;
+        // Do NOT play or setEffectiveWeight here. Playing a LoopOnce action
+        // at weight 0 causes it to silently finish once during init, firing
+        // the 'finished' event and leaving the action in a stale state.
+        onOneLoaded();
+      },
+      undefined,
+      (err) => { console.warn('slash load falhou:', err); onOneLoaded(); }
+    );
+  },
+  (p) => {
+    if (p.total) loadingEl.textContent = `Carregando personagem... ${Math.round(p.loaded / p.total * 100)}%`;
+  },
+  (err) => {
+    console.error(err);
+    fatal('Falha ao carregar assets/barbarian.fbx — veja o README.');
+  }
+);
+
+/* ─────── Slash on click ─────── */
+window.addEventListener('mousedown', (e) => {
+  if (!ready || !slashAction || e.button !== 0 || slashActive) return;
+  slashActive = true;
+  slashAction.reset();
+  // Skip the first ~80ms of the clip — some Mixamo clips include a bind/T-pose
+  // frame at the start that flashes through before the motion begins.
+  slashAction.time = 0.08;
+  slashAction.play();
+  if (idleAction) {
+    idleAction.crossFadeTo(slashAction, 0.12, false);
+  }
+  statusEl.textContent = 'estado: slash';
+});
+
+/* ─────── Head tracking (overrides idle head rotation) ─────── */
+// Live-tune from devtools: window.__headTune.yawSign = -1  etc.
+const headTune = {
+  yawSign:   1,      // flip to -1 if head turns the wrong horizontal direction
+  pitchSign: 1,      // flip to -1 if head tilts the wrong vertical direction
+  swapYawPitch: false, // set true if head rotates around the wrong axis
+  yawMax:    1.3,    // ~74°
+  pitchMax:  0.5,    // ~29°
+  lerp:      0.12,
+  targetY:   1.55,   // world Y of "eye-level" cursor target
+  axisOrder: 'YXZ',
+};
+window.__headTune = headTune;
+
+const _headWorld = new THREE.Vector3();
+const _targetEuler = new THREE.Euler();
+const _targetQuat = new THREE.Quaternion();
+
+function updateHeadTracking() {
+  if (!headBone || !ready || mouse.x < -9000) return;
+
+  headBone.getWorldPosition(_headWorld);
+  const targetX = (mouse.x - W / 2) * SCALE;
+  const targetZ = (mouse.y - H / 2) * SCALE;
+  const dx = targetX - _headWorld.x;
+  const dz = targetZ - _headWorld.z;
+  const dy = headTune.targetY - _headWorld.y;
+
+  const yawWorld   = Math.atan2(dx, dz);
+  const distFlat   = Math.hypot(dx, dz);
+  const pitchWorld = Math.atan2(dy, distFlat);
+
+  // Compensate for the body's fixed yaw so head-local yaw is 0 when the cursor
+  // is straight in front of the character.
+  let yaw = yawWorld - FORWARD_OFFSET;
+  while (yaw >  Math.PI) yaw -= Math.PI * 2;
+  while (yaw < -Math.PI) yaw += Math.PI * 2;
+
+  yaw   = Math.max(-headTune.yawMax,   Math.min(headTune.yawMax,   yaw   * headTune.yawSign));
+  let pitch = Math.max(-headTune.pitchMax, Math.min(headTune.pitchMax, pitchWorld * headTune.pitchSign));
+
+  if (headTune.swapYawPitch) {
+    _targetEuler.set(yaw, pitch, 0, headTune.axisOrder);
+  } else {
+    _targetEuler.set(pitch, yaw, 0, headTune.axisOrder);
+  }
+  _targetQuat.setFromEuler(_targetEuler);
+  headBone.quaternion.slerp(_targetQuat, headTune.lerp);
+}
+
+/* ─────── Main loop ─────── */
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+
+  updateProximity();
+
+  if (ready) {
+    mixer.update(dt);
+    updateHeadTracking(); // MUST run after mixer.update so it overrides idle head anim
+    if (!slashActive) statusEl.textContent = `proximidade: ${char.scared.toFixed(2)}`;
+  }
+  renderer.render(scene, camera);
+}
+animate();
+
+/* ─────── Resize ─────── */
+window.addEventListener('resize', () => {
+  W = window.innerWidth;
+  H = window.innerHeight;
+  camera.aspect = W / H;
+  camera.updateProjectionMatrix();
+  renderer.setSize(W, H);
+});
+</script>
+</body>
+</html>

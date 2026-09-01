@@ -3,6 +3,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/avatars/*/assets/*.fbx
+/public/avatars/*/*.jpg
 /storage/*.key
 /vendor
 .env

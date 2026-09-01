@@ -110,4 +110,10 @@ class Ficha extends Model
                     ->withPivot(['quantidade'])
                     ->withTimestamps();
     }
+
+    public function talentos()
+    {
+        return $this->belongsToMany(Talento::class, 'ficha_talento')
+                    ->withTimestamps();
+    }
 }
