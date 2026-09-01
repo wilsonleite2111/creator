@@ -1,0 +1,287 @@
+- generic [ref=f4e3]:
+  - text:  
+  - complementary [ref=f4e4]:
+    - link " CREATOR RPG" [ref=f4e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f4e7]: 
+      - generic [ref=f4e8]: CREATOR RPG
+    - navigation [ref=f4e9]:
+      - generic [ref=f4e10]:
+        - paragraph [ref=f4e11]: Essenciais
+        - link " Salão dos Heróis" [ref=f4e14] [cursor=pointer]:
+          - /url: http://localhost:8001/fichas
+          - generic [ref=f4e15]: 
+          - generic [ref=f4e16]: Salão dos Heróis
+      - generic [ref=f4e17]:
+        - paragraph [ref=f4e18]: Criação
+        - link " Classes" [ref=f4e21] [cursor=pointer]:
+          - /url: http://localhost:8001/classes
+          - generic [ref=f4e22]: 
+          - generic [ref=f4e23]: Classes
+        - link " Raças" [ref=f4e24] [cursor=pointer]:
+          - /url: http://localhost:8001/racas
+          - generic [ref=f4e25]: 
+          - generic [ref=f4e26]: Raças
+        - link " Perícias" [ref=f4e27] [cursor=pointer]:
+          - /url: http://localhost:8001/pericias
+          - generic [ref=f4e28]: 
+          - generic [ref=f4e29]: Perícias
+        - link " Talentos" [ref=f4e30] [cursor=pointer]:
+          - /url: http://localhost:8001/talentos
+          - generic [ref=f4e31]: 
+          - generic [ref=f4e32]: Talentos
+        - link " Divindades" [ref=f4e33] [cursor=pointer]:
+          - /url: http://localhost:8001/divindades
+          - generic [ref=f4e34]: 
+          - generic [ref=f4e35]: Divindades
+        - link " Tendências" [ref=f4e36] [cursor=pointer]:
+          - /url: http://localhost:8001/tendencias
+          - generic [ref=f4e37]: 
+          - generic [ref=f4e38]: Tendências
+      - generic [ref=f4e39]:
+        - paragraph [ref=f4e40]: Equipamento & Grimório
+        - link " Magias" [ref=f4e41] [cursor=pointer]:
+          - /url: http://localhost:8001/magias
+          - generic [ref=f4e42]: 
+          - generic [ref=f4e43]: Magias
+        - link "Armas" [ref=f4e44] [cursor=pointer]:
+          - /url: http://localhost:8001/armas
+        - link " Armaduras" [ref=f4e46] [cursor=pointer]:
+          - /url: http://localhost:8001/armaduras
+          - generic [ref=f4e47]: 
+          - generic [ref=f4e48]: Armaduras
+        - link " Itens" [ref=f4e49] [cursor=pointer]:
+          - /url: http://localhost:8001/equipamentos
+          - generic [ref=f4e50]: 
+          - generic [ref=f4e51]: Itens
+    - paragraph [ref=f4e53]: © 2026 RPG Forger
+  - main [ref=f4e54]:
+    - generic [ref=f4e55]:
+      - generic [ref=f4e56]:
+        - heading "Classes de Prestígio" [level=1] [ref=f4e57]
+        - paragraph [ref=f4e58]: "\"O caminho de cada herói é forjado por suas escolhas e treinamento.\""
+      - generic [ref=f4e60]:
+        - generic: 
+        - textbox "Buscar classe pelo nome..." [ref=f4e61]
+      - generic [ref=f4e62]:
+        - generic [ref=f4e63]:
+          - generic [ref=f4e64]:
+            - heading "Bárbaro" [level=2] [ref=f4e65]
+            - generic [ref=f4e66]: D12
+          - generic [ref=f4e67]:
+            - paragraph [ref=f4e68]: Guerreiro feroz de terras selvagens que canaliza a fúria de batalha como arma. Possui resistência a encantamentos, movimento rápido e fúria por um número limitado de rodadas por dia.
+            - generic [ref=f4e69]:
+              - generic [ref=f4e70]: "BBA: boa"
+              - generic [ref=f4e72]:
+                - generic [ref=f4e73]: 
+                - generic [ref=f4e74]: "Perícia: 4 + INT"
+            - generic [ref=f4e75]:
+              - link "Estudar Classe " [ref=f4e76] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/1
+                - text: Estudar Classe
+                - generic [ref=f4e77]: 
+              - link "" [ref=f4e78] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/1/edit
+        - generic [ref=f4e80]:
+          - generic [ref=f4e81]:
+            - heading "Bardo" [level=2] [ref=f4e82]
+            - generic [ref=f4e83]: D6
+          - generic [ref=f4e84]:
+            - paragraph [ref=f4e85]: Artista versátil cuja música e magia inspiram aliados e desconcertam inimigos. Lança magias arcanas espontaneamente, possui habilidades de representação e é o mestre dos conhecimentos variados.
+            - generic [ref=f4e86]:
+              - generic [ref=f4e87]: "BBA: media"
+              - generic [ref=f4e89]:
+                - generic [ref=f4e90]: 
+                - generic [ref=f4e91]: "Perícia: 6 + INT"
+            - generic [ref=f4e92]:
+              - link "Estudar Classe " [ref=f4e93] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/2
+                - text: Estudar Classe
+                - generic [ref=f4e94]: 
+              - link "" [ref=f4e95] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/2/edit
+        - generic [ref=f4e97]:
+          - generic [ref=f4e98]:
+            - heading "Clérigo" [level=2] [ref=f4e99]
+            - generic [ref=f4e100]: D8
+          - generic [ref=f4e101]:
+            - paragraph [ref=f4e102]: Sacerdote guerreiro que invoca magias divinas concedidas por seu deus. Pode curar aliados, expulsar mortos-vivos e escolhe dois domínios divinos que concedem poderes especiais e magias extras.
+            - generic [ref=f4e103]:
+              - generic [ref=f4e104]: "BBA: media"
+              - generic [ref=f4e106]:
+                - generic [ref=f4e107]: 
+                - generic [ref=f4e108]: "Perícia: 2 + INT"
+            - generic [ref=f4e109]:
+              - link "Estudar Classe " [ref=f4e110] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/3
+                - text: Estudar Classe
+                - generic [ref=f4e111]: 
+              - link "" [ref=f4e112] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/3/edit
+        - generic [ref=f4e114]:
+          - generic [ref=f4e115]:
+            - heading "Druida" [level=2] [ref=f4e116]
+            - generic [ref=f4e117]: D8
+          - generic [ref=f4e118]:
+            - paragraph [ref=f4e119]: Guardião da natureza que invoca os poderes dos elementos e das criaturas selvagens. Pode transformar-se em animais (Forma Selvagem), possui um companheiro animal poderoso e acessa magias divinas da natureza.
+            - generic [ref=f4e120]:
+              - generic [ref=f4e121]: "BBA: media"
+              - generic [ref=f4e123]:
+                - generic [ref=f4e124]: 
+                - generic [ref=f4e125]: "Perícia: 4 + INT"
+            - generic [ref=f4e126]:
+              - link "Estudar Classe " [ref=f4e127] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/4
+                - text: Estudar Classe
+                - generic [ref=f4e128]: 
+              - link "" [ref=f4e129] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/4/edit
+        - generic [ref=f4e131]:
+          - generic [ref=f4e132]:
+            - heading "Feiticeiro" [level=2] [ref=f4e133]
+            - generic [ref=f4e134]: D4
+          - generic [ref=f4e135]:
+            - paragraph [ref=f4e136]: Conjurador arcano com magia inata que flui do sangue ou da alma. Lança magias espontaneamente sem necessidade de grimório, possui poucos feitiços conhecidos mas pode lançá-los com muito mais frequência que o mago.
+            - generic [ref=f4e137]:
+              - generic [ref=f4e138]: "BBA: ruim"
+              - generic [ref=f4e140]:
+                - generic [ref=f4e141]: 
+                - generic [ref=f4e142]: "Perícia: 2 + INT"
+            - generic [ref=f4e143]:
+              - link "Estudar Classe " [ref=f4e144] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/5
+                - text: Estudar Classe
+                - generic [ref=f4e145]: 
+              - link "" [ref=f4e146] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/5/edit
+        - generic [ref=f4e148]:
+          - generic [ref=f4e149]:
+            - heading "Guerreiro" [level=2] [ref=f4e150]
+            - generic [ref=f4e151]: D10
+          - generic [ref=f4e152]:
+            - paragraph [ref=f4e153]: Mestre absoluto do combate marcial, treinado em todas as armas e armaduras. Ganha um talento de bônus a cada dois níveis (incluindo talentos exclusivos de guerreiro), tornando-se uma máquina de guerra imbatível.
+            - generic [ref=f4e154]:
+              - generic [ref=f4e155]: "BBA: boa"
+              - generic [ref=f4e157]:
+                - generic [ref=f4e158]: 
+                - generic [ref=f4e159]: "Perícia: 2 + INT"
+            - generic [ref=f4e160]:
+              - link "Estudar Classe " [ref=f4e161] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/6
+                - text: Estudar Classe
+                - generic [ref=f4e162]: 
+              - link "" [ref=f4e163] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/6/edit
+        - generic [ref=f4e165]:
+          - generic [ref=f4e166]:
+            - heading "Ladino" [level=2] [ref=f4e167]
+            - generic [ref=f4e168]: D6
+          - generic [ref=f4e169]:
+            - paragraph [ref=f4e170]: Especialista em furtividade, armadilhas e ataques pela retaguarda. O Ataque Furtivo causa dano extra a alvos desprevenidos, e a lista extensa de perícias de classe o torna o mais versátil em situações não-combativas.
+            - generic [ref=f4e171]:
+              - generic [ref=f4e172]: "BBA: media"
+              - generic [ref=f4e174]:
+                - generic [ref=f4e175]: 
+                - generic [ref=f4e176]: "Perícia: 8 + INT"
+            - generic [ref=f4e177]:
+              - link "Estudar Classe " [ref=f4e178] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/7
+                - text: Estudar Classe
+                - generic [ref=f4e179]: 
+              - link "" [ref=f4e180] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/7/edit
+        - generic [ref=f4e182]:
+          - generic [ref=f4e183]:
+            - heading "Mago" [level=2] [ref=f4e184]
+            - generic [ref=f4e185]: D4
+          - generic [ref=f4e186]:
+            - paragraph [ref=f4e187]: Conjurador arcano estudioso que registra magias em um grimório. Prepara magias diariamente e pode especializar-se em uma escola mágica, ganhando espaços de magia extras. Possui o maior leque de magias arcanas disponíveis.
+            - generic [ref=f4e188]:
+              - generic [ref=f4e189]: "BBA: ruim"
+              - generic [ref=f4e191]:
+                - generic [ref=f4e192]: 
+                - generic [ref=f4e193]: "Perícia: 2 + INT"
+            - generic [ref=f4e194]:
+              - link "Estudar Classe " [ref=f4e195] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/8
+                - text: Estudar Classe
+                - generic [ref=f4e196]: 
+              - link "" [ref=f4e197] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/8/edit
+        - generic [ref=f4e199]:
+          - generic [ref=f4e200]:
+            - heading "Monge" [level=2] [ref=f4e201]
+            - generic [ref=f4e202]: D8
+          - generic [ref=f4e203]:
+            - paragraph [ref=f4e204]: Artista marcial disciplinado que transcende os limites físicos pelo cultivo do ki. Luta sem armas com dano crescente, possui movimento aprimorado, queda suave, pureza do corpo e pode realizar proezas sobrenaturais.
+            - generic [ref=f4e205]:
+              - generic [ref=f4e206]: "BBA: media"
+              - generic [ref=f4e208]:
+                - generic [ref=f4e209]: 
+                - generic [ref=f4e210]: "Perícia: 4 + INT"
+            - generic [ref=f4e211]:
+              - link "Estudar Classe " [ref=f4e212] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/9
+                - text: Estudar Classe
+                - generic [ref=f4e213]: 
+              - link "" [ref=f4e214] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/9/edit
+        - generic [ref=f4e216]:
+          - generic [ref=f4e217]:
+            - heading "Paladino" [level=2] [ref=f4e218]
+            - generic [ref=f4e219]: D10
+          - generic [ref=f4e220]:
+            - paragraph [ref=f4e221]: Guerreiro sagrado dedicado a uma divindade bondosa. Detecta o mal, possui imunidade a doenças, lança algumas magias divinas, pode curar com imposição das mãos e comanda um corcel celestial. Deve ser sempre Leal e Bom.
+            - generic [ref=f4e222]:
+              - generic [ref=f4e223]: "BBA: boa"
+              - generic [ref=f4e225]:
+                - generic [ref=f4e226]: 
+                - generic [ref=f4e227]: "Perícia: 2 + INT"
+            - generic [ref=f4e228]:
+              - link "Estudar Classe " [ref=f4e229] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/10
+                - text: Estudar Classe
+                - generic [ref=f4e230]: 
+              - link "" [ref=f4e231] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/10/edit
+        - generic [ref=f4e233]:
+          - generic [ref=f4e234]:
+            - heading "Patrulheiro" [level=2] [ref=f4e235]
+            - generic [ref=f4e236]: D8
+          - generic [ref=f4e237]:
+            - paragraph [ref=f4e238]: Caçador e rastreador das terras selvagens especializado em um inimigo favorito. Pode lutar com duas armas ou com arco, possui um companheiro animal e acessa algumas magias divinas da natureza. Conhece seu ambiente como ninguém.
+            - generic [ref=f4e239]:
+              - generic [ref=f4e240]: "BBA: boa"
+              - generic [ref=f4e242]:
+                - generic [ref=f4e243]: 
+                - generic [ref=f4e244]: "Perícia: 6 + INT"
+            - generic [ref=f4e245]:
+              - link "Estudar Classe " [ref=f4e246] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/12
+                - text: Estudar Classe
+                - generic [ref=f4e247]: 
+              - link "" [ref=f4e248] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/12/edit
+        - generic [ref=f4e250]:
+          - generic [ref=f4e251]:
+            - heading "Ranger" [level=2] [ref=f4e252]
+            - generic [ref=f4e253]: D8
+          - generic [ref=f4e254]:
+            - paragraph [ref=f4e255]: Um caçador selvagem e rastreador, hábil no combate com duas armas ou arco e flecha.
+            - generic [ref=f4e256]:
+              - generic [ref=f4e257]: "BBA: boa"
+              - generic [ref=f4e259]:
+                - generic [ref=f4e260]: 
+                - generic [ref=f4e261]: "Perícia: 6 + INT"
+            - generic [ref=f4e262]:
+              - link "Estudar Classe " [ref=f4e263] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/11
+                - text: Estudar Classe
+                - generic [ref=f4e264]: 
+              - link "" [ref=f4e265] [cursor=pointer]:
+                - /url: http://localhost:8001/classes/11/edit
+        - link " Registrar Nova Classe" [ref=f4e267] [cursor=pointer]:
+          - /url: http://localhost:8001/classes/create
+          - generic [ref=f4e268]: 
+          - generic [ref=f4e269]: Registrar Nova Classe
+    - paragraph [ref=f4e272]: Forged in the fires of imagination. Creator RPG © 2026

@@ -1,0 +1,623 @@
+- generic [ref=f5e3]:
+  - text:  
+  - complementary [ref=f5e4]:
+    - link " CREATOR RPG" [ref=f5e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f5e7]: 
+      - generic [ref=f5e8]: CREATOR RPG
+    - navigation [ref=f5e9]:
+      - generic [ref=f5e10]:
+        - paragraph [ref=f5e11]: Essenciais
+        - link " Salão dos Heróis" [ref=f5e14] [cursor=pointer]:
+          - /url: http://localhost:8001/fichas
+          - generic [ref=f5e15]: 
+          - generic [ref=f5e16]: Salão dos Heróis
+      - generic [ref=f5e17]:
+        - paragraph [ref=f5e18]: Criação
+        - link " Classes" [ref=f5e21] [cursor=pointer]:
+          - /url: http://localhost:8001/classes
+          - generic [ref=f5e22]: 
+          - generic [ref=f5e23]: Classes
+        - link " Raças" [ref=f5e24] [cursor=pointer]:
+          - /url: http://localhost:8001/racas
+          - generic [ref=f5e25]: 
+          - generic [ref=f5e26]: Raças
+        - link " Perícias" [ref=f5e27] [cursor=pointer]:
+          - /url: http://localhost:8001/pericias
+          - generic [ref=f5e28]: 
+          - generic [ref=f5e29]: Perícias
+        - link " Talentos" [ref=f5e30] [cursor=pointer]:
+          - /url: http://localhost:8001/talentos
+          - generic [ref=f5e31]: 
+          - generic [ref=f5e32]: Talentos
+        - link " Divindades" [ref=f5e33] [cursor=pointer]:
+          - /url: http://localhost:8001/divindades
+          - generic [ref=f5e34]: 
+          - generic [ref=f5e35]: Divindades
+        - link " Tendências" [ref=f5e36] [cursor=pointer]:
+          - /url: http://localhost:8001/tendencias
+          - generic [ref=f5e37]: 
+          - generic [ref=f5e38]: Tendências
+      - generic [ref=f5e39]:
+        - paragraph [ref=f5e40]: Equipamento & Grimório
+        - link " Magias" [ref=f5e41] [cursor=pointer]:
+          - /url: http://localhost:8001/magias
+          - generic [ref=f5e42]: 
+          - generic [ref=f5e43]: Magias
+        - link "Armas" [ref=f5e44] [cursor=pointer]:
+          - /url: http://localhost:8001/armas
+        - link " Armaduras" [ref=f5e46] [cursor=pointer]:
+          - /url: http://localhost:8001/armaduras
+          - generic [ref=f5e47]: 
+          - generic [ref=f5e48]: Armaduras
+        - link " Itens" [ref=f5e49] [cursor=pointer]:
+          - /url: http://localhost:8001/equipamentos
+          - generic [ref=f5e50]: 
+          - generic [ref=f5e51]: Itens
+    - paragraph [ref=f5e53]: © 2026 RPG Forger
+  - main [ref=f5e54]:
+    - generic [ref=f5e55]:
+      - generic [ref=f5e56]:
+        - heading "Perícias" [level=1] [ref=f5e57]
+        - paragraph [ref=f5e58]: "\"Todo aventureiro aprimora suas habilidades ao longo de sua jornada.\""
+      - generic [ref=f5e60]:
+        - generic: 
+        - textbox "Buscar perícia pelo nome..." [ref=f5e61]
+      - generic [ref=f5e62]:
+        - generic [ref=f5e63]:
+          - generic [ref=f5e64]:
+            - heading "Abrir Fechaduras" [level=2] [ref=f5e65]
+            - generic [ref=f5e66]: DES
+          - generic [ref=f5e67]:
+            - paragraph [ref=f5e68]: Abre fechaduras mecânicas e dispositivos de tranca usando ferramentas de ladrão. Requer treinamento.
+            - generic [ref=f5e69]:
+              - link "Editar " [ref=f5e70] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/1/edit
+                - text: Editar
+                - generic [ref=f5e71]: 
+              - button "" [ref=f5e72] [cursor=pointer]
+        - generic [ref=f5e74]:
+          - generic [ref=f5e75]:
+            - heading "Acrobacia" [level=2] [ref=f5e76]
+            - generic [ref=f5e77]: DES
+          - generic [ref=f5e78]:
+            - paragraph [ref=f5e79]: Permite rolar, girar e realizar manobras acrobáticas para evitar ataques de oportunidade.
+            - generic [ref=f5e80]:
+              - link "Editar " [ref=f5e81] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/2/edit
+                - text: Editar
+                - generic [ref=f5e82]: 
+              - button "" [ref=f5e83] [cursor=pointer]
+        - generic [ref=f5e85]:
+          - generic [ref=f5e86]:
+            - heading "Adestrar Animais" [level=2] [ref=f5e87]
+            - generic [ref=f5e88]: CAR
+          - generic [ref=f5e89]:
+            - paragraph [ref=f5e90]: Treina animais para executar truques e comandos, acalma ou maneja feras selvagens. Requer treinamento.
+            - generic [ref=f5e91]:
+              - link "Editar " [ref=f5e92] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/3/edit
+                - text: Editar
+                - generic [ref=f5e93]: 
+              - button "" [ref=f5e94] [cursor=pointer]
+        - generic [ref=f5e96]:
+          - generic [ref=f5e97]:
+            - heading "Arte da Fuga" [level=2] [ref=f5e98]
+            - generic [ref=f5e99]: DES
+          - generic [ref=f5e100]:
+            - paragraph [ref=f5e101]: Escapa de agarramentos, amarras, algemas e outros confinamentos físicos. Requer treinamento.
+            - generic [ref=f5e102]:
+              - link "Editar " [ref=f5e103] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/4/edit
+                - text: Editar
+                - generic [ref=f5e104]: 
+              - button "" [ref=f5e105] [cursor=pointer]
+        - generic [ref=f5e107]:
+          - generic [ref=f5e108]:
+            - heading "Atuação" [level=2] [ref=f5e109]
+            - generic [ref=f5e110]: CAR
+          - generic [ref=f5e111]:
+            - paragraph [ref=f5e112]: Entretém plateias com música, dança, canto, teatro ou oratória. Base das habilidades de bardo.
+            - generic [ref=f5e113]:
+              - link "Editar " [ref=f5e114] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/5/edit
+                - text: Editar
+                - generic [ref=f5e115]: 
+              - button "" [ref=f5e116] [cursor=pointer]
+        - generic [ref=f5e118]:
+          - generic [ref=f5e119]:
+            - heading "Avaliação" [level=2] [ref=f5e120]
+            - generic [ref=f5e121]: INT
+          - generic [ref=f5e122]:
+            - paragraph [ref=f5e123]: Determina o valor de mercado de itens, gemas, obras de arte e equipamentos.
+            - generic [ref=f5e124]:
+              - link "Editar " [ref=f5e125] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/30/edit
+                - text: Editar
+                - generic [ref=f5e126]: 
+              - button "" [ref=f5e127] [cursor=pointer]
+        - generic [ref=f5e129]:
+          - generic [ref=f5e130]:
+            - heading "Blefar" [level=2] [ref=f5e131]
+            - generic [ref=f5e132]: CAR
+          - generic [ref=f5e133]:
+            - paragraph [ref=f5e134]: Convence outros de algo falso através de mentiras, enganos ou atuação. Opõe-se a Sentir Motivação.
+            - generic [ref=f5e135]:
+              - link "Editar " [ref=f5e136] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/31/edit
+                - text: Editar
+                - generic [ref=f5e137]: 
+              - button "" [ref=f5e138] [cursor=pointer]
+        - generic [ref=f5e140]:
+          - generic [ref=f5e141]:
+            - heading "Cavalgar" [level=2] [ref=f5e142]
+            - generic [ref=f5e143]: DES
+          - generic [ref=f5e144]:
+            - paragraph [ref=f5e145]: Monta e controla cavalos e outras montarias em terrenos difíceis e situações de combate.
+            - generic [ref=f5e146]:
+              - link "Editar " [ref=f5e147] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/6/edit
+                - text: Editar
+                - generic [ref=f5e148]: 
+              - button "" [ref=f5e149] [cursor=pointer]
+        - generic [ref=f5e151]:
+          - generic [ref=f5e152]:
+            - heading "Concentração" [level=2] [ref=f5e153]
+            - generic [ref=f5e154]: CON
+          - generic [ref=f5e155]:
+            - paragraph [ref=f5e156]: Mantém o foco ao lançar magias enquanto sofre dano, é empurrado ou perturbado.
+            - generic [ref=f5e157]:
+              - link "Editar " [ref=f5e158] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/7/edit
+                - text: Editar
+                - generic [ref=f5e159]: 
+              - button "" [ref=f5e160] [cursor=pointer]
+        - generic [ref=f5e162]:
+          - generic [ref=f5e163]:
+            - heading "Conhecimento (Arcano)" [level=2] [ref=f5e164]
+            - generic [ref=f5e165]: INT
+          - generic [ref=f5e166]:
+            - paragraph [ref=f5e167]: Estudo de tradições mágicas, magias arcanas, criaturas mágicas e símbolos. Requer treinamento.
+            - generic [ref=f5e168]:
+              - link "Editar " [ref=f5e169] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/8/edit
+                - text: Editar
+                - generic [ref=f5e170]: 
+              - button "" [ref=f5e171] [cursor=pointer]
+        - generic [ref=f5e173]:
+          - generic [ref=f5e174]:
+            - heading "Conhecimento (Arquitetura e Engenharia)" [level=2] [ref=f5e175]
+            - generic [ref=f5e176]: INT
+          - generic [ref=f5e177]:
+            - paragraph [ref=f5e178]: Conhecimento de construções, estruturas, pontes, castelos e engenharia civil. Requer treinamento.
+            - generic [ref=f5e179]:
+              - link "Editar " [ref=f5e180] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/32/edit
+                - text: Editar
+                - generic [ref=f5e181]: 
+              - button "" [ref=f5e182] [cursor=pointer]
+        - generic [ref=f5e184]:
+          - generic [ref=f5e185]:
+            - heading "Conhecimento (Dungeon)" [level=2] [ref=f5e186]
+            - generic [ref=f5e187]: INT
+          - generic [ref=f5e188]:
+            - paragraph [ref=f5e189]: Conhecimento de masmorras, construções subterrâneas, armadilhas comuns e ecologia de monstros. Requer treinamento.
+            - generic [ref=f5e190]:
+              - link "Editar " [ref=f5e191] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/33/edit
+                - text: Editar
+                - generic [ref=f5e192]: 
+              - button "" [ref=f5e193] [cursor=pointer]
+        - generic [ref=f5e195]:
+          - generic [ref=f5e196]:
+            - heading "Conhecimento (Geografia)" [level=2] [ref=f5e197]
+            - generic [ref=f5e198]: INT
+          - generic [ref=f5e199]:
+            - paragraph [ref=f5e200]: Conhecimento de terras, regiões, climas, topografia e culturas do mundo. Requer treinamento.
+            - generic [ref=f5e201]:
+              - link "Editar " [ref=f5e202] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/34/edit
+                - text: Editar
+                - generic [ref=f5e203]: 
+              - button "" [ref=f5e204] [cursor=pointer]
+        - generic [ref=f5e206]:
+          - generic [ref=f5e207]:
+            - heading "Conhecimento (História)" [level=2] [ref=f5e208]
+            - generic [ref=f5e209]: INT
+          - generic [ref=f5e210]:
+            - paragraph [ref=f5e211]: Conhecimento de guerras, lendas, eventos históricos, civilizações e figuras do passado. Requer treinamento.
+            - generic [ref=f5e212]:
+              - link "Editar " [ref=f5e213] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/35/edit
+                - text: Editar
+                - generic [ref=f5e214]: 
+              - button "" [ref=f5e215] [cursor=pointer]
+        - generic [ref=f5e217]:
+          - generic [ref=f5e218]:
+            - heading "Conhecimento (Local)" [level=2] [ref=f5e219]
+            - generic [ref=f5e220]: INT
+          - generic [ref=f5e221]:
+            - paragraph [ref=f5e222]: Conhecimento sobre uma região ou cidade específica, seus habitantes, leis e costumes. Requer treinamento.
+            - generic [ref=f5e223]:
+              - link "Editar " [ref=f5e224] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/36/edit
+                - text: Editar
+                - generic [ref=f5e225]: 
+              - button "" [ref=f5e226] [cursor=pointer]
+        - generic [ref=f5e228]:
+          - generic [ref=f5e229]:
+            - heading "Conhecimento (Natureza)" [level=2] [ref=f5e230]
+            - generic [ref=f5e231]: INT
+          - generic [ref=f5e232]:
+            - paragraph [ref=f5e233]: Estudo de animais, plantas, terrenos, clima e ciclos naturais. Requer treinamento.
+            - generic [ref=f5e234]:
+              - link "Editar " [ref=f5e235] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/37/edit
+                - text: Editar
+                - generic [ref=f5e236]: 
+              - button "" [ref=f5e237] [cursor=pointer]
+        - generic [ref=f5e239]:
+          - generic [ref=f5e240]:
+            - heading "Conhecimento (Nobreza e Realeza)" [level=2] [ref=f5e241]
+            - generic [ref=f5e242]: INT
+          - generic [ref=f5e243]:
+            - paragraph [ref=f5e244]: Conhecimento de linhagens nobres, brasões, heráldica, protocolos e famílias reais. Requer treinamento.
+            - generic [ref=f5e245]:
+              - link "Editar " [ref=f5e246] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/38/edit
+                - text: Editar
+                - generic [ref=f5e247]: 
+              - button "" [ref=f5e248] [cursor=pointer]
+        - generic [ref=f5e250]:
+          - generic [ref=f5e251]:
+            - heading "Conhecimento (Os Planos)" [level=2] [ref=f5e252]
+            - generic [ref=f5e253]: INT
+          - generic [ref=f5e254]:
+            - paragraph [ref=f5e255]: Conhecimento de planos de existência, criaturas planares e cosmologia. Requer treinamento.
+            - generic [ref=f5e256]:
+              - link "Editar " [ref=f5e257] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/39/edit
+                - text: Editar
+                - generic [ref=f5e258]: 
+              - button "" [ref=f5e259] [cursor=pointer]
+        - generic [ref=f5e261]:
+          - generic [ref=f5e262]:
+            - heading "Conhecimento (Religião)" [level=2] [ref=f5e263]
+            - generic [ref=f5e264]: INT
+          - generic [ref=f5e265]:
+            - paragraph [ref=f5e266]: Estudo de deuses, rituais, dogmas, criaturas sagradas e mortos-vivos. Requer treinamento.
+            - generic [ref=f5e267]:
+              - link "Editar " [ref=f5e268] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/40/edit
+                - text: Editar
+                - generic [ref=f5e269]: 
+              - button "" [ref=f5e270] [cursor=pointer]
+        - generic [ref=f5e272]:
+          - generic [ref=f5e273]:
+            - heading "Cura" [level=2] [ref=f5e274]
+            - generic [ref=f5e275]: SAB
+          - generic [ref=f5e276]:
+            - paragraph [ref=f5e277]: Estabiliza moribundos, trata doenças, envenamentos e ferimentos com curativos e primeiros socorros.
+            - generic [ref=f5e278]:
+              - link "Editar " [ref=f5e279] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/9/edit
+                - text: Editar
+                - generic [ref=f5e280]: 
+              - button "" [ref=f5e281] [cursor=pointer]
+        - generic [ref=f5e283]:
+          - generic [ref=f5e284]:
+            - heading "Decifrar Escrita" [level=2] [ref=f5e285]
+            - generic [ref=f5e286]: INT
+          - generic [ref=f5e287]:
+            - paragraph [ref=f5e288]: Interpreta textos em línguas desconhecidas, mapas antigos, pergaminhos mágicos e códigos cifrados. Requer treinamento.
+            - generic [ref=f5e289]:
+              - link "Editar " [ref=f5e290] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/10/edit
+                - text: Editar
+                - generic [ref=f5e291]: 
+              - button "" [ref=f5e292] [cursor=pointer]
+        - generic [ref=f5e294]:
+          - generic [ref=f5e295]:
+            - heading "Diplomacia" [level=2] [ref=f5e296]
+            - generic [ref=f5e297]: CAR
+          - generic [ref=f5e298]:
+            - paragraph [ref=f5e299]: Melhora a atitude de NPCs, medeia conflitos, negocia acordos e convence grupos por meios pacíficos.
+            - generic [ref=f5e300]:
+              - link "Editar " [ref=f5e301] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/11/edit
+                - text: Editar
+                - generic [ref=f5e302]: 
+              - button "" [ref=f5e303] [cursor=pointer]
+        - generic [ref=f5e305]:
+          - generic [ref=f5e306]:
+            - heading "Disfarce" [level=2] [ref=f5e307]
+            - generic [ref=f5e308]: CAR
+          - generic [ref=f5e309]:
+            - paragraph [ref=f5e310]: Altera a aparência para se passar por outra pessoa, mudando voz, roupas e postura.
+            - generic [ref=f5e311]:
+              - link "Editar " [ref=f5e312] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/41/edit
+                - text: Editar
+                - generic [ref=f5e313]: 
+              - button "" [ref=f5e314] [cursor=pointer]
+        - generic [ref=f5e316]:
+          - generic [ref=f5e317]:
+            - heading "Disfarces" [level=2] [ref=f5e318]
+            - generic [ref=f5e319]: CAR
+          - generic [ref=f5e320]:
+            - paragraph [ref=f5e321]: Capacidade de mudar a aparência para se passar por outra pessoa.
+            - generic [ref=f5e322]:
+              - link "Editar " [ref=f5e323] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/12/edit
+                - text: Editar
+                - generic [ref=f5e324]: 
+              - button "" [ref=f5e325] [cursor=pointer]
+        - generic [ref=f5e327]:
+          - generic [ref=f5e328]:
+            - heading "Equilíbrio" [level=2] [ref=f5e329]
+            - generic [ref=f5e330]: DES
+          - generic [ref=f5e331]:
+            - paragraph [ref=f5e332]: Mantém o equilíbrio em superfícies instáveis, escorregadias ou estreitas sem cair.
+            - generic [ref=f5e333]:
+              - link "Editar " [ref=f5e334] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/42/edit
+                - text: Editar
+                - generic [ref=f5e335]: 
+              - button "" [ref=f5e336] [cursor=pointer]
+        - generic [ref=f5e338]:
+          - generic [ref=f5e339]:
+            - heading "Escalar" [level=2] [ref=f5e340]
+            - generic [ref=f5e341]: FOR
+          - generic [ref=f5e342]:
+            - paragraph [ref=f5e343]: Sobe paredes, penhascos, árvores e outras superfícies verticais ou muito inclinadas.
+            - generic [ref=f5e344]:
+              - link "Editar " [ref=f5e345] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/13/edit
+                - text: Editar
+                - generic [ref=f5e346]: 
+              - button "" [ref=f5e347] [cursor=pointer]
+        - generic [ref=f5e349]:
+          - generic [ref=f5e350]:
+            - heading "Esconder-se" [level=2] [ref=f5e351]
+            - generic [ref=f5e352]: DES
+          - generic [ref=f5e353]:
+            - paragraph [ref=f5e354]: Permanece fora de vista usando cobertura, sombras e camuflagem para evitar ser detectado.
+            - generic [ref=f5e355]:
+              - link "Editar " [ref=f5e356] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/14/edit
+                - text: Editar
+                - generic [ref=f5e357]: 
+              - button "" [ref=f5e358] [cursor=pointer]
+        - generic [ref=f5e360]:
+          - generic [ref=f5e361]:
+            - heading "Falsificação" [level=2] [ref=f5e362]
+            - generic [ref=f5e363]: INT
+          - generic [ref=f5e364]:
+            - paragraph [ref=f5e365]: Cria documentos falsos convincentes e detecta falsificações em papéis, assinaturas e selos.
+            - generic [ref=f5e366]:
+              - link "Editar " [ref=f5e367] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/15/edit
+                - text: Editar
+                - generic [ref=f5e368]: 
+              - button "" [ref=f5e369] [cursor=pointer]
+        - generic [ref=f5e371]:
+          - generic [ref=f5e372]:
+            - heading "Furtividade" [level=2] [ref=f5e373]
+            - generic [ref=f5e374]: DES
+          - generic [ref=f5e375]:
+            - paragraph [ref=f5e376]: Move-se em silêncio sem ser detectado pelo som, minimizando ruídos de passos e equipamentos.
+            - generic [ref=f5e377]:
+              - link "Editar " [ref=f5e378] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/16/edit
+                - text: Editar
+                - generic [ref=f5e379]: 
+              - button "" [ref=f5e380] [cursor=pointer]
+        - generic [ref=f5e382]:
+          - generic [ref=f5e383]:
+            - heading "Identificar Magia" [level=2] [ref=f5e384]
+            - generic [ref=f5e385]: INT
+          - generic [ref=f5e386]:
+            - paragraph [ref=f5e387]: Reconhece magias sendo lançadas e identifica efeitos mágicos ativos. Requer treinamento.
+            - generic [ref=f5e388]:
+              - link "Editar " [ref=f5e389] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/17/edit
+                - text: Editar
+                - generic [ref=f5e390]: 
+              - button "" [ref=f5e391] [cursor=pointer]
+        - generic [ref=f5e393]:
+          - generic [ref=f5e394]:
+            - heading "Intimidação" [level=2] [ref=f5e395]
+            - generic [ref=f5e396]: CAR
+          - generic [ref=f5e397]:
+            - paragraph [ref=f5e398]: Capacidade de forçar outros a agir através de medo ou ameaças.
+            - generic [ref=f5e399]:
+              - link "Editar " [ref=f5e400] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/18/edit
+                - text: Editar
+                - generic [ref=f5e401]: 
+              - button "" [ref=f5e402] [cursor=pointer]
+        - generic [ref=f5e404]:
+          - generic [ref=f5e405]:
+            - heading "Intimidar" [level=2] [ref=f5e406]
+            - generic [ref=f5e407]: CAR
+          - generic [ref=f5e408]:
+            - paragraph [ref=f5e409]: Força outros a cooperar através de ameaças, demonstrações de poder ou intimidação física.
+            - generic [ref=f5e410]:
+              - link "Editar " [ref=f5e411] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/43/edit
+                - text: Editar
+                - generic [ref=f5e412]: 
+              - button "" [ref=f5e413] [cursor=pointer]
+        - generic [ref=f5e415]:
+          - generic [ref=f5e416]:
+            - heading "Natação" [level=2] [ref=f5e417]
+            - generic [ref=f5e418]: FOR
+          - generic [ref=f5e419]:
+            - paragraph [ref=f5e420]: Nada, mergulha e se movimenta em água corrente ou parada sem se afogar.
+            - generic [ref=f5e421]:
+              - link "Editar " [ref=f5e422] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/19/edit
+                - text: Editar
+                - generic [ref=f5e423]: 
+              - button "" [ref=f5e424] [cursor=pointer]
+        - generic [ref=f5e426]:
+          - generic [ref=f5e427]:
+            - heading "Observar" [level=2] [ref=f5e428]
+            - generic [ref=f5e429]: SAB
+          - generic [ref=f5e430]:
+            - paragraph [ref=f5e431]: Detecta criaturas furtivas, nota detalhes do ambiente e percebe coisas fora do comum visualmente.
+            - generic [ref=f5e432]:
+              - link "Editar " [ref=f5e433] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/20/edit
+                - text: Editar
+                - generic [ref=f5e434]: 
+              - button "" [ref=f5e435] [cursor=pointer]
+        - generic [ref=f5e437]:
+          - generic [ref=f5e438]:
+            - heading "Obter Informação" [level=2] [ref=f5e439]
+            - generic [ref=f5e440]: CAR
+          - generic [ref=f5e441]:
+            - paragraph [ref=f5e442]: Coleta boatos, notícias e informações locais conversando em tavernas, mercados e locais públicos.
+            - generic [ref=f5e443]:
+              - link "Editar " [ref=f5e444] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/21/edit
+                - text: Editar
+                - generic [ref=f5e445]: 
+              - button "" [ref=f5e446] [cursor=pointer]
+        - generic [ref=f5e448]:
+          - generic [ref=f5e449]:
+            - heading "Ofícios" [level=2] [ref=f5e450]
+            - generic [ref=f5e451]: INT
+          - generic [ref=f5e452]:
+            - paragraph [ref=f5e453]: Pratica e demonstra proficiência em uma profissão artesanal como ferraria, carpintaria ou tecelagem.
+            - generic [ref=f5e454]:
+              - link "Editar " [ref=f5e455] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/44/edit
+                - text: Editar
+                - generic [ref=f5e456]: 
+              - button "" [ref=f5e457] [cursor=pointer]
+        - generic [ref=f5e459]:
+          - generic [ref=f5e460]:
+            - heading "Operar Mecanismo" [level=2] [ref=f5e461]
+            - generic [ref=f5e462]: INT
+          - generic [ref=f5e463]:
+            - paragraph [ref=f5e464]: Desarma armadilhas mecânicas, abre cofres e sabota dispositivos complexos. Requer treinamento.
+            - generic [ref=f5e465]:
+              - link "Editar " [ref=f5e466] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/22/edit
+                - text: Editar
+                - generic [ref=f5e467]: 
+              - button "" [ref=f5e468] [cursor=pointer]
+        - generic [ref=f5e470]:
+          - generic [ref=f5e471]:
+            - heading "Ouvir" [level=2] [ref=f5e472]
+            - generic [ref=f5e473]: SAB
+          - generic [ref=f5e474]:
+            - paragraph [ref=f5e475]: Detecta sons baixos, movimentos ocultos e percebe criaturas tentando passar despercebidas.
+            - generic [ref=f5e476]:
+              - link "Editar " [ref=f5e477] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/23/edit
+                - text: Editar
+                - generic [ref=f5e478]: 
+              - button "" [ref=f5e479] [cursor=pointer]
+        - generic [ref=f5e481]:
+          - generic [ref=f5e482]:
+            - heading "Prestidigitação" [level=2] [ref=f5e483]
+            - generic [ref=f5e484]: DES
+          - generic [ref=f5e485]:
+            - paragraph [ref=f5e486]: Realiza truques de mãos, bate carteiras e oculta objetos pequenos de forma ágil. Requer treinamento.
+            - generic [ref=f5e487]:
+              - link "Editar " [ref=f5e488] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/24/edit
+                - text: Editar
+                - generic [ref=f5e489]: 
+              - button "" [ref=f5e490] [cursor=pointer]
+        - generic [ref=f5e492]:
+          - generic [ref=f5e493]:
+            - heading "Procurar" [level=2] [ref=f5e494]
+            - generic [ref=f5e495]: INT
+          - generic [ref=f5e496]:
+            - paragraph [ref=f5e497]: Encontra objetos ocultos, portas secretas, compartimentos falsos e pistas através de busca minuciosa.
+            - generic [ref=f5e498]:
+              - link "Editar " [ref=f5e499] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/25/edit
+                - text: Editar
+                - generic [ref=f5e500]: 
+              - button "" [ref=f5e501] [cursor=pointer]
+        - generic [ref=f5e503]:
+          - generic [ref=f5e504]:
+            - heading "Profissão" [level=2] [ref=f5e505]
+            - generic [ref=f5e506]: SAB
+          - generic [ref=f5e507]:
+            - paragraph [ref=f5e508]: Exerce uma profissão não-artesanal como marinheiro, fazendeiro, soldado ou cozinheiro. Requer treinamento.
+            - generic [ref=f5e509]:
+              - link "Editar " [ref=f5e510] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/45/edit
+                - text: Editar
+                - generic [ref=f5e511]: 
+              - button "" [ref=f5e512] [cursor=pointer]
+        - generic [ref=f5e514]:
+          - generic [ref=f5e515]:
+            - heading "Saltar" [level=2] [ref=f5e516]
+            - generic [ref=f5e517]: FOR
+          - generic [ref=f5e518]:
+            - paragraph [ref=f5e519]: Realiza saltos em distância, altura e atravessa obstáculos usando força e impulso.
+            - generic [ref=f5e520]:
+              - link "Editar " [ref=f5e521] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/26/edit
+                - text: Editar
+                - generic [ref=f5e522]: 
+              - button "" [ref=f5e523] [cursor=pointer]
+        - generic [ref=f5e525]:
+          - generic [ref=f5e526]:
+            - heading "Sentir Motivação" [level=2] [ref=f5e527]
+            - generic [ref=f5e528]: SAB
+          - generic [ref=f5e529]:
+            - paragraph [ref=f5e530]: Percebe se alguém está mentindo, oculta emoções ou age de forma suspeita. Opõe-se a Blefar.
+            - generic [ref=f5e531]:
+              - link "Editar " [ref=f5e532] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/27/edit
+                - text: Editar
+                - generic [ref=f5e533]: 
+              - button "" [ref=f5e534] [cursor=pointer]
+        - generic [ref=f5e536]:
+          - generic [ref=f5e537]:
+            - heading "Sobrevivência" [level=2] [ref=f5e538]
+            - generic [ref=f5e539]: SAB
+          - generic [ref=f5e540]:
+            - paragraph [ref=f5e541]: Rastreia, caça, encontra abrigo e água, e sobrevive em ambientes selvagens perigosos.
+            - generic [ref=f5e542]:
+              - link "Editar " [ref=f5e543] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/28/edit
+                - text: Editar
+                - generic [ref=f5e544]: 
+              - button "" [ref=f5e545] [cursor=pointer]
+        - generic [ref=f5e547]:
+          - generic [ref=f5e548]:
+            - heading "Usar Cordas" [level=2] [ref=f5e549]
+            - generic [ref=f5e550]: DES
+          - generic [ref=f5e551]:
+            - paragraph [ref=f5e552]: Amarra, faz nós, prende prisioneiros e usa cordas com segurança em escaladas e armadilhas.
+            - generic [ref=f5e553]:
+              - link "Editar " [ref=f5e554] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/46/edit
+                - text: Editar
+                - generic [ref=f5e555]: 
+              - button "" [ref=f5e556] [cursor=pointer]
+        - generic [ref=f5e558]:
+          - generic [ref=f5e559]:
+            - heading "Usar Instrumento Mágico" [level=2] [ref=f5e560]
+            - generic [ref=f5e561]: CAR
+          - generic [ref=f5e562]:
+            - paragraph [ref=f5e563]: Ativa varinhas, pergaminhos e outros itens mágicos que normalmente exigem habilidade de conjurador. Requer treinamento.
+            - generic [ref=f5e564]:
+              - link "Editar " [ref=f5e565] [cursor=pointer]:
+                - /url: http://localhost:8001/pericias/29/edit
+                - text: Editar
+                - generic [ref=f5e566]: 
+              - button "" [ref=f5e567] [cursor=pointer]
+        - link " Nova Perícia" [ref=f5e569] [cursor=pointer]:
+          - /url: http://localhost:8001/pericias/create
+          - generic [ref=f5e570]: 
+          - generic [ref=f5e571]: Nova Perícia
+    - paragraph [ref=f5e574]: Forged in the fires of imagination. Creator RPG © 2026

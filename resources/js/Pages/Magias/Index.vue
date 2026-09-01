@@ -1,7 +1,9 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import SearchInput from '@/Components/SearchInput.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
+import { filtrarPorNome } from '@/utils/busca';
 
 const props = defineProps({
     classes: Array,
@@ -10,8 +12,35 @@ const props = defineProps({
 
 const classeAtiva = ref(props.classes[0]?.id ?? null);
 
+const busca = ref('');
+
+// Mesma estrutura de classes, com as magias de cada uma já filtradas.
+const classesFiltradas = computed(() =>
+    props.classes.map(classe => ({
+        ...classe,
+        magias: filtrarPorNome(classe.magias, busca.value),
+    }))
+);
+
+// Uma magia pode pertencer a várias classes; conta cada uma só uma vez.
+const contarUnicas = (lista) =>
+    new Set(lista.flatMap(c => c.magias.map(m => m.id))).size;
+
+const totalEncontrado = computed(() => contarUnicas(classesFiltradas.value));
+const totalMagias = computed(() => contarUnicas(props.classes));
+
+// Buscar estando numa classe sem resultados esconderia todos os achados,
+// então salta para a primeira classe que tenha algum.
+watch(busca, () => {
+    const atual = classesFiltradas.value.find(c => c.id === classeAtiva.value);
+    if (atual?.magias.length) return;
+
+    const comResultado = classesFiltradas.value.find(c => c.magias.length > 0);
+    if (comResultado) classeAtiva.value = comResultado.id;
+});
+
 const classeAtual = computed(() =>
-    props.classes.find(c => c.id === classeAtiva.value)
+    classesFiltradas.value.find(c => c.id === classeAtiva.value)
 );
 
 const magiasPorCirculo = computed(() => {
@@ -56,8 +85,19 @@ const deleteMagia = (id) => {
             </Link>
         </div>
 
+        <SearchInput
+            v-model="busca"
+            placeholder="Buscar magia pelo nome..."
+            :resultados="totalEncontrado"
+            :total="totalMagias"
+        />
+
         <div v-if="classes.length === 0" class="text-center py-24 italic text-parchment-600 font-lora text-lg">
             Nenhuma magia registrada neste grimório.
+        </div>
+
+        <div v-else-if="totalEncontrado === 0" class="text-center py-24 italic text-parchment-600 font-lora text-lg">
+            Nenhuma magia encontrada para "{{ busca }}".
         </div>
 
         <div v-else class="flex gap-6">
@@ -66,8 +106,9 @@ const deleteMagia = (id) => {
                 <p class="font-cinzel text-xs font-bold uppercase tracking-widest text-parchment-700 mb-3 px-1">Classes</p>
                 <div class="flex flex-col gap-1">
                     <button
-                        v-for="classe in classes"
+                        v-for="classe in classesFiltradas"
                         :key="classe.id"
+                        v-show="classe.magias.length > 0"
                         @click="classeAtiva = classe.id"
                         :class="[
                             'text-left px-4 py-2.5 rounded-lg font-cinzel text-sm font-bold transition-all duration-200 border',

@@ -1,0 +1,197 @@
+- generic [ref=f8e3]:
+  - text:  
+  - complementary [ref=f8e4]:
+    - link " CREATOR RPG" [ref=f8e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f8e7]: 
+      - generic [ref=f8e8]: CREATOR RPG
+    - navigation [ref=f8e9]:
+      - generic [ref=f8e10]:
+        - paragraph [ref=f8e11]: Essenciais
+        - link " Salão dos Heróis" [ref=f8e14] [cursor=pointer]:
+          - /url: http://localhost:8001/fichas
+          - generic [ref=f8e15]: 
+          - generic [ref=f8e16]: Salão dos Heróis
+      - generic [ref=f8e17]:
+        - paragraph [ref=f8e18]: Criação
+        - link " Classes" [ref=f8e21] [cursor=pointer]:
+          - /url: http://localhost:8001/classes
+          - generic [ref=f8e22]: 
+          - generic [ref=f8e23]: Classes
+        - link " Raças" [ref=f8e24] [cursor=pointer]:
+          - /url: http://localhost:8001/racas
+          - generic [ref=f8e25]: 
+          - generic [ref=f8e26]: Raças
+        - link " Perícias" [ref=f8e27] [cursor=pointer]:
+          - /url: http://localhost:8001/pericias
+          - generic [ref=f8e28]: 
+          - generic [ref=f8e29]: Perícias
+        - link " Talentos" [ref=f8e30] [cursor=pointer]:
+          - /url: http://localhost:8001/talentos
+          - generic [ref=f8e31]: 
+          - generic [ref=f8e32]: Talentos
+        - link " Divindades" [ref=f8e33] [cursor=pointer]:
+          - /url: http://localhost:8001/divindades
+          - generic [ref=f8e34]: 
+          - generic [ref=f8e35]: Divindades
+        - link " Tendências" [ref=f8e36] [cursor=pointer]:
+          - /url: http://localhost:8001/tendencias
+          - generic [ref=f8e37]: 
+          - generic [ref=f8e38]: Tendências
+      - generic [ref=f8e39]:
+        - paragraph [ref=f8e40]: Equipamento & Grimório
+        - link " Magias" [ref=f8e41] [cursor=pointer]:
+          - /url: http://localhost:8001/magias
+          - generic [ref=f8e42]: 
+          - generic [ref=f8e43]: Magias
+        - link "Armas" [ref=f8e44] [cursor=pointer]:
+          - /url: http://localhost:8001/armas
+        - link " Armaduras" [ref=f8e46] [cursor=pointer]:
+          - /url: http://localhost:8001/armaduras
+          - generic [ref=f8e47]: 
+          - generic [ref=f8e48]: Armaduras
+        - link " Itens" [ref=f8e49] [cursor=pointer]:
+          - /url: http://localhost:8001/equipamentos
+          - generic [ref=f8e50]: 
+          - generic [ref=f8e51]: Itens
+    - paragraph [ref=f8e53]: © 2026 RPG Forger
+  - main [ref=f8e54]:
+    - generic [ref=f8e55]:
+      - generic [ref=f8e56]:
+        - heading "Tendências" [level=1] [ref=f8e57]
+        - paragraph [ref=f8e58]: "\"A moral e a ética de um ser definem não apenas suas ações, mas também seu destino.\""
+      - generic [ref=f8e60]:
+        - generic: 
+        - textbox "Buscar tendência pelo nome..." [ref=f8e61]
+      - generic [ref=f8e62]:
+        - generic [ref=f8e63]:
+          - generic [ref=f8e64]:
+            - generic [ref=f8e65]:
+              - heading "Caótico e Bom" [level=2] [ref=f8e66]
+              - paragraph [ref=f8e67]: O Rebelde
+            - generic [ref=f8e68]: CB
+          - generic [ref=f8e69]:
+            - paragraph [ref=f8e70]: Personagens caóticos e bons agem conforme sua própria bússola moral, valorizando a liberdade individual acima de governos ou leis sociais.
+            - generic [ref=f8e71]:
+              - link "Editar " [ref=f8e72] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/3/edit
+                - text: Editar
+                - generic [ref=f8e73]: 
+              - button "" [ref=f8e74] [cursor=pointer]
+        - generic [ref=f8e76]:
+          - generic [ref=f8e77]:
+            - generic [ref=f8e78]:
+              - heading "Caótico e Mau" [level=2] [ref=f8e79]
+              - paragraph [ref=f8e80]: O Destruidor
+            - generic [ref=f8e81]: CM
+          - generic [ref=f8e82]:
+            - paragraph [ref=f8e83]: Personagens caóticos e maus são motivados pela ganância, ódio ou luxúria pela destruição. Eles não têm respeito pela vida ou pela ordem.
+            - generic [ref=f8e84]:
+              - link "Editar " [ref=f8e85] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/9/edit
+                - text: Editar
+                - generic [ref=f8e86]: 
+              - button "" [ref=f8e87] [cursor=pointer]
+        - generic [ref=f8e89]:
+          - generic [ref=f8e90]:
+            - generic [ref=f8e91]:
+              - heading "Caótico e Neutro" [level=2] [ref=f8e92]
+              - paragraph [ref=f8e93]: O Espírito Livre
+            - generic [ref=f8e94]: CN
+          - generic [ref=f8e95]:
+            - paragraph [ref=f8e96]: Personagens caóticos e neutros seguem seus impulsos e valorizam sua liberdade acima de tudo. Eles são imprevisíveis mas raramente maldosos.
+            - generic [ref=f8e97]:
+              - link "Editar " [ref=f8e98] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/6/edit
+                - text: Editar
+                - generic [ref=f8e99]: 
+              - button "" [ref=f8e100] [cursor=pointer]
+        - generic [ref=f8e102]:
+          - generic [ref=f8e103]:
+            - generic [ref=f8e104]:
+              - heading "Leal e Bom" [level=2] [ref=f8e105]
+              - paragraph [ref=f8e106]: O Cruzado
+            - generic [ref=f8e107]: LB
+          - generic [ref=f8e108]:
+            - paragraph [ref=f8e109]: Personagens leais e bons acreditam que uma sociedade bem organizada e o cumprimento das leis são as melhores formas de promover o bem e a justiça.
+            - generic [ref=f8e110]:
+              - link "Editar " [ref=f8e111] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/1/edit
+                - text: Editar
+                - generic [ref=f8e112]: 
+              - button "" [ref=f8e113] [cursor=pointer]
+        - generic [ref=f8e115]:
+          - generic [ref=f8e116]:
+            - generic [ref=f8e117]:
+              - heading "Leal e Mau" [level=2] [ref=f8e118]
+              - paragraph [ref=f8e119]: O Tirano
+            - generic [ref=f8e120]: LM
+          - generic [ref=f8e121]:
+            - paragraph [ref=f8e122]: Personagens leais e maus utilizam sistemas, leis e hierarquias para obter o que desejam, sem remorso pelos que sofrem no processo.
+            - generic [ref=f8e123]:
+              - link "Editar " [ref=f8e124] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/7/edit
+                - text: Editar
+                - generic [ref=f8e125]: 
+              - button "" [ref=f8e126] [cursor=pointer]
+        - generic [ref=f8e128]:
+          - generic [ref=f8e129]:
+            - generic [ref=f8e130]:
+              - heading "Leal e Neutro" [level=2] [ref=f8e131]
+              - paragraph [ref=f8e132]: O Juiz
+            - generic [ref=f8e133]: LN
+          - generic [ref=f8e134]:
+            - paragraph [ref=f8e135]: Personagens leais e neutros seguem um código de conduta, lei ou tradição de forma rígida, sem considerar o bem ou o mal nas suas decisões.
+            - generic [ref=f8e136]:
+              - link "Editar " [ref=f8e137] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/4/edit
+                - text: Editar
+                - generic [ref=f8e138]: 
+              - button "" [ref=f8e139] [cursor=pointer]
+        - generic [ref=f8e141]:
+          - generic [ref=f8e142]:
+            - generic [ref=f8e143]:
+              - heading "Neutro" [level=2] [ref=f8e144]
+              - paragraph [ref=f8e145]: O Indeciso
+            - generic [ref=f8e146]: "N"
+          - generic [ref=f8e147]:
+            - paragraph [ref=f8e148]: Personagens neutros (verdadeiramente neutros) preferem o equilíbrio. Eles podem não ter uma inclinação forte para a ordem, o caos, o bem ou o mal.
+            - generic [ref=f8e149]:
+              - link "Editar " [ref=f8e150] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/5/edit
+                - text: Editar
+                - generic [ref=f8e151]: 
+              - button "" [ref=f8e152] [cursor=pointer]
+        - generic [ref=f8e154]:
+          - generic [ref=f8e155]:
+            - generic [ref=f8e156]:
+              - heading "Neutro e Bom" [level=2] [ref=f8e157]
+              - paragraph [ref=f8e158]: O Benfeitor
+            - generic [ref=f8e159]: NB
+          - generic [ref=f8e160]:
+            - paragraph [ref=f8e161]: Personagens neutros e bons são guiados por sua consciência. Eles fazem o que é certo sem se preocupar tanto com leis ou ordem.
+            - generic [ref=f8e162]:
+              - link "Editar " [ref=f8e163] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/2/edit
+                - text: Editar
+                - generic [ref=f8e164]: 
+              - button "" [ref=f8e165] [cursor=pointer]
+        - generic [ref=f8e167]:
+          - generic [ref=f8e168]:
+            - generic [ref=f8e169]:
+              - heading "Neutro e Mau" [level=2] [ref=f8e170]
+              - paragraph [ref=f8e171]: O Malfeitor
+            - generic [ref=f8e172]: NM
+          - generic [ref=f8e173]:
+            - paragraph [ref=f8e174]: Personagens neutros e maus fazem qualquer coisa para se beneficiar, sem qualquer consideração por leis ou outras pessoas.
+            - generic [ref=f8e175]:
+              - link "Editar " [ref=f8e176] [cursor=pointer]:
+                - /url: http://localhost:8001/tendencias/8/edit
+                - text: Editar
+                - generic [ref=f8e177]: 
+              - button "" [ref=f8e178] [cursor=pointer]
+        - link " Nova Tendência" [ref=f8e180] [cursor=pointer]:
+          - /url: http://localhost:8001/tendencias/create
+          - generic [ref=f8e181]: 
+          - generic [ref=f8e182]: Nova Tendência
+    - paragraph [ref=f8e185]: Forged in the fires of imagination. Creator RPG © 2026

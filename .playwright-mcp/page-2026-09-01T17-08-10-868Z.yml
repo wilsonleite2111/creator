@@ -1,0 +1,282 @@
+- generic [ref=f7e3]:
+  - text:  
+  - complementary [ref=f7e4]:
+    - link " CREATOR RPG" [ref=f7e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f7e7]: 
+      - generic [ref=f7e8]: CREATOR RPG
+    - navigation [ref=f7e9]:
+      - generic [ref=f7e10]:
+        - paragraph [ref=f7e11]: Essenciais
+        - link " Salão dos Heróis" [ref=f7e14] [cursor=pointer]:
+          - /url: http://localhost:8001/fichas
+          - generic [ref=f7e15]: 
+          - generic [ref=f7e16]: Salão dos Heróis
+      - generic [ref=f7e17]:
+        - paragraph [ref=f7e18]: Criação
+        - link " Classes" [ref=f7e21] [cursor=pointer]:
+          - /url: http://localhost:8001/classes
+          - generic [ref=f7e22]: 
+          - generic [ref=f7e23]: Classes
+        - link " Raças" [ref=f7e24] [cursor=pointer]:
+          - /url: http://localhost:8001/racas
+          - generic [ref=f7e25]: 
+          - generic [ref=f7e26]: Raças
+        - link " Perícias" [ref=f7e27] [cursor=pointer]:
+          - /url: http://localhost:8001/pericias
+          - generic [ref=f7e28]: 
+          - generic [ref=f7e29]: Perícias
+        - link " Talentos" [ref=f7e30] [cursor=pointer]:
+          - /url: http://localhost:8001/talentos
+          - generic [ref=f7e31]: 
+          - generic [ref=f7e32]: Talentos
+        - link " Divindades" [ref=f7e33] [cursor=pointer]:
+          - /url: http://localhost:8001/divindades
+          - generic [ref=f7e34]: 
+          - generic [ref=f7e35]: Divindades
+        - link " Tendências" [ref=f7e36] [cursor=pointer]:
+          - /url: http://localhost:8001/tendencias
+          - generic [ref=f7e37]: 
+          - generic [ref=f7e38]: Tendências
+      - generic [ref=f7e39]:
+        - paragraph [ref=f7e40]: Equipamento & Grimório
+        - link " Magias" [ref=f7e43] [cursor=pointer]:
+          - /url: http://localhost:8001/magias
+          - generic [ref=f7e44]: 
+          - generic [ref=f7e45]: Magias
+        - link "Armas" [ref=f7e46] [cursor=pointer]:
+          - /url: http://localhost:8001/armas
+        - link " Armaduras" [ref=f7e48] [cursor=pointer]:
+          - /url: http://localhost:8001/armaduras
+          - generic [ref=f7e49]: 
+          - generic [ref=f7e50]: Armaduras
+        - link " Itens" [ref=f7e51] [cursor=pointer]:
+          - /url: http://localhost:8001/equipamentos
+          - generic [ref=f7e52]: 
+          - generic [ref=f7e53]: Itens
+    - paragraph [ref=f7e55]: © 2026 RPG Forger
+  - main [ref=f7e56]:
+    - generic [ref=f7e57]:
+      - generic [ref=f7e58]:
+        - generic [ref=f7e59]:
+          - heading " Inventário de Itens" [level=1] [ref=f7e60]:
+            - generic [ref=f7e61]: 
+            - text: Inventário de Itens
+          - paragraph [ref=f7e62]: "\"Um aventureiro bem equipado está sempre preparado para o inesperado.\""
+        - link "+ Novo Item" [ref=f7e63] [cursor=pointer]:
+          - /url: http://localhost:8001/equipamentos/create
+          - generic [ref=f7e64]: +
+          - text: Novo Item
+      - generic [ref=f7e66]:
+        - generic: 
+        - textbox "Buscar item pelo nome..." [ref=f7e67]
+      - table [ref=f7e71]:
+        - rowgroup [ref=f7e72]:
+          - row [ref=f7e73]:
+            - columnheader "Nome" [ref=f7e74]
+            - columnheader "Preço" [ref=f7e75]
+            - columnheader "Peso" [ref=f7e76]
+            - columnheader "Descrição" [ref=f7e77]
+            - columnheader "Ações" [ref=f7e78]
+        - rowgroup [ref=f7e79]:
+          - row [ref=f7e80]:
+            - cell "Balde (vazio)" [ref=f7e81]
+            - cell "5 PC" [ref=f7e82]
+            - cell "1 kg" [ref=f7e83]
+            - cell "Capacidade 15 litros." [ref=f7e84]
+            - cell [ref=f7e85]:
+              - generic [ref=f7e86]:
+                - link "" [ref=f7e87] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/5/edit
+                - button "" [ref=f7e89] [cursor=pointer]
+          - row [ref=f7e91]:
+            - cell "Barril (vazio)" [ref=f7e92]
+            - cell "2 PO" [ref=f7e93]
+            - cell "15 kg" [ref=f7e94]
+            - cell "Capacidade 150 litros." [ref=f7e95]
+            - cell [ref=f7e96]:
+              - generic [ref=f7e97]:
+                - link "" [ref=f7e98] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/2/edit
+                - button "" [ref=f7e100] [cursor=pointer]
+          - row [ref=f7e102]:
+            - cell "Baú (vazio)" [ref=f7e103]
+            - cell "2 PO" [ref=f7e104]
+            - cell "12.5 kg" [ref=f7e105]
+            - cell "Capacidade 100kg." [ref=f7e106]
+            - cell [ref=f7e107]:
+              - generic [ref=f7e108]:
+                - link "" [ref=f7e109] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/6/edit
+                - button "" [ref=f7e111] [cursor=pointer]
+          - row [ref=f7e113]:
+            - cell "Cantil" [ref=f7e114]
+            - cell "1 PO" [ref=f7e115]
+            - cell "2 kg" [ref=f7e116]
+            - cell "Cheio pesa 2kg." [ref=f7e117]
+            - cell [ref=f7e118]:
+              - generic [ref=f7e119]:
+                - link "" [ref=f7e120] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/7/edit
+                - button "" [ref=f7e122] [cursor=pointer]
+          - row [ref=f7e124]:
+            - cell "Cesto (vazio)" [ref=f7e125]
+            - cell "4 PP" [ref=f7e126]
+            - cell "0.5 kg" [ref=f7e127]
+            - cell "Capacidade 10kg." [ref=f7e128]
+            - cell [ref=f7e129]:
+              - generic [ref=f7e130]:
+                - link "" [ref=f7e131] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/3/edit
+                - button "" [ref=f7e133] [cursor=pointer]
+          - row [ref=f7e135]:
+            - cell "Corda de Cânhamo (15m)" [ref=f7e136]
+            - cell "1 PO" [ref=f7e137]
+            - cell "5 kg" [ref=f7e138]
+            - cell "Resistente." [ref=f7e139]
+            - cell [ref=f7e140]:
+              - generic [ref=f7e141]:
+                - link "" [ref=f7e142] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/9/edit
+                - button "" [ref=f7e144] [cursor=pointer]
+          - row [ref=f7e146]:
+            - cell "Corda de Seda (15m)" [ref=f7e147]
+            - cell "10 PO" [ref=f7e148]
+            - cell "2.5 kg" [ref=f7e149]
+            - cell "Leve e forte." [ref=f7e150]
+            - cell [ref=f7e151]:
+              - generic [ref=f7e152]:
+                - link "" [ref=f7e153] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/10/edit
+                - button "" [ref=f7e155] [cursor=pointer]
+          - row [ref=f7e157]:
+            - cell "Estojo de Primeiros Socorros" [ref=f7e158]
+            - cell "50 PO" [ref=f7e159]
+            - cell "0.5 kg" [ref=f7e160]
+            - cell "+2 em testes de Cura." [ref=f7e161]
+            - cell [ref=f7e162]:
+              - generic [ref=f7e163]:
+                - link "" [ref=f7e164] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/17/edit
+                - button "" [ref=f7e166] [cursor=pointer]
+          - row [ref=f7e168]:
+            - cell "Garrafa de Vidro" [ref=f7e169]
+            - cell "2 PO" [ref=f7e170]
+            - cell "0.25 kg" [ref=f7e171]
+            - cell "Capacidade 0.75 litros." [ref=f7e172]
+            - cell [ref=f7e173]:
+              - generic [ref=f7e174]:
+                - link "" [ref=f7e175] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/4/edit
+                - button "" [ref=f7e177] [cursor=pointer]
+          - row [ref=f7e179]:
+            - cell "Grimório (vazio)" [ref=f7e180]
+            - cell "15 PO" [ref=f7e181]
+            - cell "1.5 kg" [ref=f7e182]
+            - cell "100 páginas de pergaminho." [ref=f7e183]
+            - cell [ref=f7e184]:
+              - generic [ref=f7e185]:
+                - link "" [ref=f7e186] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/20/edit
+                - button "" [ref=f7e188] [cursor=pointer]
+          - row [ref=f7e190]:
+            - cell "Lanterna a Óleo" [ref=f7e191]
+            - cell "12 PO" [ref=f7e192]
+            - cell "1 kg" [ref=f7e193]
+            - cell "Luz clara." [ref=f7e194]
+            - cell [ref=f7e195]:
+              - generic [ref=f7e196]:
+                - link "" [ref=f7e197] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/13/edit
+                - button "" [ref=f7e199] [cursor=pointer]
+          - row [ref=f7e201]:
+            - cell "Lanterna Furta-Fogo" [ref=f7e202]
+            - cell "7 PO" [ref=f7e203]
+            - cell "1 kg" [ref=f7e204]
+            - cell "Luz direcional." [ref=f7e205]
+            - cell [ref=f7e206]:
+              - generic [ref=f7e207]:
+                - link "" [ref=f7e208] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/12/edit
+                - button "" [ref=f7e210] [cursor=pointer]
+          - row [ref=f7e212]:
+            - cell "Mochila (vazia)" [ref=f7e213]
+            - cell "2 PO" [ref=f7e214]
+            - cell "1 kg" [ref=f7e215]
+            - cell "Capacidade 30kg." [ref=f7e216]
+            - cell [ref=f7e217]:
+              - generic [ref=f7e218]:
+                - link "" [ref=f7e219] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/1/edit
+                - button "" [ref=f7e221] [cursor=pointer]
+          - row [ref=f7e223]:
+            - cell "Óleo (frasco)" [ref=f7e224]
+            - cell "1 PP" [ref=f7e225]
+            - cell "0.5 kg" [ref=f7e226]
+            - cell "Combustível." [ref=f7e227]
+            - cell [ref=f7e228]:
+              - generic [ref=f7e229]:
+                - link "" [ref=f7e230] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/15/edit
+                - button "" [ref=f7e232] [cursor=pointer]
+          - row [ref=f7e234]:
+            - cell "Pederneira e Isqueiro" [ref=f7e235]
+            - cell "1 PO" [ref=f7e236]
+            - cell "0 kg" [ref=f7e237]
+            - cell "Para fogo." [ref=f7e238]
+            - cell [ref=f7e239]:
+              - generic [ref=f7e240]:
+                - link "" [ref=f7e241] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/11/edit
+                - button "" [ref=f7e243] [cursor=pointer]
+          - row [ref=f7e245]:
+            - cell "Ração de Viagem (dia)" [ref=f7e246]
+            - cell "5 PP" [ref=f7e247]
+            - cell "0.5 kg" [ref=f7e248]
+            - cell "Comida seca." [ref=f7e249]
+            - cell [ref=f7e250]:
+              - generic [ref=f7e251]:
+                - link "" [ref=f7e252] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/16/edit
+                - button "" [ref=f7e254] [cursor=pointer]
+          - row [ref=f7e256]:
+            - cell "Saco (vazio)" [ref=f7e257]
+            - cell "1 PP" [ref=f7e258]
+            - cell "0.25 kg" [ref=f7e259]
+            - cell "Capacidade 15kg." [ref=f7e260]
+            - cell [ref=f7e261]:
+              - generic [ref=f7e262]:
+                - link "" [ref=f7e263] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/8/edit
+                - button "" [ref=f7e265] [cursor=pointer]
+          - row [ref=f7e267]:
+            - cell "Símbolo Sagrado (Madeira)" [ref=f7e268]
+            - cell "1 PO" [ref=f7e269]
+            - cell "0 kg" [ref=f7e270]
+            - cell "Foco divino." [ref=f7e271]
+            - cell [ref=f7e272]:
+              - generic [ref=f7e273]:
+                - link "" [ref=f7e274] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/18/edit
+                - button "" [ref=f7e276] [cursor=pointer]
+          - row [ref=f7e278]:
+            - cell "Símbolo Sagrado (Prata)" [ref=f7e279]
+            - cell "25 PO" [ref=f7e280]
+            - cell "0.5 kg" [ref=f7e281]
+            - cell "Foco divino luxuoso." [ref=f7e282]
+            - cell [ref=f7e283]:
+              - generic [ref=f7e284]:
+                - link "" [ref=f7e285] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/19/edit
+                - button "" [ref=f7e287] [cursor=pointer]
+          - row [ref=f7e289]:
+            - cell "Tocha" [ref=f7e290]
+            - cell "1 PC" [ref=f7e291]
+            - cell "0.5 kg" [ref=f7e292]
+            - cell "Luz por 1 hora." [ref=f7e293]
+            - cell [ref=f7e294]:
+              - generic [ref=f7e295]:
+                - link "" [ref=f7e296] [cursor=pointer]:
+                  - /url: http://localhost:8001/equipamentos/14/edit
+                - button "" [ref=f7e298] [cursor=pointer]
+    - paragraph [ref=f7e302]: Forged in the fires of imagination. Creator RPG © 2026

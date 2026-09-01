@@ -1,0 +1,296 @@
+- generic [ref=f6e3]:
+  - text:  
+  - complementary [ref=f6e4]:
+    - link " CREATOR RPG" [ref=f6e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f6e7]: 
+      - generic [ref=f6e8]: CREATOR RPG
+    - navigation [ref=f6e9]:
+      - generic [ref=f6e10]:
+        - paragraph [ref=f6e11]: Essenciais
+        - link " Salão dos Heróis" [ref=f6e14] [cursor=pointer]:
+          - /url: http://localhost:8001/fichas
+          - generic [ref=f6e15]: 
+          - generic [ref=f6e16]: Salão dos Heróis
+      - generic [ref=f6e17]:
+        - paragraph [ref=f6e18]: Criação
+        - link " Classes" [ref=f6e21] [cursor=pointer]:
+          - /url: http://localhost:8001/classes
+          - generic [ref=f6e22]: 
+          - generic [ref=f6e23]: Classes
+        - link " Raças" [ref=f6e24] [cursor=pointer]:
+          - /url: http://localhost:8001/racas
+          - generic [ref=f6e25]: 
+          - generic [ref=f6e26]: Raças
+        - link " Perícias" [ref=f6e27] [cursor=pointer]:
+          - /url: http://localhost:8001/pericias
+          - generic [ref=f6e28]: 
+          - generic [ref=f6e29]: Perícias
+        - link " Talentos" [ref=f6e30] [cursor=pointer]:
+          - /url: http://localhost:8001/talentos
+          - generic [ref=f6e31]: 
+          - generic [ref=f6e32]: Talentos
+        - link " Divindades" [ref=f6e33] [cursor=pointer]:
+          - /url: http://localhost:8001/divindades
+          - generic [ref=f6e34]: 
+          - generic [ref=f6e35]: Divindades
+        - link " Tendências" [ref=f6e36] [cursor=pointer]:
+          - /url: http://localhost:8001/tendencias
+          - generic [ref=f6e37]: 
+          - generic [ref=f6e38]: Tendências
+      - generic [ref=f6e39]:
+        - paragraph [ref=f6e40]: Equipamento & Grimório
+        - link " Magias" [ref=f6e41] [cursor=pointer]:
+          - /url: http://localhost:8001/magias
+          - generic [ref=f6e42]: 
+          - generic [ref=f6e43]: Magias
+        - link "Armas" [ref=f6e44] [cursor=pointer]:
+          - /url: http://localhost:8001/armas
+        - link " Armaduras" [ref=f6e46] [cursor=pointer]:
+          - /url: http://localhost:8001/armaduras
+          - generic [ref=f6e47]: 
+          - generic [ref=f6e48]: Armaduras
+        - link " Itens" [ref=f6e49] [cursor=pointer]:
+          - /url: http://localhost:8001/equipamentos
+          - generic [ref=f6e50]: 
+          - generic [ref=f6e51]: Itens
+    - paragraph [ref=f6e53]: © 2026 RPG Forger
+  - main [ref=f6e54]:
+    - generic [ref=f6e55]:
+      - generic [ref=f6e56]:
+        - generic [ref=f6e57]:
+          - heading " Arsenal de Armaduras" [level=1] [ref=f6e58]:
+            - generic [ref=f6e59]: 
+            - text: Arsenal de Armaduras
+          - paragraph [ref=f6e60]: "\"A melhor proteção é aquela forjada pelo melhor ferreiro.\""
+        - link "+ Nova Armadura" [ref=f6e61] [cursor=pointer]:
+          - /url: http://localhost:8001/armaduras/create
+          - generic [ref=f6e62]: +
+          - text: Nova Armadura
+      - generic [ref=f6e64]:
+        - generic: 
+        - textbox "Buscar armadura pelo nome..." [ref=f6e65]
+      - table [ref=f6e69]:
+        - rowgroup [ref=f6e70]:
+          - row [ref=f6e71]:
+            - columnheader "Nome" [ref=f6e72]
+            - columnheader "Tipo" [ref=f6e73]
+            - columnheader "Bônus CA" [ref=f6e74]
+            - columnheader "Máx. DES" [ref=f6e75]
+            - columnheader "Pen. Arm." [ref=f6e76]
+            - columnheader "Falha Arc." [ref=f6e77]
+            - columnheader "Peso" [ref=f6e78]
+            - columnheader "Preço" [ref=f6e79]
+            - columnheader "Ações" [ref=f6e80]
+        - rowgroup [ref=f6e81]:
+          - row [ref=f6e82]:
+            - cell "Acolchoada" [ref=f6e83]
+            - cell "Leve" [ref=f6e84]
+            - cell "+1" [ref=f6e85]
+            - cell "8" [ref=f6e86]
+            - cell "0" [ref=f6e87]
+            - cell "5%" [ref=f6e88]
+            - cell "5 kg" [ref=f6e89]
+            - cell "5 PO" [ref=f6e90]
+            - cell [ref=f6e91]:
+              - generic [ref=f6e92]:
+                - link "" [ref=f6e93] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/1/edit
+                - button "" [ref=f6e95] [cursor=pointer]
+          - row [ref=f6e97]:
+            - cell "Armadura Completa" [ref=f6e98]
+            - cell "Pesada" [ref=f6e99]
+            - cell "+8" [ref=f6e100]
+            - cell "1" [ref=f6e101]
+            - cell "-6" [ref=f6e102]
+            - cell "35%" [ref=f6e103]
+            - cell "25 kg" [ref=f6e104]
+            - cell "1.500 PO" [ref=f6e105]
+            - cell [ref=f6e106]:
+              - generic [ref=f6e107]:
+                - link "" [ref=f6e108] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/12/edit
+                - button "" [ref=f6e110] [cursor=pointer]
+          - row [ref=f6e112]:
+            - cell "Brunea" [ref=f6e113]
+            - cell "Média" [ref=f6e114]
+            - cell "+4" [ref=f6e115]
+            - cell "3" [ref=f6e116]
+            - cell "-4" [ref=f6e117]
+            - cell "25%" [ref=f6e118]
+            - cell "15 kg" [ref=f6e119]
+            - cell "50 PO" [ref=f6e120]
+            - cell [ref=f6e121]:
+              - generic [ref=f6e122]:
+                - link "" [ref=f6e123] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/6/edit
+                - button "" [ref=f6e125] [cursor=pointer]
+          - row [ref=f6e127]:
+            - cell "Camisão de Cota de Malha" [ref=f6e128]
+            - cell "Leve" [ref=f6e129]
+            - cell "+4" [ref=f6e130]
+            - cell "4" [ref=f6e131]
+            - cell "-2" [ref=f6e132]
+            - cell "20%" [ref=f6e133]
+            - cell "12.5 kg" [ref=f6e134]
+            - cell "100 PO" [ref=f6e135]
+            - cell [ref=f6e136]:
+              - generic [ref=f6e137]:
+                - link "" [ref=f6e138] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/4/edit
+                - button "" [ref=f6e140] [cursor=pointer]
+          - row [ref=f6e142]:
+            - cell "Cota de Anéis" [ref=f6e143]
+            - cell "Pesada" [ref=f6e144]
+            - cell "+7" [ref=f6e145]
+            - cell "1" [ref=f6e146]
+            - cell "-6" [ref=f6e147]
+            - cell "35%" [ref=f6e148]
+            - cell "25 kg" [ref=f6e149]
+            - cell "250 PO" [ref=f6e150]
+            - cell [ref=f6e151]:
+              - generic [ref=f6e152]:
+                - link "" [ref=f6e153] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/10/edit
+                - button "" [ref=f6e155] [cursor=pointer]
+          - row [ref=f6e157]:
+            - cell "Cota de Malha" [ref=f6e158]
+            - cell "Média" [ref=f6e159]
+            - cell "+5" [ref=f6e160]
+            - cell "2" [ref=f6e161]
+            - cell "-5" [ref=f6e162]
+            - cell "30%" [ref=f6e163]
+            - cell "20 kg" [ref=f6e164]
+            - cell "150 PO" [ref=f6e165]
+            - cell [ref=f6e166]:
+              - generic [ref=f6e167]:
+                - link "" [ref=f6e168] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/7/edit
+                - button "" [ref=f6e170] [cursor=pointer]
+          - row [ref=f6e172]:
+            - cell "Cota de Talas" [ref=f6e173]
+            - cell "Pesada" [ref=f6e174]
+            - cell "+6" [ref=f6e175]
+            - cell "0" [ref=f6e176]
+            - cell "-7" [ref=f6e177]
+            - cell "35%" [ref=f6e178]
+            - cell "22.5 kg" [ref=f6e179]
+            - cell "200 PO" [ref=f6e180]
+            - cell [ref=f6e181]:
+              - generic [ref=f6e182]:
+                - link "" [ref=f6e183] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/9/edit
+                - button "" [ref=f6e185] [cursor=pointer]
+          - row [ref=f6e187]:
+            - cell "Couraça" [ref=f6e188]
+            - cell "Média" [ref=f6e189]
+            - cell "+5" [ref=f6e190]
+            - cell "3" [ref=f6e191]
+            - cell "-4" [ref=f6e192]
+            - cell "25%" [ref=f6e193]
+            - cell "15 kg" [ref=f6e194]
+            - cell "200 PO" [ref=f6e195]
+            - cell [ref=f6e196]:
+              - generic [ref=f6e197]:
+                - link "" [ref=f6e198] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/8/edit
+                - button "" [ref=f6e200] [cursor=pointer]
+          - row [ref=f6e202]:
+            - cell "Couro" [ref=f6e203]
+            - cell "Leve" [ref=f6e204]
+            - cell "+2" [ref=f6e205]
+            - cell "6" [ref=f6e206]
+            - cell "0" [ref=f6e207]
+            - cell "10%" [ref=f6e208]
+            - cell "7.5 kg" [ref=f6e209]
+            - cell "10 PO" [ref=f6e210]
+            - cell [ref=f6e211]:
+              - generic [ref=f6e212]:
+                - link "" [ref=f6e213] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/2/edit
+                - button "" [ref=f6e215] [cursor=pointer]
+          - row [ref=f6e217]:
+            - cell "Couro Batido" [ref=f6e218]
+            - cell "Leve" [ref=f6e219]
+            - cell "+3" [ref=f6e220]
+            - cell "5" [ref=f6e221]
+            - cell "-1" [ref=f6e222]
+            - cell "15%" [ref=f6e223]
+            - cell "10 kg" [ref=f6e224]
+            - cell "25 PO" [ref=f6e225]
+            - cell [ref=f6e226]:
+              - generic [ref=f6e227]:
+                - link "" [ref=f6e228] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/3/edit
+                - button "" [ref=f6e230] [cursor=pointer]
+          - row [ref=f6e232]:
+            - cell "Couro Batido Reforçado" [ref=f6e233]
+            - cell "Média" [ref=f6e234]
+            - cell "+3" [ref=f6e235]
+            - cell "4" [ref=f6e236]
+            - cell "-3" [ref=f6e237]
+            - cell "20%" [ref=f6e238]
+            - cell "10 kg" [ref=f6e239]
+            - cell "15 PO" [ref=f6e240]
+            - cell [ref=f6e241]:
+              - generic [ref=f6e242]:
+                - link "" [ref=f6e243] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/5/edit
+                - button "" [ref=f6e245] [cursor=pointer]
+          - row [ref=f6e247]:
+            - cell "Escudo de Corpo" [ref=f6e248]
+            - cell "Escudo" [ref=f6e249]
+            - cell "+4" [ref=f6e250]
+            - cell "2" [ref=f6e251]
+            - cell "-10" [ref=f6e252]
+            - cell "50%" [ref=f6e253]
+            - cell "22.5 kg" [ref=f6e254]
+            - cell "30 PO" [ref=f6e255]
+            - cell [ref=f6e256]:
+              - generic [ref=f6e257]:
+                - link "" [ref=f6e258] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/13/edit
+                - button "" [ref=f6e260] [cursor=pointer]
+          - row [ref=f6e262]:
+            - cell "Escudo Leve" [ref=f6e263]
+            - cell "Escudo" [ref=f6e264]
+            - cell "+1" [ref=f6e265]
+            - cell "—" [ref=f6e266]
+            - cell "-1" [ref=f6e267]
+            - cell "5%" [ref=f6e268]
+            - cell "2.5 kg" [ref=f6e269]
+            - cell "3 PO" [ref=f6e270]
+            - cell [ref=f6e271]:
+              - generic [ref=f6e272]:
+                - link "" [ref=f6e273] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/15/edit
+                - button "" [ref=f6e275] [cursor=pointer]
+          - row [ref=f6e277]:
+            - cell "Escudo Pesado" [ref=f6e278]
+            - cell "Escudo" [ref=f6e279]
+            - cell "+2" [ref=f6e280]
+            - cell "—" [ref=f6e281]
+            - cell "-2" [ref=f6e282]
+            - cell "15%" [ref=f6e283]
+            - cell "7.5 kg" [ref=f6e284]
+            - cell "7 PO" [ref=f6e285]
+            - cell [ref=f6e286]:
+              - generic [ref=f6e287]:
+                - link "" [ref=f6e288] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/14/edit
+                - button "" [ref=f6e290] [cursor=pointer]
+          - row [ref=f6e292]:
+            - cell "Placas" [ref=f6e293]
+            - cell "Pesada" [ref=f6e294]
+            - cell "+7" [ref=f6e295]
+            - cell "0" [ref=f6e296]
+            - cell "-7" [ref=f6e297]
+            - cell "40%" [ref=f6e298]
+            - cell "25 kg" [ref=f6e299]
+            - cell "600 PO" [ref=f6e300]
+            - cell [ref=f6e301]:
+              - generic [ref=f6e302]:
+                - link "" [ref=f6e303] [cursor=pointer]:
+                  - /url: http://localhost:8001/armaduras/11/edit
+                - button "" [ref=f6e305] [cursor=pointer]
+    - paragraph [ref=f6e309]: Forged in the fires of imagination. Creator RPG © 2026

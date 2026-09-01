@@ -1,10 +1,17 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import SearchInput from '@/Components/SearchInput.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { filtrarPorNome } from '@/utils/busca';
 
-defineProps({
+const props = defineProps({
     pericias: Array
 });
+
+const busca = ref('');
+
+const periciasFiltradas = computed(() => filtrarPorNome(props.pericias, busca.value));
 
 const destroy = (id) => {
     if (confirm('Remover esta perícia dos registros?')) {
@@ -26,8 +33,20 @@ const destroy = (id) => {
             </p>
         </div>
 
+        <SearchInput
+            v-model="busca"
+            placeholder="Buscar perícia pelo nome..."
+            :resultados="periciasFiltradas.length"
+            :total="pericias.length"
+        />
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div v-for="pericia in pericias" :key="pericia.id"
+            <div v-if="pericias.length > 0 && periciasFiltradas.length === 0"
+                class="col-span-full text-center py-16 font-lora italic text-parchment-600">
+                Nenhuma perícia encontrada para "{{ busca }}".
+            </div>
+
+            <div v-for="pericia in periciasFiltradas" :key="pericia.id"
                 class="glass-parchment rounded-xl shadow-xl overflow-hidden group hover:scale-105 transition-all duration-300 border border-parchment-400">
 
                 <div class="p-6 bg-parchment-300/30 border-b border-parchment-400 flex justify-between items-center">

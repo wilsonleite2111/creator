@@ -1,10 +1,17 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import SearchInput from '@/Components/SearchInput.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { filtrarPorNome } from '@/utils/busca';
 
-defineProps({
+const props = defineProps({
     armaduras: Array
 });
+
+const busca = ref('');
+
+const armadurasFiltradas = computed(() => filtrarPorNome(props.armaduras, busca.value));
 
 const destroy = (id) => {
     if (confirm('Remover esta armadura do arsenal?')) {
@@ -29,6 +36,13 @@ const destroy = (id) => {
             </Link>
         </div>
 
+        <SearchInput
+            v-model="busca"
+            placeholder="Buscar armadura pelo nome..."
+            :resultados="armadurasFiltradas.length"
+            :total="armaduras.length"
+        />
+
         <v-card class="glass-parchment border border-parchment-400" elevation="4">
             <v-table class="bg-transparent">
                 <thead class="bg-parchment-300 font-cinzel">
@@ -45,7 +59,7 @@ const destroy = (id) => {
                     </tr>
                 </thead>
                 <tbody class="font-lora">
-                    <tr v-for="armadura in armaduras" :key="armadura.id" class="hover:bg-parchment-200 transition-colors">
+                    <tr v-for="armadura in armadurasFiltradas" :key="armadura.id" class="hover:bg-parchment-200 transition-colors">
                         <td class="font-bold font-cinzel">{{ armadura.nome }}</td>
                         <td>{{ armadura.tipo ?? '—' }}</td>
                         <td class="text-center font-bold text-magic-700">+{{ armadura.bonus_ca }}</td>
@@ -65,9 +79,10 @@ const destroy = (id) => {
                             </div>
                         </td>
                     </tr>
-                    <tr v-if="armaduras.length === 0">
+                    <tr v-if="armadurasFiltradas.length === 0">
                         <td colspan="9" class="text-center py-12 italic text-parchment-600">
-                            Nenhuma armadura registrada no arsenal.
+                            <template v-if="armaduras.length === 0">Nenhuma armadura registrada no arsenal.</template>
+                            <template v-else>Nenhuma armadura encontrada para "{{ busca }}".</template>
                         </td>
                     </tr>
                 </tbody>

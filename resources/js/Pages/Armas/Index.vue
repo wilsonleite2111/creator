@@ -1,10 +1,17 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import SearchInput from '@/Components/SearchInput.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { filtrarPorNome } from '@/utils/busca';
 
-defineProps({
+const props = defineProps({
     armas: Array
 });
+
+const busca = ref('');
+
+const armasFiltradas = computed(() => filtrarPorNome(props.armas, busca.value));
 
 const destroy = (id) => {
     if (confirm('Remover esta arma do arsenal?')) {
@@ -29,6 +36,13 @@ const destroy = (id) => {
             </Link>
         </div>
 
+        <SearchInput
+            v-model="busca"
+            placeholder="Buscar arma pelo nome..."
+            :resultados="armasFiltradas.length"
+            :total="armas.length"
+        />
+
         <v-card class="glass-parchment border border-parchment-400" elevation="4">
             <v-table class="bg-transparent">
                 <thead class="bg-parchment-300 font-cinzel">
@@ -45,7 +59,7 @@ const destroy = (id) => {
                     </tr>
                 </thead>
                 <tbody class="font-lora">
-                    <tr v-for="arma in armas" :key="arma.id" class="hover:bg-parchment-200 transition-colors">
+                    <tr v-for="arma in armasFiltradas" :key="arma.id" class="hover:bg-parchment-200 transition-colors">
                         <td class="font-bold font-cinzel">{{ arma.nome }}</td>
                         <td>{{ arma.dano_p ?? '—' }}</td>
                         <td>{{ arma.dano_m ?? '—' }}</td>
@@ -65,9 +79,10 @@ const destroy = (id) => {
                             </div>
                         </td>
                     </tr>
-                    <tr v-if="armas.length === 0">
+                    <tr v-if="armasFiltradas.length === 0">
                         <td colspan="9" class="text-center py-12 italic text-parchment-600">
-                            Nenhuma arma registrada no arsenal.
+                            <template v-if="armas.length === 0">Nenhuma arma registrada no arsenal.</template>
+                            <template v-else>Nenhuma arma encontrada para "{{ busca }}".</template>
                         </td>
                     </tr>
                 </tbody>

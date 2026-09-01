@@ -1,10 +1,17 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import SearchInput from '@/Components/SearchInput.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { filtrarPorNome } from '@/utils/busca';
 
-defineProps({
+const props = defineProps({
     talentos: Array
 });
+
+const busca = ref('');
+
+const talentosFiltrados = computed(() => filtrarPorNome(props.talentos, busca.value));
 
 const destroy = (id) => {
     if (confirm('Remover este talento dos tomos?')) {
@@ -26,8 +33,20 @@ const destroy = (id) => {
             </p>
         </div>
 
+        <SearchInput
+            v-model="busca"
+            placeholder="Buscar talento pelo nome..."
+            :resultados="talentosFiltrados.length"
+            :total="talentos.length"
+        />
+
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div v-for="talento in talentos" :key="talento.id"
+            <div v-if="talentos.length > 0 && talentosFiltrados.length === 0"
+                class="col-span-full text-center py-16 font-lora italic text-parchment-600">
+                Nenhum talento encontrado para "{{ busca }}".
+            </div>
+
+            <div v-for="talento in talentosFiltrados" :key="talento.id"
                 class="glass-parchment rounded-xl shadow-xl overflow-hidden group hover:scale-105 transition-all duration-300 border border-parchment-400">
 
                 <div class="p-6 bg-parchment-300/30 border-b border-parchment-400 flex justify-between items-center">

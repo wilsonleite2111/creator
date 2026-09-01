@@ -1,10 +1,17 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import SearchInput from '@/Components/SearchInput.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { filtrarPorNome } from '@/utils/busca';
 
-defineProps({
+const props = defineProps({
     equipamentos: Array
 });
+
+const busca = ref('');
+
+const equipamentosFiltrados = computed(() => filtrarPorNome(props.equipamentos, busca.value));
 
 const destroy = (id) => {
     if (confirm('Remover este item do inventário?')) {
@@ -29,6 +36,13 @@ const destroy = (id) => {
             </Link>
         </div>
 
+        <SearchInput
+            v-model="busca"
+            placeholder="Buscar item pelo nome..."
+            :resultados="equipamentosFiltrados.length"
+            :total="equipamentos.length"
+        />
+
         <v-card class="glass-parchment border border-parchment-400" elevation="4">
             <v-table class="bg-transparent">
                 <thead class="bg-parchment-300 font-cinzel">
@@ -41,7 +55,7 @@ const destroy = (id) => {
                     </tr>
                 </thead>
                 <tbody class="font-lora">
-                    <tr v-for="equipamento in equipamentos" :key="equipamento.id" class="hover:bg-parchment-200 transition-colors">
+                    <tr v-for="equipamento in equipamentosFiltrados" :key="equipamento.id" class="hover:bg-parchment-200 transition-colors">
                         <td class="font-bold font-cinzel">{{ equipamento.nome }}</td>
                         <td>{{ equipamento.preco ?? '—' }}</td>
                         <td>{{ equipamento.peso != null ? equipamento.peso + ' kg' : '—' }}</td>
@@ -57,9 +71,10 @@ const destroy = (id) => {
                             </div>
                         </td>
                     </tr>
-                    <tr v-if="equipamentos.length === 0">
+                    <tr v-if="equipamentosFiltrados.length === 0">
                         <td colspan="5" class="text-center py-12 italic text-parchment-600">
-                            Nenhum item registrado no inventário.
+                            <template v-if="equipamentos.length === 0">Nenhum item registrado no inventário.</template>
+                            <template v-else>Nenhum item encontrado para "{{ busca }}".</template>
                         </td>
                     </tr>
                 </tbody>

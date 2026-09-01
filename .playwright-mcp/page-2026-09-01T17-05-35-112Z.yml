@@ -1,0 +1,638 @@
+- generic [ref=e3]:
+  - text:  
+  - complementary [ref=e4]:
+    - link " CREATOR RPG" [ref=e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=e7]: 
+      - generic [ref=e8]: CREATOR RPG
+    - navigation [ref=e9]:
+      - generic [ref=e10]:
+        - paragraph [ref=e11]: Essenciais
+        - link " Salão dos Heróis" [ref=e14] [cursor=pointer]:
+          - /url: http://localhost:8001/fichas
+          - generic [ref=e15]: 
+          - generic [ref=e16]: Salão dos Heróis
+      - generic [ref=e17]:
+        - paragraph [ref=e18]: Criação
+        - link " Classes" [ref=e21] [cursor=pointer]:
+          - /url: http://localhost:8001/classes
+          - generic [ref=e22]: 
+          - generic [ref=e23]: Classes
+        - link " Raças" [ref=e24] [cursor=pointer]:
+          - /url: http://localhost:8001/racas
+          - generic [ref=e25]: 
+          - generic [ref=e26]: Raças
+        - link " Perícias" [ref=e27] [cursor=pointer]:
+          - /url: http://localhost:8001/pericias
+          - generic [ref=e28]: 
+          - generic [ref=e29]: Perícias
+        - link " Talentos" [ref=e30] [cursor=pointer]:
+          - /url: http://localhost:8001/talentos
+          - generic [ref=e31]: 
+          - generic [ref=e32]: Talentos
+        - link " Divindades" [ref=e33] [cursor=pointer]:
+          - /url: http://localhost:8001/divindades
+          - generic [ref=e34]: 
+          - generic [ref=e35]: Divindades
+        - link " Tendências" [ref=e36] [cursor=pointer]:
+          - /url: http://localhost:8001/tendencias
+          - generic [ref=e37]: 
+          - generic [ref=e38]: Tendências
+      - generic [ref=e39]:
+        - paragraph [ref=e40]: Equipamento & Grimório
+        - link " Magias" [ref=e41] [cursor=pointer]:
+          - /url: http://localhost:8001/magias
+          - generic [ref=e42]: 
+          - generic [ref=e43]: Magias
+        - link "Armas" [ref=e44] [cursor=pointer]:
+          - /url: http://localhost:8001/armas
+        - link " Armaduras" [ref=e46] [cursor=pointer]:
+          - /url: http://localhost:8001/armaduras
+          - generic [ref=e47]: 
+          - generic [ref=e48]: Armaduras
+        - link " Itens" [ref=e49] [cursor=pointer]:
+          - /url: http://localhost:8001/equipamentos
+          - generic [ref=e50]: 
+          - generic [ref=e51]: Itens
+    - paragraph [ref=e53]: © 2026 RPG Forger
+  - main [ref=e54]:
+    - generic [ref=e55]:
+      - generic [ref=e56]:
+        - heading "Talentos" [level=1] [ref=e57]
+        - paragraph [ref=e58]: "\"Cada talento é um dom forjado pelo destino e aperfeiçoado pela dedicação.\""
+      - generic [ref=e60]:
+        - generic: 
+        - textbox "Buscar talento pelo nome..." [ref=e61]
+      - generic [ref=e62]:
+        - generic [ref=e63]:
+          - generic [ref=e64]:
+            - heading "Acuidade com Arma" [level=2] [ref=e65]
+            - generic [ref=e66]: Combate
+          - generic [ref=e67]:
+            - generic [ref=e68]: Pré-requisitos:BBA +1
+            - paragraph [ref=e69]: "Benefício: Usa o modificador de DES em vez de FOR nas jogadas de ataque com armas leves (e rapieira, corrente espigada, etc.)."
+            - generic [ref=e70]:
+              - link "Editar " [ref=e71] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/14/edit
+                - text: Editar
+                - generic [ref=e72]: 
+              - button "" [ref=e73] [cursor=pointer]
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - heading "Alerta" [level=2] [ref=e77]
+            - generic [ref=e78]: Geral
+          - generic [ref=e79]:
+            - paragraph [ref=e80]: "Benefício: +2 em Ouvir e +2 em Observar."
+            - generic [ref=e81]:
+              - link "Editar " [ref=e82] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/11/edit
+                - text: Editar
+                - generic [ref=e83]: 
+              - button "" [ref=e84] [cursor=pointer]
+        - generic [ref=e86]:
+          - generic [ref=e87]:
+            - heading "Ataque Poderoso" [level=2] [ref=e88]
+            - generic [ref=e89]: Combate
+          - generic [ref=e90]:
+            - generic [ref=e91]: Pré-requisitos:Força 13
+            - paragraph [ref=e92]: "Benefício: Subtrai até o BBA da jogada de ataque e adiciona o mesmo valor ao dano."
+            - generic [ref=e93]:
+              - link "Editar " [ref=e94] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/1/edit
+                - text: Editar
+                - generic [ref=e95]: 
+              - button "" [ref=e96] [cursor=pointer]
+        - generic [ref=e98]:
+          - generic [ref=e99]:
+            - heading "Ataque Rápido" [level=2] [ref=e100]
+            - generic [ref=e101]: Combate
+          - generic [ref=e102]:
+            - generic [ref=e103]: Pré-requisitos:BBA +1
+            - paragraph [ref=e104]: "Benefício: Saca ou guarda uma arma como ação livre em vez de ação de movimento."
+            - generic [ref=e105]:
+              - link "Editar " [ref=e106] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/15/edit
+                - text: Editar
+                - generic [ref=e107]: 
+              - button "" [ref=e108] [cursor=pointer]
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - heading "Carga Violenta" [level=2] [ref=e112]
+            - generic [ref=e113]: Combate
+          - generic [ref=e114]:
+            - generic [ref=e115]: Pré-requisitos:BBA +1
+            - paragraph [ref=e116]: "Benefício: Ao realizar uma carga, pode mover até o dobro do seu deslocamento."
+            - generic [ref=e117]:
+              - link "Editar " [ref=e118] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/16/edit
+                - text: Editar
+                - generic [ref=e119]: 
+              - button "" [ref=e120] [cursor=pointer]
+        - generic [ref=e122]:
+          - generic [ref=e123]:
+            - heading "Combate às Cegas" [level=2] [ref=e124]
+            - generic [ref=e125]: Combate
+          - generic [ref=e126]:
+            - paragraph [ref=e127]: "Benefício: Relança o dado de perda de chance por camuflagem total; inimigos invisíveis não ganham bônus de flanqueamento."
+            - generic [ref=e128]:
+              - link "Editar " [ref=e129] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/17/edit
+                - text: Editar
+                - generic [ref=e130]: 
+              - button "" [ref=e131] [cursor=pointer]
+        - generic [ref=e133]:
+          - generic [ref=e134]:
+            - heading "Combate com Duas Armas" [level=2] [ref=e135]
+            - generic [ref=e136]: Combate
+          - generic [ref=e137]:
+            - generic [ref=e138]: Pré-requisitos:Destreza 15
+            - paragraph [ref=e139]: "Benefício: Reduz a penalidade de combate com duas armas: –2/–2 com arma leve na mão secundária."
+            - generic [ref=e140]:
+              - link "Editar " [ref=e141] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/18/edit
+                - text: Editar
+                - generic [ref=e142]: 
+              - button "" [ref=e143] [cursor=pointer]
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - heading "Combate com Duas Armas Aprimorado" [level=2] [ref=e147]
+            - generic [ref=e148]: Combate
+          - generic [ref=e149]:
+            - generic [ref=e150]: Pré-requisitos:Destreza 17, Combate com Duas Armas, BBA +6
+            - paragraph [ref=e151]: "Benefício: Permite um segundo ataque com a mão secundária (a –5)."
+            - generic [ref=e152]:
+              - link "Editar " [ref=e153] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/19/edit
+                - text: Editar
+                - generic [ref=e154]: 
+              - button "" [ref=e155] [cursor=pointer]
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - heading "Combate Defensivo" [level=2] [ref=e159]
+            - generic [ref=e160]: Combate
+          - generic [ref=e161]:
+            - generic [ref=e162]: Pré-requisitos:Inteligência 13
+            - paragraph [ref=e163]: "Benefício: Subtrai até 5 da jogada de ataque para adicionar o mesmo valor à CA como bônus de esquiva."
+            - generic [ref=e164]:
+              - link "Editar " [ref=e165] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/27/edit
+                - text: Editar
+                - generic [ref=e166]: 
+              - button "" [ref=e167] [cursor=pointer]
+        - generic [ref=e169]:
+          - generic [ref=e170]:
+            - heading "Conjuração Ágil" [level=2] [ref=e171]
+            - generic [ref=e172]: Metamagia
+          - generic [ref=e173]:
+            - paragraph [ref=e174]: "Benefício: Lança a magia como ação livre. Ocupa espaço de magia 4 níveis acima."
+            - generic [ref=e175]:
+              - link "Editar " [ref=e176] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/33/edit
+                - text: Editar
+                - generic [ref=e177]: 
+              - button "" [ref=e178] [cursor=pointer]
+        - generic [ref=e180]:
+          - generic [ref=e181]:
+            - heading "Conjuração Aprimorada" [level=2] [ref=e182]
+            - generic [ref=e183]: Metamagia
+          - generic [ref=e184]:
+            - paragraph [ref=e185]: "Benefício: Aumenta efeitos variáveis de uma magia em 50%. Ocupa espaço de magia 2 níveis acima."
+            - generic [ref=e186]:
+              - link "Editar " [ref=e187] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/32/edit
+                - text: Editar
+                - generic [ref=e188]: 
+              - button "" [ref=e189] [cursor=pointer]
+        - generic [ref=e191]:
+          - generic [ref=e192]:
+            - heading "Conjuração Discreta" [level=2] [ref=e193]
+            - generic [ref=e194]: Metamagia
+          - generic [ref=e195]:
+            - paragraph [ref=e196]: "Benefício: Remove o componente gestual de uma magia. Ocupa espaço de magia 1 nível acima."
+            - generic [ref=e197]:
+              - link "Editar " [ref=e198] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/34/edit
+                - text: Editar
+                - generic [ref=e199]: 
+              - button "" [ref=e200] [cursor=pointer]
+        - generic [ref=e202]:
+          - generic [ref=e203]:
+            - heading "Conjuração Extensa" [level=2] [ref=e204]
+            - generic [ref=e205]: Metamagia
+          - generic [ref=e206]:
+            - paragraph [ref=e207]: "Benefício: Dobra a duração de uma magia com duração que não seja instantânea ou permanente. Ocupa espaço 1 nível acima."
+            - generic [ref=e208]:
+              - link "Editar " [ref=e209] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/35/edit
+                - text: Editar
+                - generic [ref=e210]: 
+              - button "" [ref=e211] [cursor=pointer]
+        - generic [ref=e213]:
+          - generic [ref=e214]:
+            - heading "Conjuração Maximizada" [level=2] [ref=e215]
+            - generic [ref=e216]: Metamagia
+          - generic [ref=e217]:
+            - paragraph [ref=e218]: "Benefício: Maximiza todos os efeitos variáveis de uma magia. Ocupa espaço de magia 3 níveis acima."
+            - generic [ref=e219]:
+              - link "Editar " [ref=e220] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/36/edit
+                - text: Editar
+                - generic [ref=e221]: 
+              - button "" [ref=e222] [cursor=pointer]
+        - generic [ref=e224]:
+          - generic [ref=e225]:
+            - heading "Conjuração Silenciosa" [level=2] [ref=e226]
+            - generic [ref=e227]: Metamagia
+          - generic [ref=e228]:
+            - paragraph [ref=e229]: "Benefício: Remove o componente verbal de uma magia. Ocupa espaço de magia 1 nível acima."
+            - generic [ref=e230]:
+              - link "Editar " [ref=e231] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/37/edit
+                - text: Editar
+                - generic [ref=e232]: 
+              - button "" [ref=e233] [cursor=pointer]
+        - generic [ref=e235]:
+          - generic [ref=e236]:
+            - heading "Corrida" [level=2] [ref=e237]
+            - generic [ref=e238]: Geral
+          - generic [ref=e239]:
+            - paragraph [ref=e240]: "Benefício: Corre 5 vezes seu deslocamento (em vez de 4). Não perde o bônus de DES na CA ao correr."
+            - generic [ref=e241]:
+              - link "Editar " [ref=e242] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/12/edit
+                - text: Editar
+                - generic [ref=e243]: 
+              - button "" [ref=e244] [cursor=pointer]
+        - generic [ref=e246]:
+          - generic [ref=e247]:
+            - heading "Disparo a Longa Distância" [level=2] [ref=e248]
+            - generic [ref=e249]: Combate
+          - generic [ref=e250]:
+            - generic [ref=e251]: Pré-requisitos:Tiro Certeiro
+            - paragraph [ref=e252]: "Benefício: Dobra o alcance incremental de armas de ataque à distância."
+            - generic [ref=e253]:
+              - link "Editar " [ref=e254] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/20/edit
+                - text: Editar
+                - generic [ref=e255]: 
+              - button "" [ref=e256] [cursor=pointer]
+        - generic [ref=e258]:
+          - generic [ref=e259]:
+            - heading "Disparo Rápido" [level=2] [ref=e260]
+            - generic [ref=e261]: Combate
+          - generic [ref=e262]:
+            - generic [ref=e263]: Pré-requisitos:Destreza 13, Tiro Certeiro
+            - paragraph [ref=e264]: "Benefício: Ataque extra com arma de ataque à distância por rodada, porém todos os ataques da rodada sofrem –2."
+            - generic [ref=e265]:
+              - link "Editar " [ref=e266] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/21/edit
+                - text: Editar
+                - generic [ref=e267]: 
+              - button "" [ref=e268] [cursor=pointer]
+        - generic [ref=e270]:
+          - generic [ref=e271]:
+            - heading "Escrever Pergaminho" [level=2] [ref=e272]
+            - generic [ref=e273]: Criação
+          - generic [ref=e274]:
+            - generic [ref=e275]: Pré-requisitos:Nível de conjurador 1
+            - paragraph [ref=e276]: "Benefício: Pode criar pergaminhos mágicos com magias que conhece."
+            - generic [ref=e277]:
+              - link "Editar " [ref=e278] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/45/edit
+                - text: Editar
+                - generic [ref=e279]: 
+              - button "" [ref=e280] [cursor=pointer]
+        - generic [ref=e282]:
+          - generic [ref=e283]:
+            - heading "Especialização em Arma" [level=2] [ref=e284]
+            - generic [ref=e285]: Combate
+          - generic [ref=e286]:
+            - generic [ref=e287]: Pré-requisitos:Foco em Arma, Guerreiro 4
+            - paragraph [ref=e288]: "Benefício: +2 de dano nas jogadas de dano com a arma escolhida."
+            - generic [ref=e289]:
+              - link "Editar " [ref=e290] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/25/edit
+                - text: Editar
+                - generic [ref=e291]: 
+              - button "" [ref=e292] [cursor=pointer]
+        - generic [ref=e294]:
+          - generic [ref=e295]:
+            - heading "Especialização em Combate" [level=2] [ref=e296]
+            - generic [ref=e297]: Combate
+          - generic [ref=e298]:
+            - generic [ref=e299]: Pré-requisitos:Inteligência 13
+            - paragraph [ref=e300]: "Benefício: O personagem pode subtrair um valor de sua jogada de ataque e adicioná-lo à sua CA como um bônus de esquiva."
+            - generic [ref=e301]:
+              - link "Editar " [ref=e302] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/2/edit
+                - text: Editar
+                - generic [ref=e303]: 
+              - button "" [ref=e304] [cursor=pointer]
+        - generic [ref=e306]:
+          - generic [ref=e307]:
+            - heading "Esquiva" [level=2] [ref=e308]
+            - generic [ref=e309]: Combate
+          - generic [ref=e310]:
+            - generic [ref=e311]: Pré-requisitos:Destreza 13
+            - paragraph [ref=e312]: "Benefício: +1 de bônus de esquiva na CA contra um oponente designado por turno."
+            - generic [ref=e313]:
+              - link "Editar " [ref=e314] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/3/edit
+                - text: Editar
+                - generic [ref=e315]: 
+              - button "" [ref=e316] [cursor=pointer]
+        - generic [ref=e318]:
+          - generic [ref=e319]:
+            - heading "Expulsão Aprimorada" [level=2] [ref=e320]
+            - generic [ref=e321]: Divino
+          - generic [ref=e322]:
+            - generic [ref=e323]: Pré-requisitos:Capacidade de expulsar mortos-vivos
+            - paragraph [ref=e324]: "Benefício: 4 tentativas adicionais de expulsar mortos-vivos por dia."
+            - generic [ref=e325]:
+              - link "Editar " [ref=e326] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/30/edit
+                - text: Editar
+                - generic [ref=e327]: 
+              - button "" [ref=e328] [cursor=pointer]
+        - generic [ref=e330]:
+          - generic [ref=e331]:
+            - heading "Expulsão Potente" [level=2] [ref=e332]
+            - generic [ref=e333]: Divino
+          - generic [ref=e334]:
+            - generic [ref=e335]: Pré-requisitos:Capacidade de expulsar mortos-vivos, Carisma 21
+            - paragraph [ref=e336]: "Benefício: Mortos-vivos afetados pela expulsão são destruídos em vez de afugentados."
+            - generic [ref=e337]:
+              - link "Editar " [ref=e338] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/31/edit
+                - text: Editar
+                - generic [ref=e339]: 
+              - button "" [ref=e340] [cursor=pointer]
+        - generic [ref=e342]:
+          - generic [ref=e343]:
+            - heading "Foco em Arma" [level=2] [ref=e344]
+            - generic [ref=e345]: Combate
+          - generic [ref=e346]:
+            - generic [ref=e347]: Pré-requisitos:Proficiência com a arma, BBA +1
+            - paragraph [ref=e348]: "Benefício: +1 em todas as jogadas de ataque com a arma escolhida."
+            - generic [ref=e349]:
+              - link "Editar " [ref=e350] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/10/edit
+                - text: Editar
+                - generic [ref=e351]: 
+              - button "" [ref=e352] [cursor=pointer]
+        - generic [ref=e354]:
+          - generic [ref=e355]:
+            - heading "Foco em Arma Maior" [level=2] [ref=e356]
+            - generic [ref=e357]: Combate
+          - generic [ref=e358]:
+            - generic [ref=e359]: Pré-requisitos:Foco em Arma, Guerreiro 8
+            - paragraph [ref=e360]: "Benefício: +1 adicional nas jogadas de ataque com a arma escolhida (total +2)."
+            - generic [ref=e361]:
+              - link "Editar " [ref=e362] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/22/edit
+                - text: Editar
+                - generic [ref=e363]: 
+              - button "" [ref=e364] [cursor=pointer]
+        - generic [ref=e366]:
+          - generic [ref=e367]:
+            - heading "Foco em Conjuração" [level=2] [ref=e368]
+            - generic [ref=e369]: Conjuração
+          - generic [ref=e370]:
+            - paragraph [ref=e371]: "Benefício: +1 na CD para resistir às magias de uma escola escolhida."
+            - generic [ref=e372]:
+              - link "Editar " [ref=e373] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/38/edit
+                - text: Editar
+                - generic [ref=e374]: 
+              - button "" [ref=e375] [cursor=pointer]
+        - generic [ref=e377]:
+          - generic [ref=e378]:
+            - heading "Foco em Conjuração Maior" [level=2] [ref=e379]
+            - generic [ref=e380]: Conjuração
+          - generic [ref=e381]:
+            - generic [ref=e382]: Pré-requisitos:Foco em Conjuração
+            - paragraph [ref=e383]: "Benefício: +1 adicional na CD das magias da escola escolhida (total +2)."
+            - generic [ref=e384]:
+              - link "Editar " [ref=e385] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/39/edit
+                - text: Editar
+                - generic [ref=e386]: 
+              - button "" [ref=e387] [cursor=pointer]
+        - generic [ref=e389]:
+          - generic [ref=e390]:
+            - heading "Forja de Anel" [level=2] [ref=e391]
+            - generic [ref=e392]: Criação
+          - generic [ref=e393]:
+            - generic [ref=e394]: Pré-requisitos:Nível de conjurador 12
+            - paragraph [ref=e395]: "Benefício: Pode criar anéis mágicos conforme as regras de itens mágicos."
+            - generic [ref=e396]:
+              - link "Editar " [ref=e397] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/42/edit
+                - text: Editar
+                - generic [ref=e398]: 
+              - button "" [ref=e399] [cursor=pointer]
+        - generic [ref=e401]:
+          - generic [ref=e402]:
+            - heading "Forja de Arma Mágica" [level=2] [ref=e403]
+            - generic [ref=e404]: Criação
+          - generic [ref=e405]:
+            - generic [ref=e406]: Pré-requisitos:Nível de conjurador 5
+            - paragraph [ref=e407]: "Benefício: Pode criar armas e armaduras mágicas conforme as regras de itens mágicos."
+            - generic [ref=e408]:
+              - link "Editar " [ref=e409] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/41/edit
+                - text: Editar
+                - generic [ref=e410]: 
+              - button "" [ref=e411] [cursor=pointer]
+        - generic [ref=e413]:
+          - generic [ref=e414]:
+            - heading "Forja de Maravilha" [level=2] [ref=e415]
+            - generic [ref=e416]: Criação
+          - generic [ref=e417]:
+            - generic [ref=e418]: Pré-requisitos:Nível de conjurador 3
+            - paragraph [ref=e419]: "Benefício: Pode criar itens mágicos maravilhosos (capas, cintos, botas, amuletos etc.)."
+            - generic [ref=e420]:
+              - link "Editar " [ref=e421] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/44/edit
+                - text: Editar
+                - generic [ref=e422]: 
+              - button "" [ref=e423] [cursor=pointer]
+        - generic [ref=e425]:
+          - generic [ref=e426]:
+            - heading "Forja de Varinha" [level=2] [ref=e427]
+            - generic [ref=e428]: Criação
+          - generic [ref=e429]:
+            - generic [ref=e430]: Pré-requisitos:Nível de conjurador 5
+            - paragraph [ref=e431]: "Benefício: Pode criar varinhas mágicas contendo uma magia de nível 1 a 4."
+            - generic [ref=e432]:
+              - link "Editar " [ref=e433] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/43/edit
+                - text: Editar
+                - generic [ref=e434]: 
+              - button "" [ref=e435] [cursor=pointer]
+        - generic [ref=e437]:
+          - generic [ref=e438]:
+            - heading "Golpe Atordoante" [level=2] [ref=e439]
+            - generic [ref=e440]: Combate
+          - generic [ref=e441]:
+            - generic [ref=e442]: Pré-requisitos:Destreza 13, Sabedoria 13, BBA +8 ou Monge 1
+            - paragraph [ref=e443]: "Benefício: Declare antes do ataque desarmado: se acertar, o alvo faz Fortitude (CD 10 + metade do nível + mod SAB) ou fica atordoado por 1 rodada."
+            - generic [ref=e444]:
+              - link "Editar " [ref=e445] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/23/edit
+                - text: Editar
+                - generic [ref=e446]: 
+              - button "" [ref=e447] [cursor=pointer]
+        - generic [ref=e449]:
+          - generic [ref=e450]:
+            - heading "Grande Fortitude" [level=2] [ref=e451]
+            - generic [ref=e452]: Geral
+          - generic [ref=e453]:
+            - paragraph [ref=e454]: "Benefício: +2 em todos os testes de resistência de Fortitude."
+            - generic [ref=e455]:
+              - link "Editar " [ref=e456] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/8/edit
+                - text: Editar
+                - generic [ref=e457]: 
+              - button "" [ref=e458] [cursor=pointer]
+        - generic [ref=e460]:
+          - generic [ref=e461]:
+            - heading "Iniciativa Aprimorada" [level=2] [ref=e462]
+            - generic [ref=e463]: Geral
+          - generic [ref=e464]:
+            - paragraph [ref=e465]: "Benefício: +4 em testes de iniciativa."
+            - generic [ref=e466]:
+              - link "Editar " [ref=e467] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/4/edit
+                - text: Editar
+                - generic [ref=e468]: 
+              - button "" [ref=e469] [cursor=pointer]
+        - generic [ref=e471]:
+          - generic [ref=e472]:
+            - heading "Maestria em Combate" [level=2] [ref=e473]
+            - generic [ref=e474]: Combate
+          - generic [ref=e475]:
+            - generic [ref=e476]: Pré-requisitos:Destreza 13
+            - paragraph [ref=e477]: "Benefício: Pode realizar ataques de oportunidade adicionais por rodada igual ao modificador de DES (mín. 1)."
+            - generic [ref=e478]:
+              - link "Editar " [ref=e479] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/24/edit
+                - text: Editar
+                - generic [ref=e480]: 
+              - button "" [ref=e481] [cursor=pointer]
+        - generic [ref=e483]:
+          - generic [ref=e484]:
+            - heading "Mobilidade" [level=2] [ref=e485]
+            - generic [ref=e486]: Combate
+          - generic [ref=e487]:
+            - generic [ref=e488]: Pré-requisitos:Destreza 13, Esquiva
+            - paragraph [ref=e489]: "Benefício: +4 de bônus de esquiva na CA contra ataques de oportunidade provocados por movimento."
+            - generic [ref=e490]:
+              - link "Editar " [ref=e491] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/28/edit
+                - text: Editar
+                - generic [ref=e492]: 
+              - button "" [ref=e493] [cursor=pointer]
+        - generic [ref=e495]:
+          - generic [ref=e496]:
+            - heading "Penetrar Resistência a Magia" [level=2] [ref=e497]
+            - generic [ref=e498]: Conjuração
+          - generic [ref=e499]:
+            - paragraph [ref=e500]: "Benefício: +2 nas rolagens de nível de conjurador para superar a Resistência a Magia de criaturas."
+            - generic [ref=e501]:
+              - link "Editar " [ref=e502] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/40/edit
+                - text: Editar
+                - generic [ref=e503]: 
+              - button "" [ref=e504] [cursor=pointer]
+        - generic [ref=e506]:
+          - generic [ref=e507]:
+            - heading "Reflexos Rápidos" [level=2] [ref=e508]
+            - generic [ref=e509]: Geral
+          - generic [ref=e510]:
+            - paragraph [ref=e511]: "Benefício: +2 em todos os testes de resistência de Reflexos."
+            - generic [ref=e512]:
+              - link "Editar " [ref=e513] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/9/edit
+                - text: Editar
+                - generic [ref=e514]: 
+              - button "" [ref=e515] [cursor=pointer]
+        - generic [ref=e517]:
+          - generic [ref=e518]:
+            - heading "Salto Feérico" [level=2] [ref=e519]
+            - generic [ref=e520]: Combate
+          - generic [ref=e521]:
+            - generic [ref=e522]: Pré-requisitos:Destreza 13, Esquiva, Mobilidade, BBA +4
+            - paragraph [ref=e523]: "Benefício: Move-se até o deslocamento, realiza um único ataque corpo a corpo e continua movendo-se, tudo como ação padrão."
+            - generic [ref=e524]:
+              - link "Editar " [ref=e525] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/29/edit
+                - text: Editar
+                - generic [ref=e526]: 
+              - button "" [ref=e527] [cursor=pointer]
+        - generic [ref=e529]:
+          - generic [ref=e530]:
+            - heading "Tiro Certeiro" [level=2] [ref=e531]
+            - generic [ref=e532]: Combate
+          - generic [ref=e533]:
+            - paragraph [ref=e534]: "Benefício: +1 nas jogadas de ataque e de dano com armas de ataque à distância contra alvos a até 9 metros."
+            - generic [ref=e535]:
+              - link "Editar " [ref=e536] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/5/edit
+                - text: Editar
+                - generic [ref=e537]: 
+              - button "" [ref=e538] [cursor=pointer]
+        - generic [ref=e540]:
+          - generic [ref=e541]:
+            - heading "Tiro Preciso" [level=2] [ref=e542]
+            - generic [ref=e543]: Combate
+          - generic [ref=e544]:
+            - generic [ref=e545]: Pré-requisitos:Tiro Certeiro
+            - paragraph [ref=e546]: "Benefício: Pode atirar ou arremessar armas de ataque à distância em combate corpo a corpo sem penalidade de –4."
+            - generic [ref=e547]:
+              - link "Editar " [ref=e548] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/26/edit
+                - text: Editar
+                - generic [ref=e549]: 
+              - button "" [ref=e550] [cursor=pointer]
+        - generic [ref=e552]:
+          - generic [ref=e553]:
+            - heading "Vigor" [level=2] [ref=e554]
+            - generic [ref=e555]: Geral
+          - generic [ref=e556]:
+            - paragraph [ref=e557]: "Benefício: +4 nos testes de Constituição feitos para resistir a privação (exaustão, desidratação, sufocamento)."
+            - generic [ref=e558]:
+              - link "Editar " [ref=e559] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/13/edit
+                - text: Editar
+                - generic [ref=e560]: 
+              - button "" [ref=e561] [cursor=pointer]
+        - generic [ref=e563]:
+          - generic [ref=e564]:
+            - heading "Vitalidade" [level=2] [ref=e565]
+            - generic [ref=e566]: Geral
+          - generic [ref=e567]:
+            - paragraph [ref=e568]: "Benefício: +3 pontos de vida permanentes."
+            - generic [ref=e569]:
+              - link "Editar " [ref=e570] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/6/edit
+                - text: Editar
+                - generic [ref=e571]: 
+              - button "" [ref=e572] [cursor=pointer]
+        - generic [ref=e574]:
+          - generic [ref=e575]:
+            - heading "Vontade de Ferro" [level=2] [ref=e576]
+            - generic [ref=e577]: Geral
+          - generic [ref=e578]:
+            - paragraph [ref=e579]: "Benefício: +2 em todos os testes de resistência de Vontade."
+            - generic [ref=e580]:
+              - link "Editar " [ref=e581] [cursor=pointer]:
+                - /url: http://localhost:8001/talentos/7/edit
+                - text: Editar
+                - generic [ref=e582]: 
+              - button "" [ref=e583] [cursor=pointer]
+        - link " Novo Talento" [ref=e585] [cursor=pointer]:
+          - /url: http://localhost:8001/talentos/create
+          - generic [ref=e586]: 
+          - generic [ref=e587]: Novo Talento
+    - paragraph [ref=e590]: Forged in the fires of imagination. Creator RPG © 2026

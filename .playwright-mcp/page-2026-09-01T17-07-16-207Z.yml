@@ -1,0 +1,511 @@
+- generic [ref=f3e3]:
+  - text:  
+  - complementary [ref=f3e4]:
+    - link " CREATOR RPG" [ref=f3e6] [cursor=pointer]:
+      - /url: /
+      - generic [ref=f3e7]: 
+      - generic [ref=f3e8]: CREATOR RPG
+    - navigation [ref=f3e9]:
+      - generic [ref=f3e10]:
+        - paragraph [ref=f3e11]: Essenciais
+        - link " Salão dos Heróis" [ref=f3e14] [cursor=pointer]:
+          - /url: http://localhost:8001/fichas
+          - generic [ref=f3e15]: 
+          - generic [ref=f3e16]: Salão dos Heróis
+      - generic [ref=f3e17]:
+        - paragraph [ref=f3e18]: Criação
+        - link " Classes" [ref=f3e21] [cursor=pointer]:
+          - /url: http://localhost:8001/classes
+          - generic [ref=f3e22]: 
+          - generic [ref=f3e23]: Classes
+        - link " Raças" [ref=f3e24] [cursor=pointer]:
+          - /url: http://localhost:8001/racas
+          - generic [ref=f3e25]: 
+          - generic [ref=f3e26]: Raças
+        - link " Perícias" [ref=f3e27] [cursor=pointer]:
+          - /url: http://localhost:8001/pericias
+          - generic [ref=f3e28]: 
+          - generic [ref=f3e29]: Perícias
+        - link " Talentos" [ref=f3e30] [cursor=pointer]:
+          - /url: http://localhost:8001/talentos
+          - generic [ref=f3e31]: 
+          - generic [ref=f3e32]: Talentos
+        - link " Divindades" [ref=f3e33] [cursor=pointer]:
+          - /url: http://localhost:8001/divindades
+          - generic [ref=f3e34]: 
+          - generic [ref=f3e35]: Divindades
+        - link " Tendências" [ref=f3e36] [cursor=pointer]:
+          - /url: http://localhost:8001/tendencias
+          - generic [ref=f3e37]: 
+          - generic [ref=f3e38]: Tendências
+      - generic [ref=f3e39]:
+        - paragraph [ref=f3e40]: Equipamento & Grimório
+        - link " Magias" [ref=f3e41] [cursor=pointer]:
+          - /url: http://localhost:8001/magias
+          - generic [ref=f3e42]: 
+          - generic [ref=f3e43]: Magias
+        - link "Armas" [ref=f3e44] [cursor=pointer]:
+          - /url: http://localhost:8001/armas
+        - link " Armaduras" [ref=f3e46] [cursor=pointer]:
+          - /url: http://localhost:8001/armaduras
+          - generic [ref=f3e47]: 
+          - generic [ref=f3e48]: Armaduras
+        - link " Itens" [ref=f3e49] [cursor=pointer]:
+          - /url: http://localhost:8001/equipamentos
+          - generic [ref=f3e50]: 
+          - generic [ref=f3e51]: Itens
+    - paragraph [ref=f3e53]: © 2026 RPG Forger
+  - main [ref=f3e54]:
+    - generic [ref=f3e55]:
+      - generic [ref=f3e56]:
+        - heading "Panteão" [level=1] [ref=f3e57]
+        - paragraph [ref=f3e58]: "\"Os deuses observam os mortais com interesse, concedendo dons àqueles que os servem fielmente.\""
+      - generic [ref=f3e60]:
+        - generic: 
+        - textbox "Buscar divindade pelo nome..." [ref=f3e61]
+      - generic [ref=f3e62]:
+        - generic [ref=f3e63]:
+          - generic [ref=f3e65]:
+            - generic [ref=f3e66]:
+              - heading "Boccob" [level=2] [ref=f3e67]
+              - paragraph [ref=f3e68]: O Sem par, Senhor de Toda Magia
+            - generic [ref=f3e69]: Neutro
+          - generic [ref=f3e70]:
+            - generic [ref=f3e71]:
+              - generic [ref=f3e72]: 
+              - text: Domínios:Conhecimento, Magia, Proteção
+            - generic [ref=f3e73]:
+              - generic [ref=f3e74]: 
+              - text: Arma:Cajado
+            - paragraph [ref=f3e75]: Deus da magia e do conhecimento arcano. Boccob é indiferente à moral, preocupando-se apenas com a preservação e o avanço da magia no mundo.
+            - generic [ref=f3e76]:
+              - link "Editar " [ref=f3e77] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/9/edit
+                - text: Editar
+                - generic [ref=f3e78]: 
+              - button "" [ref=f3e79] [cursor=pointer]
+        - generic [ref=f3e81]:
+          - generic [ref=f3e83]:
+            - generic [ref=f3e84]:
+              - heading "Corellon Larethian" [level=2] [ref=f3e85]
+              - paragraph [ref=f3e86]: Criador dos Elfos, Senhor das Artes
+            - generic [ref=f3e87]: Caótico e Bom
+          - generic [ref=f3e88]:
+            - generic [ref=f3e89]:
+              - generic [ref=f3e90]: 
+              - text: Domínios:Bem, Caos, Magia, Proteção, Guerra
+            - generic [ref=f3e91]:
+              - generic [ref=f3e92]: 
+              - text: Arma:Espada Longa
+            - paragraph [ref=f3e93]: Divindade principal do panteão élfico. Patrono das artes, magia, música e da proteção dos elfos contra Lolth e Gruumsh.
+            - generic [ref=f3e94]:
+              - link "Editar " [ref=f3e95] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/5/edit
+                - text: Editar
+                - generic [ref=f3e96]: 
+              - button "" [ref=f3e97] [cursor=pointer]
+        - generic [ref=f3e99]:
+          - generic [ref=f3e101]:
+            - generic [ref=f3e102]:
+              - heading "Ehlonna" [level=2] [ref=f3e103]
+              - paragraph [ref=f3e104]: Senhora das Florestas
+            - generic [ref=f3e105]: Neutro e Bom
+          - generic [ref=f3e106]:
+            - generic [ref=f3e107]:
+              - generic [ref=f3e108]: 
+              - text: Domínios:Animais, Bem, Plantas, Sol
+            - generic [ref=f3e109]:
+              - generic [ref=f3e110]: 
+              - text: Arma:Lança Longa
+            - paragraph [ref=f3e111]: Deusa das florestas, das pastagens e de todos os animais e plantas. Protetora das criaturas da natureza e dos que vivem em harmonia com ela.
+            - generic [ref=f3e112]:
+              - link "Editar " [ref=f3e113] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/10/edit
+                - text: Editar
+                - generic [ref=f3e114]: 
+              - button "" [ref=f3e115] [cursor=pointer]
+        - generic [ref=f3e117]:
+          - generic [ref=f3e119]:
+            - generic [ref=f3e120]:
+              - heading "Erythnul" [level=2] [ref=f3e121]
+              - paragraph [ref=f3e122]: O Muitos Rostos, Senhor do Massacre
+            - generic [ref=f3e123]: Caótico e Mau
+          - generic [ref=f3e124]:
+            - generic [ref=f3e125]:
+              - generic [ref=f3e126]: 
+              - text: Domínios:Caos, Mal, Trapaça, Guerra
+            - generic [ref=f3e127]:
+              - generic [ref=f3e128]: 
+              - text: Arma:Mangual Pesado
+            - paragraph [ref=f3e129]: Deus do ódio, da inveja, do massacre e do pânico. Seus seguidores caóticos e violentos são conhecidos por semear terror e destruição.
+            - generic [ref=f3e130]:
+              - link "Editar " [ref=f3e131] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/11/edit
+                - text: Editar
+                - generic [ref=f3e132]: 
+              - button "" [ref=f3e133] [cursor=pointer]
+        - generic [ref=f3e135]:
+          - generic [ref=f3e137]:
+            - generic [ref=f3e138]:
+              - heading "Fharlanghn" [level=2] [ref=f3e139]
+              - paragraph [ref=f3e140]: O Distante, Horizonte do Viajante
+            - generic [ref=f3e141]: Neutro
+          - generic [ref=f3e142]:
+            - generic [ref=f3e143]:
+              - generic [ref=f3e144]: 
+              - text: Domínios:Sorte, Proteção, Viagem
+            - generic [ref=f3e145]:
+              - generic [ref=f3e146]: 
+              - text: Arma:Bordão
+            - paragraph [ref=f3e147]: Deus das estradas, das distâncias e da viagem. Protege mercadores, mensageiros e todos que percorrem longos caminhos.
+            - generic [ref=f3e148]:
+              - link "Editar " [ref=f3e149] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/12/edit
+                - text: Editar
+                - generic [ref=f3e150]: 
+              - button "" [ref=f3e151] [cursor=pointer]
+        - generic [ref=f3e153]:
+          - generic [ref=f3e155]:
+            - generic [ref=f3e156]:
+              - heading "Garl Glittergold" [level=2] [ref=f3e157]
+              - paragraph [ref=f3e158]: O Protetor Brilhante, Rei dos Gnomos
+            - generic [ref=f3e159]: Neutro e Bom
+          - generic [ref=f3e160]:
+            - generic [ref=f3e161]:
+              - generic [ref=f3e162]: 
+              - text: Domínios:Bem, Proteção, Trapaça
+            - generic [ref=f3e163]:
+              - generic [ref=f3e164]: 
+              - text: Arma:Machadinha de Batalha
+            - paragraph [ref=f3e165]: Divindade principal dos gnomos. Patrono da ilusão, da joalheria, do humor e da proteção do povo gnômico.
+            - generic [ref=f3e166]:
+              - link "Editar " [ref=f3e167] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/13/edit
+                - text: Editar
+                - generic [ref=f3e168]: 
+              - button "" [ref=f3e169] [cursor=pointer]
+        - generic [ref=f3e171]:
+          - generic [ref=f3e173]:
+            - generic [ref=f3e174]:
+              - heading "Gruumsh" [level=2] [ref=f3e175]
+              - paragraph [ref=f3e176]: O que Não Pisca, Senhor dos Orcs
+            - generic [ref=f3e177]: Caótico e Mau
+          - generic [ref=f3e178]:
+            - generic [ref=f3e179]:
+              - generic [ref=f3e180]: 
+              - text: Domínios:Caos, Força, Mal, Guerra
+            - generic [ref=f3e181]:
+              - generic [ref=f3e182]: 
+              - text: Arma:Lança
+            - paragraph [ref=f3e183]: Divindade principal dos orcs. Um-Olhado após conflito com Corellon Larethian, comanda seus seguidores a destruir elfos e conquistar territórios.
+            - generic [ref=f3e184]:
+              - link "Editar " [ref=f3e185] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/14/edit
+                - text: Editar
+                - generic [ref=f3e186]: 
+              - button "" [ref=f3e187] [cursor=pointer]
+        - generic [ref=f3e189]:
+          - generic [ref=f3e191]:
+            - generic [ref=f3e192]:
+              - heading "Heironeous" [level=2] [ref=f3e193]
+              - paragraph [ref=f3e194]: O Invencível
+            - generic [ref=f3e195]: Leal e Bom
+          - generic [ref=f3e196]:
+            - generic [ref=f3e197]:
+              - generic [ref=f3e198]: 
+              - text: Domínios:Bem, Glória, Guerra, Lei
+            - generic [ref=f3e199]:
+              - generic [ref=f3e200]: 
+              - text: Arma:Espada Longa
+            - paragraph [ref=f3e201]: Deus da justiça, cavalheirismo, bravura e honra. Patrono dos paladinos e guerreiros nobres. Rival eterno de seu meio-irmão Hextor.
+            - generic [ref=f3e202]:
+              - link "Editar " [ref=f3e203] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/1/edit
+                - text: Editar
+                - generic [ref=f3e204]: 
+              - button "" [ref=f3e205] [cursor=pointer]
+        - generic [ref=f3e207]:
+          - generic [ref=f3e209]:
+            - generic [ref=f3e210]:
+              - heading "Hextor" [level=2] [ref=f3e211]
+              - paragraph [ref=f3e212]: Arauto da Guerra, Campeão do Mal
+            - generic [ref=f3e213]: Leal e Mau
+          - generic [ref=f3e214]:
+            - generic [ref=f3e215]:
+              - generic [ref=f3e216]: 
+              - text: Domínios:Destruição, Guerra, Lei, Mal
+            - generic [ref=f3e217]:
+              - generic [ref=f3e218]: 
+              - text: Arma:Mangual Pesado
+            - paragraph [ref=f3e219]: Deus da guerra, discórdia, massacres e tirania. Meio-irmão e rival de Heironeous, comanda exércitos malignos com mão de ferro.
+            - generic [ref=f3e220]:
+              - link "Editar " [ref=f3e221] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/7/edit
+                - text: Editar
+                - generic [ref=f3e222]: 
+              - button "" [ref=f3e223] [cursor=pointer]
+        - generic [ref=f3e225]:
+          - generic [ref=f3e227]:
+            - generic [ref=f3e228]:
+              - heading "Kord" [level=2] [ref=f3e229]
+              - paragraph [ref=f3e230]: O Senhor da Força
+            - generic [ref=f3e231]: Caótico e Bom
+          - generic [ref=f3e232]:
+            - generic [ref=f3e233]:
+              - generic [ref=f3e234]: 
+              - text: Domínios:Bem, Caos, Força, Sorte
+            - generic [ref=f3e235]:
+              - generic [ref=f3e236]: 
+              - text: Arma:Espada Grande
+            - paragraph [ref=f3e237]: Deus da força, atletismo, esportes e coragem física. Patrono de guerreiros e atletas que testam constantemente seus limites.
+            - generic [ref=f3e238]:
+              - link "Editar " [ref=f3e239] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/3/edit
+                - text: Editar
+                - generic [ref=f3e240]: 
+              - button "" [ref=f3e241] [cursor=pointer]
+        - generic [ref=f3e243]:
+          - generic [ref=f3e245]:
+            - generic [ref=f3e246]:
+              - heading "Moradin" [level=2] [ref=f3e247]
+              - paragraph [ref=f3e248]: O Forjador de Almas, Pai dos Anões
+            - generic [ref=f3e249]: Leal e Bom
+          - generic [ref=f3e250]:
+            - generic [ref=f3e251]:
+              - generic [ref=f3e252]: 
+              - text: Domínios:Bem, Lei, Proteção, Terra
+            - generic [ref=f3e253]:
+              - generic [ref=f3e254]: 
+              - text: Arma:Martelo de Guerra
+            - paragraph [ref=f3e255]: Divindade principal dos anões. Deus da criação, da forja, da família e da proteção da raça anã desde os tempos primordiais.
+            - generic [ref=f3e256]:
+              - link "Editar " [ref=f3e257] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/4/edit
+                - text: Editar
+                - generic [ref=f3e258]: 
+              - button "" [ref=f3e259] [cursor=pointer]
+        - generic [ref=f3e261]:
+          - generic [ref=f3e263]:
+            - generic [ref=f3e264]:
+              - heading "Nerull" [level=2] [ref=f3e265]
+              - paragraph [ref=f3e266]: O Ceifador, Senhor dos Mortos
+            - generic [ref=f3e267]: Neutro e Mau
+          - generic [ref=f3e268]:
+            - generic [ref=f3e269]:
+              - generic [ref=f3e270]: 
+              - text: Domínios:Mal, Morte, Trevas
+            - generic [ref=f3e271]:
+              - generic [ref=f3e272]: 
+              - text: Arma:Foice
+            - paragraph [ref=f3e273]: Deus da morte, das trevas e do assassinato. O mais odiado dos deuses, Nerull abomina a vida e os vivos, buscando encher seus reinos com almas.
+            - generic [ref=f3e274]:
+              - link "Editar " [ref=f3e275] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/15/edit
+                - text: Editar
+                - generic [ref=f3e276]: 
+              - button "" [ref=f3e277] [cursor=pointer]
+        - generic [ref=f3e279]:
+          - generic [ref=f3e281]:
+            - generic [ref=f3e282]:
+              - heading "Obad-Hai" [level=2] [ref=f3e283]
+              - paragraph [ref=f3e284]: O Senhor da Selva, Mestre das Eras
+            - generic [ref=f3e285]: Neutro
+          - generic [ref=f3e286]:
+            - generic [ref=f3e287]:
+              - generic [ref=f3e288]: 
+              - text: Domínios:Ar, Animais, Terra, Fogo, Plantas, Água
+            - generic [ref=f3e289]:
+              - generic [ref=f3e290]: 
+              - text: Arma:Bordão
+            - paragraph [ref=f3e291]: Deus da natureza selvagem, das estações e dos ambientes não domesticados. Rival de Ehlonna, Obad-Hai representa a face implacável da natureza.
+            - generic [ref=f3e292]:
+              - link "Editar " [ref=f3e293] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/16/edit
+                - text: Editar
+                - generic [ref=f3e294]: 
+              - button "" [ref=f3e295] [cursor=pointer]
+        - generic [ref=f3e297]:
+          - generic [ref=f3e299]:
+            - generic [ref=f3e300]:
+              - heading "Olidammara" [level=2] [ref=f3e301]
+              - paragraph [ref=f3e302]: O Alegre
+            - generic [ref=f3e303]: Caótico e Neutro
+          - generic [ref=f3e304]:
+            - generic [ref=f3e305]:
+              - generic [ref=f3e306]: 
+              - text: Domínios:Caos, Sorte, Viagem, Trapaça
+            - generic [ref=f3e307]:
+              - generic [ref=f3e308]: 
+              - text: Arma:Rapieira
+            - paragraph [ref=f3e309]: Deus da música, das festas, dos vinhos e dos ladrões. Um ser alegre e imprevisível, patrono dos boêmios, artistas e ladinos.
+            - generic [ref=f3e310]:
+              - link "Editar " [ref=f3e311] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/17/edit
+                - text: Editar
+                - generic [ref=f3e312]: 
+              - button "" [ref=f3e313] [cursor=pointer]
+        - generic [ref=f3e315]:
+          - generic [ref=f3e317]:
+            - generic [ref=f3e318]:
+              - heading "Pelor" [level=2] [ref=f3e319]
+              - paragraph [ref=f3e320]: O Senhor do Sol
+            - generic [ref=f3e321]: Neutro e Bom
+          - generic [ref=f3e322]:
+            - generic [ref=f3e323]:
+              - generic [ref=f3e324]: 
+              - text: Domínios:Bem, Cura, Sol, Força
+            - generic [ref=f3e325]:
+              - generic [ref=f3e326]: 
+              - text: Arma:Maça Pesada
+            - paragraph [ref=f3e327]: Deus do sol, da luz, da força e da cura. Pelor é bondoso e generoso, mas combate ferozmente os mortos-vivos e as forças das trevas.
+            - generic [ref=f3e328]:
+              - link "Editar " [ref=f3e329] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/2/edit
+                - text: Editar
+                - generic [ref=f3e330]: 
+              - button "" [ref=f3e331] [cursor=pointer]
+        - generic [ref=f3e333]:
+          - generic [ref=f3e335]:
+            - generic [ref=f3e336]:
+              - heading "São Cuthbert" [level=2] [ref=f3e337]
+              - paragraph [ref=f3e338]: De Estrela Bilhante, Senhor da Retribuição
+            - generic [ref=f3e339]: Leal e Neutro
+          - generic [ref=f3e340]:
+            - generic [ref=f3e341]:
+              - generic [ref=f3e342]: 
+              - text: Domínios:Destruição, Lei, Proteção, Força
+            - generic [ref=f3e343]:
+              - generic [ref=f3e344]: 
+              - text: Arma:Maça de Guerra
+            - paragraph [ref=f3e345]: Deus da retribuição, do senso comum e da devoção sincera. São Cuthbert acredita que as leis devem ser aplicadas com firmeza para o bem da sociedade.
+            - generic [ref=f3e346]:
+              - link "Editar " [ref=f3e347] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/18/edit
+                - text: Editar
+                - generic [ref=f3e348]: 
+              - button "" [ref=f3e349] [cursor=pointer]
+        - generic [ref=f3e351]:
+          - generic [ref=f3e353]:
+            - generic [ref=f3e354]:
+              - heading "Tharizdun" [level=2] [ref=f3e355]
+              - paragraph [ref=f3e356]: O Deus Acorrentado, O Escuro Eterno
+            - generic [ref=f3e357]: Caótico e Mau
+          - generic [ref=f3e358]:
+            - generic [ref=f3e359]:
+              - generic [ref=f3e360]: 
+              - text: Domínios:Caos, Destruição, Mal, Conhecimento
+            - generic [ref=f3e361]:
+              - generic [ref=f3e362]: 
+              - text: Arma:Adaga Retorcida
+            - paragraph [ref=f3e363]: Deus do caos eterno e da aniquilação. Aprisionado por outros deuses antes dos tempos, seus cultistas trabalham para libertar essa entidade demente e destrutiva.
+            - generic [ref=f3e364]:
+              - link "Editar " [ref=f3e365] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/19/edit
+                - text: Editar
+                - generic [ref=f3e366]: 
+              - button "" [ref=f3e367] [cursor=pointer]
+        - generic [ref=f3e369]:
+          - generic [ref=f3e371]:
+            - generic [ref=f3e372]:
+              - heading "Trithereon" [level=2] [ref=f3e373]
+              - paragraph [ref=f3e374]: O Summonador, Senhor da Liberdade Individual
+            - generic [ref=f3e375]: Caótico e Bom
+          - generic [ref=f3e376]:
+            - generic [ref=f3e377]:
+              - generic [ref=f3e378]: 
+              - text: Domínios:Bem, Caos, Proteção, Viagem
+            - generic [ref=f3e379]:
+              - generic [ref=f3e380]: 
+              - text: Arma:Lança
+            - paragraph [ref=f3e381]: Deus da liberdade, da retribuição e do autocontrole. Defende ferozmente o direito de cada indivíduo à autodeterminação e pune os tiranos.
+            - generic [ref=f3e382]:
+              - link "Editar " [ref=f3e383] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/20/edit
+                - text: Editar
+                - generic [ref=f3e384]: 
+              - button "" [ref=f3e385] [cursor=pointer]
+        - generic [ref=f3e387]:
+          - generic [ref=f3e389]:
+            - generic [ref=f3e390]:
+              - heading "Ulaa" [level=2] [ref=f3e391]
+              - paragraph [ref=f3e392]: Coração das Montanhas
+            - generic [ref=f3e393]: Leal e Bom
+          - generic [ref=f3e394]:
+            - generic [ref=f3e395]:
+              - generic [ref=f3e396]: 
+              - text: Domínios:Bem, Lei, Terra
+            - generic [ref=f3e397]:
+              - generic [ref=f3e398]: 
+              - text: Arma:Martelo de Guerra
+            - paragraph [ref=f3e399]: Deusa das colinas, das montanhas e das pedras preciosas. Venerada principalmente por mineiros, joalheiros e anões das montanhas.
+            - generic [ref=f3e400]:
+              - link "Editar " [ref=f3e401] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/21/edit
+                - text: Editar
+                - generic [ref=f3e402]: 
+              - button "" [ref=f3e403] [cursor=pointer]
+        - generic [ref=f3e405]:
+          - generic [ref=f3e407]:
+            - generic [ref=f3e408]:
+              - heading "Vecna" [level=2] [ref=f3e409]
+              - paragraph [ref=f3e410]: O Sussurrado, O Senhor dos Segredos
+            - generic [ref=f3e411]: Neutro e Mau
+          - generic [ref=f3e412]:
+            - generic [ref=f3e413]:
+              - generic [ref=f3e414]: 
+              - text: Domínios:Mal, Conhecimento, Magia
+            - generic [ref=f3e415]:
+              - generic [ref=f3e416]: 
+              - text: Arma:Adaga
+            - paragraph [ref=f3e417]: Deus dos segredos, do conhecimento proibido e dos mortos-vivos. Vecna foi um lich poderoso que ascendeu à divindade, guardando segredos que podem destruir o mundo.
+            - generic [ref=f3e418]:
+              - link "Editar " [ref=f3e419] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/8/edit
+                - text: Editar
+                - generic [ref=f3e420]: 
+              - button "" [ref=f3e421] [cursor=pointer]
+        - generic [ref=f3e423]:
+          - generic [ref=f3e425]:
+            - generic [ref=f3e426]:
+              - heading "Wee Jas" [level=2] [ref=f3e427]
+              - paragraph [ref=f3e428]: A Feiticeira da Morte, Joia dos Corvos
+            - generic [ref=f3e429]: Leal e Neutro
+          - generic [ref=f3e430]:
+            - generic [ref=f3e431]:
+              - generic [ref=f3e432]: 
+              - text: Domínios:Lei, Magia, Morte
+            - generic [ref=f3e433]:
+              - generic [ref=f3e434]: 
+              - text: Arma:Adaga
+            - paragraph [ref=f3e435]: Deusa da magia e da morte. Valoriza a ordem, o conhecimento arcano e a transição natural da morte. Patrona de magos e necromantes de orientação legal.
+            - generic [ref=f3e436]:
+              - link "Editar " [ref=f3e437] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/6/edit
+                - text: Editar
+                - generic [ref=f3e438]: 
+              - button "" [ref=f3e439] [cursor=pointer]
+        - generic [ref=f3e441]:
+          - generic [ref=f3e443]:
+            - generic [ref=f3e444]:
+              - heading "Yondalla" [level=2] [ref=f3e445]
+              - paragraph [ref=f3e446]: A Provedora, Guardiã dos Halflings
+            - generic [ref=f3e447]: Leal e Bom
+          - generic [ref=f3e448]:
+            - generic [ref=f3e449]:
+              - generic [ref=f3e450]: 
+              - text: Domínios:Bem, Lei, Proteção
+            - generic [ref=f3e451]:
+              - generic [ref=f3e452]: 
+              - text: Arma:Escudo Curto Espigado
+            - paragraph [ref=f3e453]: Divindade principal dos halflings. Deusa da proteção, da fertilidade e da família. Yondalla guia seu povo com sabedoria e os protege dos perigos do mundo.
+            - generic [ref=f3e454]:
+              - link "Editar " [ref=f3e455] [cursor=pointer]:
+                - /url: http://localhost:8001/divindades/22/edit
+                - text: Editar
+                - generic [ref=f3e456]: 
+              - button "" [ref=f3e457] [cursor=pointer]
+        - link " Nova Divindade" [ref=f3e459] [cursor=pointer]:
+          - /url: http://localhost:8001/divindades/create
+          - generic [ref=f3e460]: 
+          - generic [ref=f3e461]: Nova Divindade
+    - paragraph [ref=f3e464]: Forged in the fires of imagination. Creator RPG © 2026
