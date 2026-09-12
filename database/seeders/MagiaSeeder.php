@@ -777,7 +777,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Longo (120 m + 12 m/nível)', 'alvo_area_efeito' => 'Um alvo primário mais um/nível (até 20)',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Reflexos metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Um relâmpago salta entre alvos causando 1d6/nível (máx. 20d6); alvos secundários: 1d6/dois níveis.',
+                'descricao' => 'Você dispara um relâmpago elétrico contra um alvo primário e a energia salta em cascata para outros alvos próximos. O alvo primário sofre 1d6 pontos de dano elétrico por nível de conjurador (máximo 20d6 no 20° nível). Após atingi-lo, o relâmpago salta automaticamente para um alvo secundário por nível de conjurador (até 20 alvos secundários total), desde que cada alvo secundário esteja a até 9 m do alvo primário. Alvos secundários sofrem 1d6 pontos por dois níveis de conjurador (máximo 10d6). Cada alvo, primário e secundário, tem direito a TR Reflexos metade individualmente. Cada alvo secundário deve ser diferente do primário e dos demais secundários — a magia não pode saltar duas vezes para o mesmo alvo. Você escolhe quais alvos serão atingidos, permitindo poupar aliados adjacentes. Ideal contra grupos numerosos e espalhados que outras magias em área não alcançariam — enquanto Bola de Fogo domina áreas circulares e Relâmpago fura linhas retas, Relâmpago em Corrente escolhe alvos individuais estrategicamente. Componente foco: um pouco de pele ou couro e uma haste de âmbar, cristal ou vidro (bastão de âmbar de conjurador).',
                 'classes' => ['Mago' => 6, 'Feiticeiro' => 6],
             ],
             [
@@ -786,7 +786,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Um ser vivo ou objeto',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Fortitude parcial',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Um raio causa 2d6/nível (máx. 40d6) de dano; se matar, o alvo vira pó.',
+                'descricao' => 'Você dispara um raio verde de energia pura contra um ser vivo ou um cubo de 3 m de matéria inanimada dentro do alcance. Requer ataque de toque à distância. Se acertar um ser vivo, o alvo tem TR Fortitude parcial: falha total causa 2d6 pontos de dano por nível de conjurador (máximo 40d6 no 20° nível — dano potencialmente letal para praticamente qualquer criatura mortal); sucesso reduz o dano a 5d6, ainda substancial. Se o alvo é reduzido a 0 PVs ou menos pelo dano, é completamente desintegrado — apenas um monte de pó fino permanece onde ele existia, sem chance de ser ressuscitado exceto por magias mais poderosas que Ressurreição Total. Objetos inanimados são simplesmente desintegrados sem TR (a menos que o objeto seja mágico, quando ganha TR). Paredes, portões, veículos e até muralhas podem ser eliminadas com uma única aplicação — a magia contorna problemas de exploração e cerco tão bem quanto vence combates. Uma parede antimagia bloqueia a desintegração. Não afeta criaturas em estado etéreo. Componente material: uma pitada de pó fino feito de um imã ou um pedaço de rocha ígnea (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Mago' => 6, 'Feiticeiro' => 6],
             ],
             [
@@ -795,7 +795,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => '3 m', 'alvo_area_efeito' => 'Esfera de 3 m de raio centrada em você',
                 'duracao' => '1 rodada/nível (D)', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Cria uma barreira imóvel impedindo magias de 4° nível ou menos.',
+                'descricao' => 'Uma barreira esférica invisível de 3 m de raio surge centrada em você, servindo como escudo contra magias inimigas. A esfera bloqueia completamente qualquer magia de conjuração de 4° círculo ou menor conjurada de fora do globo em direção ao interior — ela simplesmente falha em atravessar a barreira. Efeitos já ativos dentro do globo continuam; magias conjuradas de dentro para fora passam normalmente; e magias de 5° círculo ou superior passam também. A esfera não bloqueia ataques físicos, magias já em vôo, criaturas atravessando fisicamente nem efeitos que não sejam magias (radiação natural, breath weapons não-mágicos etc.). Como a esfera se centra em você, move-se conforme você se desloca. Não requer concentração; dura 1 rodada por nível de conjurador. Combinação clássica: um mago no centro do globo lançando Bola de Fogo (3°) contra os inimigos ao redor — as bolas passam de dentro para fora sem obstáculo, mas as magias de dispersão e ataque dos inimigos são bloqueadas. Uso limitado em altos níveis quando a maioria dos oponentes ataca com magias de 5° ou mais, mas ainda útil contra magos de nível médio ou grupos com muitos conjuradores menores. Componente material: uma miniatura arredondada de vidro ou cristal.',
                 'classes' => ['Mago' => 6, 'Feiticeiro' => 6],
             ],
             [
@@ -804,7 +804,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Um ou mais cadáveres',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Cria mortos-vivos mais poderosos: ghoul, ghast, mummy, mohrg, etc.',
+                'descricao' => 'Versão superior de Animar Mortos: você invoca energia negativa poderosa e cria um morto-vivo inteligente e mais formidável a partir de um cadáver disponível. O tipo de morto-vivo depende do seu nível de conjurador: no 11° pode criar um ghoul; no 12°, ghast; no 14°, mumia; no 15°, mohrg. Diferente de Animar Mortos, os mortos-vivos criados são independentes — não estão sob seu controle direto — e você não pode simplesmente comandá-los; eles agem por sua própria vontade maligna. Para controlá-los, use Comando Cadaveroso ou Controlar Mortos-Vivos separadamente. Os mortos-vivos criados são permanentes até serem destruídos. A magia leva 1 hora completa para conjurar e requer um cadáver adequado (recentemente falecido, no caso de ghast/ghoul; envolto em bandagens rituais e mumificado, para múmia). Componente material caro: pó de ônix no valor mínimo de 50 PO por Dado de Vida do morto-vivo criado (consumido). Como magia [Mal], usá-la repetidamente aproxima o conjurador do alinhamento maligno; para conjuradores bons, é praticamente sempre um caminho de queda. Frequentemente usada por liches, necromantes de alto nível e cultistas para povoar torres e criptas com guardiões permanentes.',
                 'classes' => ['Clérigo' => 6, 'Mago' => 6, 'Feiticeiro' => 6],
             ],
             [
@@ -813,7 +813,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Concede +4 em ataques, testes de resistência e verificações; mais 2d10 PVs temporários e imunidade a medo.',
+                'descricao' => 'Versão superior de Heroísmo (3° círculo): a criatura tocada é imbuída com poder heróico maciço, recebendo múltiplos benefícios simultaneamente. Durante 1 min./nível, o alvo ganha: bônus de moral de +4 em todas as jogadas de ataque, todos os testes de resistência, todas as verificações de habilidade e todas as perícias (dobro do Heroísmo original); 2d10 pontos de vida temporários adicionais (aproximadamente 11 PVs em média); e imunidade completa a efeitos de medo (magias com descritor [Medo], habilidades de assustar, presença aterrorizante de dragões, capacidades causando abalo ou pânico). Todos os efeitos anteriores de medo ativos no alvo são imediatamente removidos. Como o bônus é de moral, não empilha com outras fontes de moral (Bênção, Preze, Encorajamento do bardo), mas empilha livremente com competência, sagrado, deflexão, esquiva etc. Como magia benéfica, TR e RM podem ser voluntariamente ignorados. Efetivamente transforma um herói competente em um combatente lendário por um combate completo — a magia predileta para lançar em campeões antes de encontros contra dragões, arquidemônios ou outros oponentes de campanha. Não requer componente material — V, S apenas.',
                 'classes' => ['Bardo' => 5, 'Mago' => 6, 'Feiticeiro' => 6],
             ],
             // ── NÍVEL 7 ───────────────────────────────────────────────────────
