@@ -613,7 +613,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Longo (120 m + 12 m/nível)', 'alvo_area_efeito' => 'Você e objetos tocados',
                 'duracao' => 'Instantânea e até 1 rodada; consulte o texto', 'teste_resistencia' => 'Nenhum e Vontade anula',
                 'resistencia_magia' => 'Não e Sim', 'versao' => '3.5',
-                'descricao' => 'Teletransporta você e, possivelmente, outros para um local designado.',
+                'descricao' => 'Você abre uma porta dimensional instantânea entre sua posição atual e um ponto designado dentro do alcance (até 120 m + 12 m por nível). O teletransporte é instantâneo e infalível: você chega exatamente onde apontou, sem chance de erro por distância ou linha de visão desconhecida. Pode levar consigo objetos até a sua capacidade máxima de carga e uma criatura por três níveis de conjurador (até um máximo determinado pelo tamanho: uma criatura Média por 3 níveis, uma Grande a partir do 6°, etc.), desde que todos estejam adjacentes a você ao lançar. Criaturas passageiras devem ser dispostas e você deve tocá-las durante a conjuração. Após teletransportar, você e os passageiros não podem realizar nenhuma outra ação naquela rodada — a magia consome toda a rodada, exceto o próprio salto. Não pode teletransportar para dentro de sólidos, e se o destino estiver ocupado ou hostilmente cercado, a magia falha e o espaço da magia é gasto. Como só requer componente Verbal e alcance longo, é a magia de escape definitiva para conjuradores em apuros — o único componente audível pode até ser sussurrado se a mordaça permitir.',
                 'classes' => ['Bardo' => 4, 'Mago' => 4, 'Feiticeiro' => 4],
             ],
             [
@@ -622,7 +622,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Pessoal ou toque', 'alvo_area_efeito' => 'Você ou criatura tocada',
                 'duracao' => '1 rodada/nível (D)', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Semelhante a Invisibilidade, mas o alvo permanece invisível mesmo ao atacar.',
+                'descricao' => 'Versão aprimorada de Invisibilidade: o alvo (você ou uma criatura tocada) torna-se completamente invisível durante 1 rodada por nível de conjurador. Diferente da versão de 2° círculo, a invisibilidade não termina ao realizar ataques — o alvo permanece invisível mesmo ao atacar, lançar magias hostis ou executar outras ações agressivas. Todo o equipamento carregado ou vestido no momento do lançamento também torna-se invisível; itens largados ou lançados aparecem imediatamente. Uma criatura invisível ganha bônus de +2 em ataques em melee (contra alvos que não a percebem — geralmente todos), e ataques físicos contra ela sofrem 50% de dispersão. Ainda é audível: passos, respiração, componentes verbais de magias, entrelinha de portas. Criaturas com Ver Invisível, Visão Verdadeira, blindsense, tremorsense ou olfato aguçado podem perceber o alvo por outros meios. Combinada com Voar ou Rapidez, torna um mago virtualmente intocável — cinco rodadas de invisibilidade permanente durante ataques é dominação absoluta em combate. Como magia benéfica, TR e RM podem ser voluntariamente ignorados. Não requer componente material — apenas V e S.',
                 'classes' => ['Bardo' => 4, 'Mago' => 4, 'Feiticeiro' => 4],
             ],
             [
@@ -631,7 +631,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Longo (120 m + 12 m/nível)', 'alvo_area_efeito' => 'Cilindro de 6 m de raio e 12 m de altura',
                 'duracao' => '1 rodada completa', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Granizo causa 3d6 de dano contuso e 2d6 de dano de frio a tudo na área.',
+                'descricao' => 'Uma tempestade violenta de granizo e gelo se materializa em um cilindro de 6 m de raio e 12 m de altura, martelando tudo em seu interior por 1 rodada completa. Cada criatura na área sofre 3d6 de dano contuso (das pedras de gelo caindo) e 2d6 de dano de frio (do vento congelante), totalizando 5d6 de dano — sem TR e sem contagem por nível. Toda a área da magia é considerada terreno difícil enquanto ela dura: velocidade dobrada em custo, testes de Ouvir com penalidade -4 e áreas do chão ficam escorregadias (teste de Equilíbrio CD 10 para andar rápido). Após a rodada de duração ativa, o gelo pode permanecer no chão por vários minutos em climas frios, criando terreno gelado natural. Uma das raras magias de dano de área que combina dois tipos (contuso + frio) — apenas Resistência a Frio reduz metade, e criaturas apenas com RD contra contuso ainda sofrem os 2d6 de frio (e vice-versa). Ideal contra grupos vulneráveis a frio (elementais do fogo, ifritis, dragões vermelhos) ou em ambientes onde o terreno difícil resultante é útil taticamente. Componente material: uma pitada de pó ou minúsculo cristal de rocha.',
                 'classes' => ['Druida' => 4, 'Mago' => 4, 'Feiticeiro' => 4],
             ],
             [
@@ -640,7 +640,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '10 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Concede RD 10/adamanto.',
+                'descricao' => 'Você endurece a pele da criatura tocada como se fosse feita de granito rijo. O alvo recebe redução de dano 10/adamante — todos os ataques físicos comuns têm seu dano reduzido em 10 pontos antes de aplicar aos PVs. Apenas armas feitas de adamante (metal raro e caro) contornam essa redução completamente. A magia tem uma reserva de absorção: até 10 pontos de dano por nível de conjurador (máximo 150 pontos no 15° nível). Quando essa reserva se esgota, a magia termina prematuramente, mesmo se a duração original não tiver expirado. Como não afeta dano de energia (ácido, fogo, frio, eletricidade, sônico) nem dano de força ou energia negativa/positiva, é vulnerável a magos e conjuradores elementalistas mesmo quando o alvo parece impenetrável. Como magia benéfica, TR e RM podem ser voluntariamente ignorados. Duração de 10 min./nível é generosa; dissipável. Componente material valioso: pó de diamante granulado no valor de 250 PO — a magia é uma das maiores despesas contínuas de campanhas de alto nível. Uma das defesas mais poderosas do jogo: um bárbaro com Pele de Pedra praticamente ignora combatentes mundanos e serves-lhe até contra dragões que atacam com garras.',
                 'classes' => ['Druida' => 5, 'Mago' => 4, 'Feiticeiro' => 4],
             ],
             [
@@ -649,7 +649,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Um ser vivo',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Raio causa 1d4 níveis negativos ao alvo.',
+                'descricao' => 'Você dispara um raio de energia negra e mortiça em ataque de toque à distância contra um ser vivo. Se acertar, o alvo recebe 1d4 níveis negativos — um dos efeitos mais devastadores do arsenal negromântico. Cada nível negativo impõe imediatamente: -1 em todas as jogadas de ataque, testes de resistência, verificações de perícia e capacidade; -5 PVs máximos; -1 nível efetivo de conjurador (perde acesso ao maior espaço de magia); se for magia clerical, perde uma magia preparada do maior nível. Se o total de níveis negativos igualar ou exceder os DV atuais do alvo, ele morre instantaneamente. Os níveis negativos duram 1 hora por nível de conjurador; ao final desse período, o alvo faz TR Fortitude para cada nível negativo — sucesso remove esse nível, falha o torna permanente (e requer Restauração para curar). Como usa energia negativa, tem efeito INVERTIDO contra mortos-vivos: cura 1d4 × 5 PVs temporários que duram 1 hora. Não permite TR contra o efeito de níveis negativos em si (apenas o TR de resistência posterior). Componente material: nenhum requerido (apenas V, S).',
                 'classes' => ['Mago' => 4, 'Feiticeiro' => 4],
             ],
             [
@@ -658,7 +658,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Um ser vivo',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Vontade descrença e Fortitude metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Uma imagem aterrorizante da morte do alvo causa dano potencialmente letal.',
+                'descricao' => 'Você extrai dos temores mais profundos do alvo e materializa em sua mente uma imagem aterrorizante e detalhada — geralmente do próprio alvo sendo morto de forma horripilante pelo pior medo dele (uma criatura específica, uma situação, uma criatura fictícia). Apenas o alvo pode ver e ouvir a ilusão; outras criaturas nada percebem. O alvo tem direito primeiro a TR Vontade para descrer (se passar, apenas percebe a tentativa e nada acontece); se falhar em descrer, tem então TR Fortitude parcial contra o efeito letal: sucesso reduz o dano a 3d6+1 (dano psíquico do trauma) e imposição do status abalado (-2 em tudo) por um minuto; falha significa a morte instantânea do alvo por parada cardíaca causada pelo terror puro. O medo é sobrenatural e as criaturas testemunhando o efeito veem apenas o alvo trepidar, gritar de horror e cair sem ferimento visível. Como magia com descritor [Mental] e [Medo], criaturas imunes a mental (Vontade de Ferro ativa) ou a medo (paladinos com Aura de Coragem) são imunes ao efeito completo. Não afeta constructos, mortos-vivos ou plantas. Componente material: nenhum requerido (apenas V, S).',
                 'classes' => ['Mago' => 4, 'Feiticeiro' => 4],
             ],
             [
@@ -667,7 +667,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => '9 m', 'alvo_area_efeito' => 'Cone de 9 m',
                 'duracao' => '1 rodada/nível', 'teste_resistencia' => 'Vontade parcial',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Criaturas na área ficam apavoradas.',
+                'descricao' => 'Uma onda visível de terror mágico emana da sua mão em um cone de 9 m à frente, envolvendo todas as criaturas na área. Cada criatura afetada deve fazer TR Vontade parcial: falha total significa que fica apavorada — deve fugir a toda velocidade em sentido oposto à origem, sem poder atacar (se encurralada, treme com penalidade -2 em tudo) — por 1 rodada por nível de conjurador. Sucesso reduz o efeito a "abalada" (-2 em ataques, testes e verificações) por apenas 1 rodada. Diferente de Causar Medo (1° círculo), Medo não tem limite de Dados de Vida — afeta criaturas de qualquer poder que passem no TR e falhem, incluindo o encontro mais assustador do calabouço. Como possui os descritores [Medo] e [Mental], criaturas imunes a efeitos mentais ou de medo (paladinos com Aura de Coragem, alvos com Vontade de Ferro ativa, constructos, mortos-vivos, plantas, gosmas) são imunes. Combina excelentemente com Encantamentos anteriores — remover metade dos inimigos de combate via fuga simplifica encontros dramaticamente. Componente material: um coração de galinha ou pena de pena de qualquer ave.',
                 'classes' => ['Bardo' => 3, 'Mago' => 4, 'Feiticeiro' => 4],
             ],
             [
@@ -676,7 +676,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Um ou mais esqueletos ou zumbis',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Cria mortos-vivos não-inteligentes a partir de cadáveres e ossos.',
+                'descricao' => 'Você imbui um ou mais cadáveres com uma centelha maléfica de energia negativa, criando mortos-vivos não-inteligentes sob seu controle. Cada aplicação pode criar esqueletos ou zumbis a partir dos ossos ou corpos disponíveis, respeitando dois limites: (1) você não pode criar mortos-vivos com HD total superior a 4 vezes o seu nível de conjurador em uma única conjuração; (2) o número máximo de mortos-vivos que pode controlar simultaneamente é 4 HD por nível de conjurador (somando todos os criados). Se você exceder o limite de controle, os excedentes ficam livres e hostis a todos, incluindo você. Os mortos-vivos criados seguem instruções simples verbais que não exijam raciocínio complexo (atacar aquele alvo, guardar essa porta, seguir-me). São permanentes até serem destruídos, o que os torna aliados de longo prazo mesmo após a magia se esgotar. Componente material valioso: ônix moído no valor mínimo de 25 PO por Dado de Vida do morto-vivo criado (destruído na conjuração). Como magia [Mal], usar Animar Mortos periodicamente aproxima o conjurador do alinhamento maligno — clérigos bons ou paladinos que a usem podem sofrer consequências divinas. O componente material caro (25 PO/HD) faz da magia um investimento considerável.',
                 'classes' => ['Clérigo' => 3, 'Mago' => 4, 'Feiticeiro' => 4],
             ],
             [
@@ -685,7 +685,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Cura 4d8 + 1/nível (máx. +20) de dano.',
+                'descricao' => 'Canalizando energia positiva por um toque, você cura 4d8 pontos de dano + 1 por nível de conjurador (máximo +20). Como as outras magias de cura da linha, funciona ao contrário contra mortos-vivos: um ataque de toque em melee causa o mesmo dano (TR Vontade metade). Cura em média 25 PVs por espaço de 4° círculo — o suficiente para tirar um combatente de nível médio de perto da morte a plena saúde com uma única aplicação. Bardos aprendem no 4° nível de bardo (topo da lista deles). Paladinos e patrulheiros não têm acesso a esta versão — a magia de cura mais poderosa para eles é Curar Ferimentos Sérios. Como magia benéfica, TR anular pode ser voluntariamente ignorado; RM aplica-se apenas contra mortos-vivos. Não remove venenos, doenças, cegueira, envelhecimento ou dreno de níveis. Um clérigo de 8° nível ou superior costuma ter várias aplicações preparadas para o dia — em campanhas de combate intenso, é frequentemente a magia mais utilizada do grimório divino.',
                 'classes' => ['Bardo' => 4, 'Clérigo' => 4, 'Druida' => 5],
             ],
             [
@@ -694,7 +694,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura, objeto ou área de 1,5 m³',
                 'duracao' => '10 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva, objeto)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Detoxifica qualquer veneno no alvo.',
+                'descricao' => 'Você detoxifica completamente qualquer veneno no alvo — seja uma criatura envenenada, um objeto contaminado ou uma pequena área impregnada (até 1,5 m³). Se aplicada em uma criatura, cura instantaneamente todos os efeitos de veneno ativos e imuniza o alvo contra novos venenos durante 10 min./nível: mesmo se picado por serpente ou envenenado durante a duração, o alvo passa automaticamente em TRs contra veneno. Aplicada em objetos (comidas, bebidas, itens envenenados intencionalmente), remove permanentemente o veneno. Uma área envenenada — poça de veneno de dragão, gás tóxico — pode ser purificada com uma aplicação, mas apenas um cubo de 1,5 m por vez (grandes áreas requerem múltiplas conjurações). Não regenera dano de habilidade já causado por venenos — para isso, use Restauração. Como magia benéfica, TR anular pode ser voluntariamente ignorado (objetos podem também salvar contra a magia, o que pode ser desejável se o objeto for uma cura mágica de veneno intencionalmente). Componente material: uma pitada de carvão vegetal (arcano); ou o foco divino habitual (divino). Essencial em campanhas com muitos monstros venenosos (aranhas gigantes, aboletas, medusas, dragões-negros); patrulheiros aprendem no 3° nível como uma das razões de sua utilidade em explorações selvagens.',
                 'classes' => ['Bardo' => 4, 'Clérigo' => 4, 'Druida' => 3, 'Paladino' => 4, 'Patrulheiro' => 3],
             ],
             // ── NÍVEL 5 ───────────────────────────────────────────────────────
