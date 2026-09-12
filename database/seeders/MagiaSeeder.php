@@ -823,7 +823,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Longo (120 m + 12 m/nível)', 'alvo_area_efeito' => 'Explosão com 6 m de raio',
                 'duracao' => '5 rodadas ou menos; consulte o texto', 'teste_resistencia' => 'Reflexos metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Bola de fogo de detonação retardada causando 1d6/nível (máx. 20d6).',
+                'descricao' => 'Você conjura uma bola de fogo similar à magia Bola de Fogo, mas com dois aprimoramentos essenciais: maior potencial de dano e detonação controlada. A esfera voa até o local designado dentro do alcance longo e pousa lá, brilhando ominosamente sem detonar por até 5 rodadas — você escolhe o atraso no momento da conjuração. A qualquer momento durante esse intervalo, você pode acionar mentalmente a detonação (ação livre), ou ela detona automaticamente ao final das 5 rodadas. Quando explode, cria uma esfera de 6 m de raio causando 1d6 pontos de dano de fogo por nível de conjurador (máximo 20d6 no 20° nível), TR Reflexos metade. Se uma criatura toca a esfera durante o atraso, ela pode tentar pegá-la e arremessá-la de volta ou para longe — o arremesso requer teste de Reflexos CD 20 para pegar, e a esfera detona imediatamente ao ser tocada por um alvo hostil (ou pega por um aliado). Duplo dano (20d6 versus 10d6 da Bola de Fogo normal) e controle temporal a tornam devastadora contra grupos preparados ou em emboscadas cronometradas. Componente material: uma pequena bola feita de esterco de morcego seco e enxofre (como Bola de Fogo).',
                 'classes' => ['Mago' => 7, 'Feiticeiro' => 7],
             ],
             [
@@ -832,7 +832,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Um ser vivo',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Fortitude parcial',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Mata instantaneamente; se salvar, sofre 3d6 + 1/nível de dano (máx. +25).',
+                'descricao' => 'Você aponta o dedo indicador para um único ser vivo dentro do alcance e canaliza energia negativa mortal. O alvo deve fazer TR Fortitude parcial: se falhar, morre instantaneamente sem chance de recuperação (exceto por magias mais poderosas que Ressurreição — Ressurreição Total ou Milagre); se passar, ainda sofre 3d6 pontos de dano + 1 por nível de conjurador (máximo +25 no 25° nível). Como possui o descritor [Morte], criaturas imunes a efeitos de morte (mortos-vivos, constructos, elementais, imunes a energia negativa, ou com Mente em Branco/Vontade de Ferro dependendo da versão do efeito) são automaticamente imunes. Também não afeta plantas, gosmas, personagens com PVs positivos elevados costumam sobreviver se passarem — mas mesmo assim são feridos gravemente. Diferente do Palavra do Poder: Matar (9° círculo), Dedo da Morte permite TR, mas alcança qualquer criatura viva independente do total de PVs. Como magia negromântica direta, é um dos golpes finais mais rápidos disponíveis: uma ação padrão pode terminar um combate se o alvo falhar no TR. Componente material: nenhum requerido (V, S apenas).',
                 'classes' => ['Druida' => 8, 'Mago' => 7, 'Feiticeiro' => 7],
             ],
             [
@@ -841,7 +841,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Área cilíndrica de 6 m de raio e 18 m de altura',
                 'duracao' => '1 rodada/nível (D)', 'teste_resistencia' => 'Reflexos anula; consulte o texto',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Inverte a gravidade em uma área, fazendo criaturas e objetos caírem para o teto.',
+                'descricao' => 'Você inverte a gravidade em uma área — até um cubo de 3 m por nível de conjurador. Todas as criaturas e objetos não-fixados na área "caem para cima" no instante da conjuração, ganhando velocidade a cada rodada até baterem no teto (ou outra superfície acima) ou saírem da área. Criaturas afetadas podem fazer TR Reflexos anular se tiverem algo próximo para agarrar (uma parede, uma corda, um galho, um aliado); sucesso significa que agarram e ficam suspensas em vez de cair. Falha significa que caem para cima, sofrendo dano de queda normal (1d6 por 3 m de altura) ao bater no teto e ficando prostradas lá. Quando a magia termina (1 rodada por nível), todas as criaturas e objetos que ainda estejam suspensos caem de volta ao chão original, sofrendo dano de queda novamente. Uso brilhante em salões altos, catedrais, torres com tetos altos — pode dobrar o dano de queda contra alvos importantes. Não afeta criaturas voadoras (elas continuam voando; podem escolher subir ou sair). Componente material: uma pitada de pó fino de imã (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Druida' => 7, 'Mago' => 7, 'Feiticeiro' => 7],
             ],
             [
@@ -850,7 +850,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Um ser vivo',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Vontade anula',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Torna o alvo permanentemente insano (como confusão permanente).',
+                'descricao' => 'Você despedaça a sanidade de uma criatura viva dentro do alcance, condenando-a a loucura permanente. Se falhar no TR Vontade, o alvo passa a sofrer os efeitos de Confusão em caráter permanente — a magia não expira nem pode ser dispensada por Dissipar Magia (apenas Cura Loucura, Cura, Milagre ou Desejo removem). A cada rodada em que Insanidade estiver ativa, o alvo rola 1d10 no início do seu turno: 1 age normalmente; 2-6 fica confuso (age aleatoriamente — atacar aleatório, fugir, atacar aliado); 7-9 fica desnorteado (não age); 10 ataca a criatura mais próxima (que pode ser ele mesmo se estiver sozinho). Como possui os descritores [Mental] e [Compulsão], criaturas imunes a mental (Vontade de Ferro, Mente em Branco, constructos, mortos-vivos, elementais) são imunes ao efeito. Não afeta o corpo — o alvo mantém todos os PVs e habilidades físicas, mas sua mente está tão fragmentada que raramente consegue usá-los efetivamente. Uma das maldições mais cruéis do arsenal arcano: um oponente vencido por Insanidade continua vivo, mas essencialmente destruído como pessoa. Componente material: nenhum requerido (V, S apenas).',
                 'classes' => ['Mago' => 7, 'Feiticeiro' => 7],
             ],
             [
@@ -859,7 +859,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura morta tocada',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Nenhum; consulte o texto',
                 'resistencia_magia' => 'Sim (inofensiva)', 'versao' => '3.5',
-                'descricao' => 'Retorna um morto à vida mesmo sem corpo completo. Recupera nível perdido por Ressuscitar.',
+                'descricao' => 'Versão superior de Ressuscitar (5° círculo): você retorna à vida uma criatura morta a partir de qualquer fragmento corpóreo — mesmo um único dedo, uma mecha de cabelo ou uma pequena porção de tecido serve como âncora para a reconstituição completa. A magia regenera o corpo inteiro se a alma estiver disposta a retornar e não for reservada em outros planos (como aprisionada em uma máquina infernal ou consumida por magia proibida). Diferente de Ressuscitar, o alvo retorna com todos os seus PVs máximos, todos os seus atributos e habilidades intactos, e NÃO perde nível permanente. Ademais, cura simultaneamente doenças, venenos, cegueira, surdez e outros males que causaram (ou existiam antes) da morte. Se o alvo morreu por dreno de níveis, a Ressurreição também restaura os níveis perdidos. O alvo pode ter morrido há no máximo 10 anos por nível de conjurador — magia poderosa o suficiente para reverter mortes antigas, mas nunca imprescritíveis. Alma indisposta ou destruída (por Aniquilar Alma) impossibilita a magia. Componente material extremamente caro: pó de diamante no valor mínimo de 10.000 PO (consumido na conjuração). Padrão dos maiores templos e clérigos de alto nível para restaurar heróis fundamentais para o reino.',
                 'classes' => ['Clérigo' => 7],
             ],
             // ── NÍVEL 8 ───────────────────────────────────────────────────────
