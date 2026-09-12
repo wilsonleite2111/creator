@@ -869,7 +869,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Longo (120 m + 12 m/nível)', 'alvo_area_efeito' => 'Até um ser/nível em área de 18 m de raio',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Fortitude metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Drena toda a umidade das criaturas causando 1d6/nível (máx. 20d6) de dano.',
+                'descricao' => 'Uma onda de necromancia arcana varre a área designada, drenando violentamente toda a umidade e vitalidade das criaturas vivas presentes. Até uma criatura por nível de conjurador dentro de uma área de 18 m de raio deve fazer TR Fortitude metade contra o efeito: falha causa 1d6 pontos de dano por nível de conjurador (máximo 20d6 no 20° nível — dano gigantesco); sucesso reduz o dano à metade. Como o efeito é essencialmente desidratação mágica, plantas e criaturas com o subtipo aquático ou água sofrem dano dobrado — magia devastadora contra elementais da água, exércitos de plantas hostis (blights, treants, fungos gigantes) ou selvas encharcadas. Criaturas sem corpo aquoso (constructos, mortos-vivos, elementais não-aquáticos) são imunes. Você seleciona quais criaturas na área serão atingidas (até o limite por nível), permitindo poupar aliados no meio de um grupo inimigo — uma flexibilidade rara em magias de área desse porte. Efetivamente combina o poder de uma Bola de Fogo (20d6) com seletividade de alvos, tornando-a a magia de área definitiva no 8° círculo. Componente material: uma esponja seca (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Mago' => 8, 'Feiticeiro' => 8],
             ],
             [
@@ -878,7 +878,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Nuvem em área de 6 m de raio',
                 'duracao' => '1 rodada/nível', 'teste_resistencia' => 'Reflexos metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Uma nuvem de brasas causa 4d6 de dano de fogo por rodada.',
+                'descricao' => 'Você conjura uma nuvem espessa de fumaça acre e brasas ardentes em uma área de 6 m de raio dentro do alcance. A nuvem obscurece visão (dispersão 20% dentro, dispersão total além de 1,5 m), impede a maioria dos ataques à distância através dela, e — o efeito devastador — causa 4d6 pontos de dano de fogo por rodada a toda criatura que começar seu turno dentro (TR Reflexos metade). Além disso, o fogo dispensa oxigênio: criaturas dentro da nuvem devem passar em TR Fortitude a cada rodada ou ficar tossindo e engasgadas por 1d4+1 rodadas (não podem agir), efeito com descritor [Fatigue] independente do dano. A nuvem persiste por 1 rodada por nível de conjurador e se move 3 m por rodada na direção do vento predominante (ou fica parada se não houver vento). Ventos fortes (mais de 15 km/h) dispersam a nuvem em 1d4 rodadas. A magia é devastadora em ambientes fechados (salões, dungeons, cavernas), onde vento raramente move a nuvem — enche o espaço todo, matando lentamente por asfixia e queimaduras. Componente material: nenhum requerido (V, S apenas).',
                 'classes' => ['Mago' => 8, 'Feiticeiro' => 8],
             ],
             [
@@ -887,7 +887,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Um ser vivo com 150 PVs ou menos',
                 'duracao' => 'Consulte o texto', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Atordoa uma criatura por duração baseada nos PVs atuais dela.',
+                'descricao' => 'Você profere uma única palavra mágica de poder tão intensa que atordoa instantaneamente uma criatura viva com 150 PVs atuais ou menos. Não há TR — se o alvo estiver dentro do limite de PVs, o efeito acontece automaticamente. A duração depende dos PVs atuais do alvo no momento da conjuração: 50 PVs ou menos = atordoado por 4d4 rodadas; 51-100 PVs = atordoado por 2d4 rodadas; 101-150 PVs = atordoado por 1d4 rodadas. Criaturas com mais de 150 PVs são completamente imunes — a palavra passa por elas sem efeito. Atordoado: perde ação, perde bônus de Destreza na CA, ataques contra o alvo recebem +2 no ataque, incapaz de conjurar magias ou usar habilidades ativas. Como usa componente V apenas e é ação padrão, é uma das poucas magias reativas úteis contra oponentes de nível médio-alto. A imunidade acima de 150 PVs a torna obsoleta contra dragões grandes, colossos ou anciãos, mas contra magos, ladinos, monges e outros classes de PVs mais baixos, um Palavra do Poder: Atordoar bem colocada tira o oponente de combate por rodadas — tempo suficiente para o restante do grupo eliminá-lo. Não requer componente material (apenas V).',
                 'classes' => ['Mago' => 8, 'Feiticeiro' => 8],
             ],
             [
@@ -896,7 +896,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => '0 m; consulte o texto', 'alvo_area_efeito' => 'Área de 18 m de raio',
                 'duracao' => 'Consulte o texto', 'teste_resistencia' => 'Fortitude anula',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Símbolo gravado mata criaturas com 150 PVs ou menos que o vejam.',
+                'descricao' => 'Você grava um símbolo mágico letal em uma superfície plana — uma porta, uma parede, um livro, o chão de uma sala. O ritual demora 10 minutos e o símbolo permanece dormente até uma condição de ativação escolhida por você (uma criatura vê o símbolo, toca no objeto, fala uma senha específica, etc.). Uma vez ativado, o símbolo mata instantaneamente todas as criaturas com 150 PVs atuais ou menos em uma área de 18 m de raio ao redor dele — não permite TR contra a morte para alvos abaixo do limite. Criaturas acima de 150 PVs devem fazer TR Fortitude, sofrendo consequências reduzidas (varia por versão: geralmente atordoamento). O símbolo mata até 150 PVs de criaturas por conjuração, distribuídos entre os alvos elegíveis; após esse limite, o símbolo se descarrega. Se ninguém ativar o símbolo, ele permanece ativo indefinidamente — perigo mortal esperando em cofres antigos, cofres reais, salas de tesouro. Componente material extremamente caro: pó de mercúrio, fósforo e opala moída no valor mínimo de 5.000 PO (consumido). Uma das armadilhas mais mortais do arsenal de altos níveis: um único Símbolo da Morte pode exterminar um grupo aventureiro inteiro se ninguém for cauteloso.',
                 'classes' => ['Clérigo' => 8, 'Mago' => 8, 'Feiticeiro' => 8],
             ],
             [
@@ -905,7 +905,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '24 horas', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Imunidade a magias de adivinhação e afins; protege totalmente a mente.',
+                'descricao' => 'A criatura alvo é envolta em uma proteção arcana suprema que blinda completamente sua mente e consciência por 24 horas. Enquanto ativa, o alvo é imune a todos os efeitos mentais e de scrying, incluindo: todas as magias de Encantamento (mesmo Dominar Pessoa, Encantar Monstro, Compulsões em geral), todas as magias de Adivinhação (Detectar Pensamentos, Ler Pensamentos, Scrying, Localizar Criatura, Mensagem via cristal); efeitos telepáticos, controle mental por drow, illithids ou aboletas; qualquer tentativa de espionagem via magia. Uma tentativa de conjurar essas magias contra o alvo falha completamente — nem sequer há teste. Uma vez lançada, é praticamente impossível para outro conjurador saber se o alvo tem Mente em Branco ativa (a menos que ele veja o alvo em pessoa e tente uma sondagem). Não requer concentração; dura 24 horas fixas independentes do nível de conjurador. Sem componente material (V, S apenas). Padrão para reis, generais, líderes de culto, mercadores importantes e qualquer alvo de alto valor. Uma das poucas defesas absolutas contra magia mental na 3.5 — magia obrigatória em campanhas com muitos conjuradores hostis ou espiões arcanos.',
                 'classes' => ['Mago' => 8, 'Feiticeiro' => 8],
             ],
             // ── NÍVEL 9 ───────────────────────────────────────────────────────
