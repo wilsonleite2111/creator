@@ -20,7 +20,7 @@ const classesFiltradas = computed(() => filtrarPorNome(props.classes, busca.valu
     <AppLayout>
         <div class="mb-12 text-center">
             <h1 class="text-4xl font-cinzel font-bold text-parchment-900 mb-2 uppercase tracking-widest">
-                Classes de Prestígio
+                Classes de Personagens
             </h1>
             <p class="font-lora italic text-parchment-800 opacity-75">
                 "O caminho de cada herói é forjado por suas escolhas e treinamento."
