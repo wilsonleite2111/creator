@@ -504,7 +504,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Longo (120 m + 12 m/nível)', 'alvo_area_efeito' => 'Explosão com 6 m de raio',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Reflexos metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Uma explosão de chama causa 1d6/nível (máx. 10d6) de dano de fogo.',
+                'descricao' => 'Você aponta para um local dentro do alcance e uma esfera do tamanho de uma ervilha voa em linha reta até lá, onde detona em uma explosão esférica de chamas com 6 m de raio. Toda criatura na área sofre 1d6 pontos de dano de fogo por nível de conjurador (máximo 10d6 no 10° nível), TR Reflexos metade. Objetos inflamáveis desprotegidos são acesos, e materiais frágeis (madeira fina, tecidos) podem ser destruídos. A esfera contorna cantos: se você tiver linha de efeito para o ponto de detonação, a Bola de Fogo se expandirá por corredores e portas, atingindo áreas atrás de obstáculos até preencher o volume total (independente do formato da área). Se o feitiço encontrar barreira sólida antes de chegar ao ponto marcado, detona no primeiro obstáculo. Como usa fogo, é reduzida por resistência a fogo, elimina objetos gelados e falha em ambientes onde fogo naturalmente não funciona (submerso, vácuo). Ícone da carreira de qualquer mago ofensivo: 10d6 (média 35) em uma esfera de 12 m de diâmetro por um único espaço de 3° é dificilmente superado em custo-benefício. Componente material: uma pequena bola feita de esterco de morcego seco e enxofre.',
                 'classes' => ['Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -513,7 +513,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => '36 m', 'alvo_area_efeito' => 'Relâmpago de 36 m',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Reflexos metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Um raio de eletricidade causa 1d6/nível (máx. 10d6) de dano elétrico.',
+                'descricao' => 'Você libera um relâmpago elétrico crepitante que se estende em linha reta a partir da sua mão por até 36 m à frente. Toda criatura na linha sofre 1d6 pontos de dano elétrico por nível de conjurador (máximo 10d6 no 10° nível), TR Reflexos metade. O relâmpago passa através de criaturas — atinge todos os alvos alinhados —, mas para em barreiras sólidas: se atingir uma parede antes de percorrer toda a extensão, encurta ali. Objetos metálicos amplificam eletricidade, então armaduras metálicas e superfícies molhadas aumentam a vulnerabilidade dos alvos (regra de mestre). Ideal para corredores estreitos, formações inimigas em linha ou embarcações em fila: onde Bola de Fogo espalha o dano em círculo, Relâmpago concentra em uma linha reta, atingindo vários alvos "empilhados". Não passa por curvas nem contorna obstáculos como Bola de Fogo — a linha é rigorosamente reta. Excelente contra criaturas vulneráveis a eletricidade (elementais da terra, aberrações aquáticas com ferro). Componente material: um pequeno tufo de pele de animal peludo e uma haste de âmbar, cristal ou vidro.',
                 'classes' => ['Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -522,7 +522,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível (D)', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Concede deslocamento de voo de 18 m (boa manobrabilidade).',
+                'descricao' => 'A criatura tocada ganha capacidade de voo mágico com velocidade de 18 m e manobrabilidade boa (pode fazer curvas de 45° sem gastar deslocamento extra e pode voar para trás na metade da velocidade). O voo mantém-se automaticamente — o alvo pode voar como andaria, incluindo descansar no ar em posição fixa. A duração é de 1 minuto por nível, tempo suficiente para atravessar campos de batalha, subir a torres altas ou escapar de emboscadas em terreno. Se a magia terminar enquanto o alvo estiver voando, ele começa a cair, mas descreve como um efeito de Queda Suave por um minuto (para dar tempo de pousar) — cortesia particular do PHB 3.5. Como magia benéfica, TR e RM podem ser voluntariamente ignorados. Pesos limites: carga como no chão (a magia não muda capacidade de carga do alvo). Uso em combate é evidente, mas em campanhas de exploração torna caverneiros, torres de mago e ambientes verticais muito mais navegáveis. Componente foco: uma pena de qualquer ave.',
                 'classes' => ['Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -531,7 +531,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Uma criatura/nível, sem duas a mais de 9 m',
                 'duracao' => '1 rodada/nível', 'teste_resistencia' => 'Fortitude anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Um alvo por nível ganha um ataque extra no ataque total, +9 m de deslocamento e +1 de esquiva na CA e nos Reflexos.',
+                'descricao' => 'Você acelera magicamente até uma criatura por nível de conjurador (sem duas a mais de 9 m umas das outras). Cada alvo afetado, durante 1 rodada por nível, recebe: um ataque extra ao fazer ataque total (com o maior bônus, mas com penalidade acumulada -2 aplicada a todos os ataques da rodada), bônus de +9 m no deslocamento base terrestre (aditivo, não multiplicativo), e bônus de esquiva de +1 na Classe de Armadura e nos testes de resistência de Reflexos. Como o ataque extra vale apenas em ataque total, personagens que costumam usar ação padrão (atacar e mover) precisam ajustar a tática. Como magia benéfica, TR e RM podem ser voluntariamente ignorados por aliados. Costuma ser lançada no início do combate para maximizar rodadas úteis; guerreiros, bárbaros e monges com múltiplos ataques por rodada tornam-se dramaticamente mais eficazes (um lutador de 6° nível com Rapidez faz 4 ataques por rodada em vez de 2). A contrapartida Lentidão, magia oposta de 3° nível, remove o ataque extra do alvo — as duas magias se anulam mutuamente. Componente material: uma raspa de raiz de alcaçuz.',
                 'classes' => ['Bardo' => 3, 'Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -540,7 +540,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Uma magia, conjurador ou criatura',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Cancela magias e efeitos mágicos.',
+                'descricao' => 'Você libera uma onda de energia contra-mágica que pode ser aplicada de três formas: (1) Dispelar Direcionado — apontar para uma única criatura, objeto ou magia visível para tentar cancelar todas as magias ativas sobre o alvo; (2) Contra-magia — usar como reação para tentar anular uma magia sendo conjurada por um oponente adjacente; ou (3) Dispelar em Área — atingir uma explosão de 6 m de raio, testando cancelar todas as magias afetando qualquer criatura ou objeto na área. Para cada magia que se tenta dispelar, faça um teste de dispelagem: 1d20 + seu nível de conjurador (máximo +10 no Dissipar Magia normal) contra CD 11 + nível de conjurador da magia alvo. Sucesso cancela a magia (ou uma magia aleatória entre as ativas, no caso de múltiplas). Não afeta magias instantâneas (Bola de Fogo já detonada, cura já aplicada) — só magias com duração em curso. Contra itens mágicos, o item fica suprimido (não funciona) por 1d4 rodadas se a dispelagem funcionar. Ferramenta essencial contra conjuradores inimigos: um oponente com Escudo, Armadura Arcana e Imagem Especular pode ser desnudado por uma única aplicação bem-sucedida. Componentes: apenas V e S — versátil e sem custo material.',
                 'classes' => ['Bardo' => 3, 'Clérigo' => 3, 'Druida' => 4, 'Paladino' => 3, 'Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -549,7 +549,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Ser vivo tocado',
                 'duracao' => 'Instantânea/1 hora; consulte o texto', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Toque causa 1d6/dois níveis de dano (máx. 10d6); você ganha os PVs perdidos como temporários.',
+                'descricao' => 'Sua mão fica envolta em uma aura negra que suga vida ao contato. Você deve fazer um ataque de toque em melee bem-sucedido contra um ser vivo. Se acertar, a criatura sofre 1d6 pontos de dano por dois níveis de conjurador (máximo 10d6 no 20° nível) — dano de energia negativa — e você recebe a mesma quantidade em pontos de vida temporários (podem exceder seu máximo normal). Os PVs temporários duram até 1 hora, ou até serem consumidos por dano; ambos efeitos aplicam-se em uma única aplicação de toque. Não afeta criaturas imunes a energia negativa (mortos-vivos, alguns constructos), nem plantas ou elementais. TR não se aplica — o dano é automático se o ataque de toque acertar —, mas a Resistência à Magia aplica-se. Como toda magia de toque em melee, você pode segurar a magia por até 1 hora até o momento certo, mas conjurar outra magia neste período desperdiça o Toque Vampírico. Ideal para negromantes de melee: cada toque não só fere o inimigo mas fortalece o conjurador para o próximo golpe, criando um ciclo devastador em combates prolongados.',
                 'classes' => ['Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -558,7 +558,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '10 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Concede +2 em jogadas de ataque, testes de resistência e verificações de habilidade.',
+                'descricao' => 'A criatura tocada é imbuída com coragem e capacidade elevadas, recebendo bônus de moral de +2 em: todas as jogadas de ataque, todos os testes de resistência, todas as verificações de habilidade e todas as perícias. A magia essencialmente eleva um combatente competente para um herói: a soma de bônus se estende por qualquer categoria de teste em jogo. Como o bônus é de tipo "moral", não empilha com outras fontes de moral (Bênção, Preze, Encorajamento do bardo), mas empilha com bônus de outros tipos (competência, melhoria, deflexão, sagrado). A duração é excelente: 10 min./nível — uma exploração de dungeon inteira ou vários encontros consecutivos com um único espaço. Contraparte simetricamente maior: Heroísmo Superior (6° nível), que aumenta o bônus para +4 e adiciona 2d10 PVs temporários e imunidade a medo. Como magia benéfica, TR e RM podem ser voluntariamente ignorados. Bardos a incluem no repertório frequentemente — se você tem sua própria Palavra da Fama ou outros bônus morais, garanta que Heroísmo é usado quando estes não estão ativos.',
                 'classes' => ['Bardo' => 2, 'Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -567,7 +567,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Uma ou mais criaturas em área de 3 m de raio',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Causa torpor mágico em 10 DV de criaturas.',
+                'descricao' => 'Versão amplificada de Sono: uma onda de sonolência mágica varre a área e mergulha em torpor profundo até 10 Dados de Vida de criaturas vivas — mais que o dobro do Sono original, suficiente para incapacitar um pequeno bando de humanoides médios ou uma dupla de guerreiros veteranos. As mesmas regras aplicam-se: você escolhe o ponto central da área, e a magia afeta primeiro criaturas de menor DV, subindo até esgotar o orçamento; criaturas com mais de 10 DV são imunes, assim como elfos, constructos, mortos-vivos e elementais; cada alvo tem direito a TR Vontade. As criaturas afetadas ficam indefesas e podem sofrer coup de grâce; um tapa firme (ação padrão de um aliado) desperta uma dormente, e dano automático desperta também. Duração 1 min./nível, mais que suficiente para tomar reféns, capturar oponentes ou fugir. Uma escolha excepcional para caçadores de recompensa e infiltradores que preferem alvos vivos, ou para conjuradores que evitam matanças. Como Sono original, torna-se menos útil em altos níveis quando a maioria dos inimigos tem 10+ DV. Componente material: uma pitada de areia fina, pétalas de rosa ou um grilo vivo.',
                 'classes' => ['Bardo' => 3, 'Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -576,7 +576,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '10 min./nível ou até ser descarregado', 'teste_resistencia' => 'Fortitude anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Absorve até 12 pontos/nível de dano de um tipo de energia (máx. 120).',
+                'descricao' => 'Você envolve a criatura tocada com uma barreira mágica invisível que absorve dano de um tipo específico de energia — escolhido no momento da conjuração dentre: ácido, frio, eletricidade, fogo ou sônico. A barreira absorve 12 pontos por nível de conjurador desse tipo de energia (máximo 120 pontos no 10° nível), aplicados a cada golpe recebido. Quando o total absorvido é excedido, a magia se descarrega e o dano restante passa normalmente. Se o alvo não sofrer dano do tipo escolhido, a magia dura até 10 min./nível sem descarregar. Pode-se lançar duas ou mais aplicações em um mesmo alvo com energias diferentes (uma para fogo e uma para frio, por exemplo), e cada uma tem sua própria reserva de pontos. Ideal preparar antes de encontros com dragões (fogo/frio/ácido/eletricidade dependendo da espécie), elementais, ou ambientes hostis (deserto quente = escolher fogo). Como magia benéfica, TR e RM podem ser voluntariamente ignorados. Não protege contra dano de tipos não-elementais (contuso, cortante, perfurante, força, energia negativa/positiva). Componente foco: uma miniatura de escudo (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Clérigo' => 3, 'Druida' => 3, 'Patrulheiro' => 2, 'Mago' => 3, 'Feiticeiro' => 3],
             ],
             [
@@ -585,7 +585,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Cura 3d8 + 1/nível (máx. +15) de dano.',
+                'descricao' => 'Canalizando energia positiva por um toque, você cura 3d8 pontos de dano + 1 por nível de conjurador (máximo +15). Como as outras magias de cura da linha, funciona ao contrário contra mortos-vivos: um ataque de toque em melee causa o mesmo dano (TR Vontade metade). Cura em média 18-19 PVs por espaço de 3° círculo — o ponto ideal de eficiência para clérigos e druidas em campanha média, curando o suficiente para tirar um aliado ferido de status crítico com um único espaço. Bardos aprendem no 3° nível de bardo, ampliando a versatilidade dos aventureiros que não dependem exclusivamente do clérigo. Paladinos e patrulheiros a ganham em 4° nível de magia (topo da lista deles). Como magia benéfica, o TR anular pode ser voluntariamente ignorado, mas a RM aplica-se contra mortos-vivos. Não remove venenos, doenças, cegueira, envelhecimento ou dreno de níveis — para isso são precisas magias específicas.',
                 'classes' => ['Bardo' => 3, 'Clérigo' => 3, 'Druida' => 4, 'Paladino' => 4, 'Patrulheiro' => 4],
             ],
             [
@@ -594,7 +594,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => '12 m', 'alvo_area_efeito' => 'Todos os aliados e inimigos em 12 m de raio',
                 'duracao' => '1 rodada/nível', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Aliados ganham +1 em ataques, dano, testes de resistência e perícias; inimigos sofrem penalidade de -1.',
+                'descricao' => 'Você entoa uma oração pública que envolve todos ao seu redor em uma área de 12 m de raio centrada em você — mas de efeito diferente para amigos e inimigos. Todos os aliados na área (incluindo você) recebem bônus de sorte de +1 em jogadas de ataque, jogadas de dano, testes de resistência e verificações de habilidade. Todos os inimigos na área sofrem penalidade equivalente de -1 nos mesmos parâmetros. O efeito distingue amigos e inimigos automaticamente conforme sua percepção — dopplegangers disfarçados ainda são identificados pela magia como inimigos, mas aliados sob controle mental hostil continuam recebendo o bônus. A área acompanha você conforme se move. Como afeta ambos os lados simultaneamente, é uma das mais eficientes magias de suporte em combate: transforma cada rodada em um duplo balanço em favor do grupo. Como o bônus é de sorte, empilha com outros tipos (moral, competência, sagrado). Duração de 1 rodada/nível é o típico combate; TR nenhum (efeito é de sorte, não coerção). Componente: apenas o foco divino habitual.',
                 'classes' => ['Clérigo' => 3, 'Paladino' => 3],
             ],
             [
@@ -603,7 +603,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '10 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Permite compreender e falar qualquer idioma.',
+                'descricao' => 'A criatura tocada pode compreender e falar qualquer idioma falado, incluindo dialetos regionais, linguagens exóticas (Draconiano, Silvestre, Aquan, Infernal, Celestial) e mesmo criptolectos secretos. A magia funciona para conversas de fluxo natural — o alvo ouve as palavras em sua língua nativa mentalmente e responde na língua do interlocutor sem esforço consciente. Não permite ler ou escrever idiomas (para isso, use Compreender Idiomas escrita); apenas o falar e ouvir são cobertos. Não permite falar com criaturas que naturalmente não falam (animais, plantas, mortos-vivos sem discurso, elementais mudos) — o alvo continua sem interlocutor. Contra idiomas mágicos ou linguagens divinas de códigos secretos (True Speech de deuses), o Mestre pode determinar limites específicos. A duração de 10 min./nível é generosa para uma conversa longa ou várias curtas seguidas. Bardos aprendem no 2° nível, refletindo sua reputação como emissários poliglotas. Como magia benéfica, TR e RM podem ser voluntariamente ignorados. Componente material: um pequeno mapa cerâmico ou uma pequena zigurate de argila (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Bardo' => 2, 'Clérigo' => 4, 'Mago' => 3, 'Feiticeiro' => 3],
             ],
             // ── NÍVEL 4 ───────────────────────────────────────────────────────
