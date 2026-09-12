@@ -704,7 +704,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => '18 m', 'alvo_area_efeito' => 'Cone de 18 m',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Reflexos metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Jato de frio causa 1d6/nível (máx. 15d6) de dano de frio.',
+                'descricao' => 'Um cone de frio absoluto irrompe das suas mãos abertas, jorrando à frente em uma área de 18 m em formato triangular. Toda criatura na área sofre 1d6 pontos de dano de frio por nível de conjurador (máximo 15d6 no 15° nível), TR Reflexos metade. É a magia de maior dano por espaço no 5° círculo, alcançando picos de 90 pontos médios contra um único alvo bem posicionado ou pintando dezenas de inimigos de gelo em campos abertos. Como o dano é de frio, criaturas com Resistência ou Imunidade a Frio (elementais do gelo, dragões brancos, gigantes do gelo) sofrem redução ou anulam o efeito totalmente — verifique antes de gastar espaços preciosos. Objetos frágeis não-protegidos ficam sujeitos ao dano; poças d\'água na área podem congelar temporariamente. Componente material: uma miniatura de cone de cristal ou vidro (arcano), ou o foco divino habitual (divino). Complementa perfeitamente Bola de Fogo no repertório de magos evocadores — enquanto uma prefere o teto máximo do 3° círculo, a outra encontra picos altos como magia de 5° com quase o dobro do dano máximo.',
                 'classes' => ['Mago' => 5, 'Feiticeiro' => 5],
             ],
             [
@@ -713,7 +713,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Um humanoide',
                 'duracao' => '1 dia/nível', 'teste_resistencia' => 'Vontade anula',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Controla o humanoide alvo telepáticamente.',
+                'descricao' => 'Você estabelece um vínculo telepático permanente com um único humanoide alvo dentro do alcance. Se o alvo falhar no TR Vontade, cai sob seu controle mental completo por 1 dia por nível de conjurador — uma das durações mais longas do jogo. Você pode dar ordens telepáticas através da conexão, mesmo à distância indeterminada; se estiver a menos de 30 m, pode dar comandos como ação padrão; a maiores distâncias, uma ação de rodada completa. Sem instruções ativas, o alvo age normalmente conforme suas próprias inclinações mas favorece seus interesses. Ordens obviamente auto-destrutivas ou contra a natureza fundamental do alvo (como matar um filho amado ou trair um deus) permitem novo TR com bônus para resistir; se o alvo passar nesse TR, você perde controle temporariamente sobre aquele comando (mas mantém o vínculo geral). O alvo sabe que está sendo controlado e frequentemente odeia o conjurador consciamente enquanto obedece involuntariamente. Ao contrário de Encantar Pessoa, o alvo torna-se sua marionete real, não apenas amigo. Contra-magias como Proteção contra o Mal, Mente em Branco ou Dissipar Magia podem quebrar o efeito. Componente material: nenhum requerido (apenas V, S). Restrita a humanoides — não afeta gigantes, feras, aberrações, mortos-vivos etc.',
                 'classes' => ['Bardo' => 4, 'Mago' => 5, 'Feiticeiro' => 5],
             ],
             [
@@ -722,7 +722,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Longo (120 m + 12 m/nível)', 'alvo_area_efeito' => 'Consulte o texto',
                 'duracao' => 'Concentração, até 1 rodada/nível, ou instantânea; consulte o texto', 'teste_resistencia' => 'Vontade anula (objeto)',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Move objetos ou criaturas usando somente a força da mente.',
+                'descricao' => 'Você move objetos ou criaturas usando apenas força da mente, em uma das três aplicações possíveis (escolhida na conjuração): (1) Movimento Sustentado — mover um objeto ou criatura não-portados dentro do alcance à velocidade de sua concentração até 6 m por rodada, com peso máximo de 11,5 kg por nível de conjurador; (2) Empurrão Violento — arremessar até um alvo por nível de conjurador (sem duas a mais de 4,5 m umas das outras) em ataque à distância com dano contuso baseado em impacto (variável); ou (3) Manobra de Combate — realizar bônus mágico em ações de agarrar, derrubar, desarmar ou empurrar contra criaturas dentro do alcance (usa nível de conjurador + Int mod em vez de FOR). A duração é diferente para cada aplicação: Concentração de até 1 rodada/nível para movimento sustentado, instantâneo para empurrão, ou concentração de até 1 rodada/nível para combate. TR Vontade nega (para objetos, se protegidos por magia; para criaturas, sempre). A magia consome bastante ação, mas oferece uma solução para praticamente todo problema físico: elevar um camarada ferido, jogar armas em inimigos, imobilizar oponentes maiores. Componente material: nenhum requerido (V, S apenas).',
                 'classes' => ['Mago' => 5, 'Feiticeiro' => 5],
             ],
             [
@@ -731,7 +731,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Um ser vivo',
                 'duracao' => '1 rodada/nível (D)', 'teste_resistencia' => 'Vontade anula',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Paralisa qualquer criatura, não apenas humanoide.',
+                'descricao' => 'Versão expandida de Imobilizar Pessoa (2° círculo): paralisa qualquer criatura viva, não apenas humanoides. Você aponta para um único alvo dentro do alcance; se falhar no TR Vontade, fica completamente paralisado por 1 rodada por nível de conjurador. Cada rodada no início do turno do alvo, ele pode fazer novo TR Vontade para se libertar antecipadamente. Paralisado, o alvo é indefeso (ataques automáticos de toque, coup de grâce possível), incapaz de mover-se, atacar, falar ou lançar magias. Como Imobilizar Monstro afeta qualquer criatura, é utilíssima contra dragões, gigantes, aberrações, feras místicas e outros oponentes que Imobilizar Pessoa não alcança. As mesmas imunidades aplicam-se: criaturas com Vontade de Ferro ativa, Mente em Branco ou imunidade a mental (constructos, mortos-vivos, elementais, gosmas) são imunes. Componente foco: um pequeno pedaço de ferro em forma reta (arcano); ou o foco divino habitual (divino). A combinação clássica com Imobilizar Pessoa é aplicá-la em melees pesados e monstros — enquanto o mago inimigo cai por Imobilizar Pessoa (2°, mais barato), o dragão fica paralisado por Imobilizar Monstro (5°).',
                 'classes' => ['Bardo' => 4, 'Clérigo' => 6, 'Mago' => 5, 'Feiticeiro' => 5],
             ],
             [
@@ -740,7 +740,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Parede de força de até 3 m²/nível',
                 'duracao' => '1 rodada/nível (D)', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Uma parede invisível e invulnerável de força.',
+                'descricao' => 'Você cria uma parede invisível e absolutamente rígida feita de energia de força pura. A parede pode assumir qualquer formato plano — retângulo, disco, cúpula — cobrindo uma área total de até 3 m² por nível de conjurador (você define a distribuição na conjuração). A parede é indestrutível por meios físicos: nenhuma força mundana, nenhum ácido, nenhum tipo de dano físico pode danificá-la. Ataques mágicos também falham: apenas Dissipar Magia, Desintegrar, uma esfera de aniquilação, ou uma rachadura em Prisão Antimagia (que a suprime enquanto ativa) podem afetá-la. Criaturas de qualquer tipo, mesmo etéreas e incorpóreas, não podem atravessar a parede — ela bloqueia até criaturas em plano etéreo e a maioria dos ataques a distância. Uma vez posicionada, é imóvel: não pode ser empurrada, movida ou girada. Excepcional para dividir campos de batalha, encurralar oponentes, criar pontes temporárias (em cúpula) ou proteger áreas críticas. Duração de 1 rodada/nível é apenas o suficiente para virar uma escaramuça; para uso mais permanente, use Prisão de Força ou Muralha de Adamante. Componente material: uma pitada de pó de diamante no valor de 50 PO.',
                 'classes' => ['Mago' => 5, 'Feiticeiro' => 5],
             ],
             [
@@ -749,7 +749,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Várias criaturas, sem duas a mais de 9 m',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Vontade metade (inofensiva) ou Vontade metade',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Cura 1d8 + 1/nível (máx. +25) em múltiplos aliados.',
+                'descricao' => 'Você libera uma onda de energia positiva que cura simultaneamente múltiplas criaturas dentro do alcance (uma criatura por nível de conjurador, sem duas a mais de 9 m umas das outras). Cada alvo escolhido recebe 1d8 pontos de cura + 1 por nível de conjurador (máximo +25 no 25° nível). Como as magias de cura da linha, o efeito é invertido contra mortos-vivos alvo: cada morto-vivo escolhido sofre o mesmo total como dano de energia positiva (TR Vontade metade). Você pode misturar aliados vivos e mortos-vivos na mesma aplicação — magia devastadora contra grupos com um necromante e seus zumbis. Aliados podem ser feridos e mortos-vivos escolhidos ao mesmo tempo em Terrenos onde ambos coexistem. Cura em média 30 PVs por alvo — a magia de cura em massa mais eficiente do 5° círculo, capaz de recuperar um grupo inteiro fatigado em uma única aplicação. Bardos aprendem no 5° nível de bardo; clérigos e druidas naturalmente. Como magia benéfica, cada aliado pode ignorar voluntariamente o TR anular; RM aplica-se contra mortos-vivos alvo. Não removem venenos, doenças, cegueira, envelhecimento ou dreno de níveis — para isso magias específicas.',
                 'classes' => ['Bardo' => 5, 'Clérigo' => 5, 'Druida' => 6],
             ],
             [
@@ -758,7 +758,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura morta tocada',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Nenhum; Consulte o texto',
                 'resistencia_magia' => 'Sim (inofensiva)', 'versao' => '3.5',
-                'descricao' => 'Retorna um ser morto à vida (até 10 anos morto). Perde um nível permanentemente.',
+                'descricao' => 'Você retorna uma criatura morta à vida. O corpo do alvo (ou pelo menos uma parte substancial) deve estar presente e intacto o suficiente para reanimar — a magia falha em cadáveres queimados, dissolvidos por ácido, comidos, desintegrados ou de outra forma destruídos. A criatura pode ter morrido há no máximo 10 dias por nível de conjurador (100 dias no 10° nível). Ao ressuscitar, o alvo perde um nível de personagem permanente (ou 2 pontos de Constituição se apenas com 1 nível) — a partida da alma cobra seu preço. Retorna com apenas 1 PV, mas está vivo e pode ser curado normalmente. A alma deve estar disposta a retornar (mortos por natural morte tranquila e satisfeita podem recusar; espíritos aprisionados ou destruídos por magias como Aniquilar Alma são inacessíveis). Componente material extremamente caro: um diamante no valor mínimo de 5.000 PO (consumido na conjuração) — uma das razões pelas quais ressuscitações são raras em campanhas realistas. Componentes divinos completos (V, S, M, DF) refletem a natureza sagrada da magia. Não recupera itens ou equipamentos perdidos, doenças curadas por morte, dreno de níveis pré-morte ou danos permanentes; o retorno é apenas do espírito ao corpo em estado saudável.',
                 'classes' => ['Clérigo' => 5],
             ],
             [
@@ -767,7 +767,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Concede visão da verdade, revelando ilusões, formas ocultas, plano etéreo e invisíveis.',
+                'descricao' => 'A criatura tocada ganha visão sobrenatural que penetra toda forma de encobrimento mágico e ilusório. Durante 1 min./nível de conjurador, o alvo enxerga: através de todas as ilusões (Imagem Silenciosa, Imagem Especular, disfarces via Mudança de Forma, etc.), criaturas invisíveis, criaturas polimorfadas em suas formas verdadeiras, mortos-vivos disfarçados, tesouros mimicados, portais mágicos e sombras/escuridão mágicas até 36 m de alcance. Também revela o Plano Etéreo se coexistir com o Material — fantasmas e criaturas etéreas ficam visíveis. Não permite ver através de barreiras físicas (paredes, portas fechadas) nem através de encobrimento mundano (folhagem densa, cobertura); apenas magia de dissimulação é anulada. Não permite ler mentes nem enxergar através de tempo/passado. Como a magia é limitada ao alvo tocado, cada aplicação beneficia apenas uma criatura — usa-a estrategicamente no explorador ou escoteiro. Componente material valioso: pó de goma-arábica dissolvido em água benta e aplicado aos olhos do alvo, no valor de 250 PO (consumido). Como magia benéfica, TR anular pode ser voluntariamente ignorado. Essencial em torres de ilusionistas, dungeons com dopplegangers, ou encontros com criaturas invisíveis inatas.',
                 'classes' => ['Clérigo' => 5, 'Druida' => 7, 'Mago' => 6, 'Feiticeiro' => 6],
             ],
             // ── NÍVEL 6 ───────────────────────────────────────────────────────
