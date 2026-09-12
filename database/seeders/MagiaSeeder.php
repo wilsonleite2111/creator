@@ -341,7 +341,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Pessoal ou toque', 'alvo_area_efeito' => 'Você ou a criatura tocada',
                 'duracao' => '1 min./nível (D)', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'O alvo torna-se invisível. Termina se atacar.',
+                'descricao' => 'O alvo — você mesmo ou uma criatura tocada — torna-se completamente invisível durante 1 min./nível ou até realizar um ataque contra outra criatura. Fica invisível todo o equipamento que estiver carregando ou vestindo no momento; itens largados ou lançados durante a duração tornam-se visíveis imediatamente ao deixar a posse do alvo. Ataques que quebram a magia incluem ataques em melee, à distância, magias com alvo específico contra criaturas hostis e canalização positiva/negativa. Efeitos passivos como toques de aliados ou magias buff em si mesmo não quebram a invisibilidade. Uma criatura invisível ganha +2 nas jogadas de ataque em melee (que quebrarão a magia) e ataques contra ela sofrem penalidade de 50% de dispersão (ataques com sucesso ainda podem errar). A magia não silencia — passos, respiração e conversa continuam audíveis, e criaturas com Ver Invisível, Visão Verdadeira ou olfato aguçado (blindsense) ainda podem perceber o alvo. Uso predileto de ladinos e assassinos: um ataque furtivo com Invisibilidade ativa combina bônus de flanqueado, penalidade de dispersão e dano furtivo se disponível. Componente material: uma pestana envolvida em pedaço de goma-arábica (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Bardo' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -350,7 +350,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Pessoal', 'alvo_area_efeito' => 'Você',
                 'duracao' => '1 min./nível (D)', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Cria 1d4+1/3 níveis cópias ilusórias (máx. 8) do conjurador.',
+                'descricao' => 'Você conjura entre 1d4+1 e 1d4+1 cópias ilusórias suas — mais uma imagem a cada três níveis de conjurador, até um máximo de oito imagens no 21° nível de conjurador. As imagens aparecem no seu espaço e nas casas adjacentes, movem-se junto com você e mimetizam suas ações perfeitamente, tornando impossível para observadores distinguir a original das cópias sem interação. Quando uma criatura te ataca, há chance percentual de acertar uma imagem em vez de você (aproximadamente 50% com 1 imagem, subindo com mais imagens); imagens acertadas são destruídas instantaneamente. Ataques de área (Bola de Fogo, Cone de Frio) não afetam as imagens — apenas você. Criaturas com Visão Verdadeira, blindsense ou Ver Invisível ignoram completamente as imagens e sempre te atacam diretamente. A magia dura 1 min./nível, mas termina quando todas as imagens são destruídas. Combinar Imagem Especular com Escudo e Invisibilidade Superior torna um mago de nível médio quase intocável em melee, e é uma das razões pelas quais conjuradores costumam sobreviver em combates onde guerreiros caem.',
                 'classes' => ['Bardo' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -359,7 +359,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Um ou mais raios',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Um raio de fogo causa 4d6 de dano de fogo (até três raios acima do 11°).',
+                'descricao' => 'Você dispara um raio de fogo intenso da mão estendida em ataque de toque à distância. Se acertar, causa 4d6 pontos de dano de fogo. No 7° nível de conjurador você ganha um segundo raio, e no 11° nível um terceiro raio (máximo 3 raios); cada raio requer seu próprio ataque de toque à distância e pode ser direcionado ao mesmo alvo ou a alvos diferentes dentro do alcance. Cada raio é resolvido independentemente para RM e resistência a fogo. Como são raios (linhas de energia), cada um pode causar acerto crítico com ameaça em 20 — o que faz da magia uma das melhores em critar para conjuradores no 11° nível ou mais. Não permite TR. A magia é ideal contra alvos poucos e resistentes: no 11° nível, três raios totalizando até 12d6 podem eliminar um único inimigo importante que Bola de Fogo (limitada a 10d6) não conseguiria. Contra grupos, prefira magias de área.',
                 'classes' => ['Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -368,7 +368,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Teias em área de 6 m de raio',
                 'duracao' => '10 min./nível (D)', 'teste_resistencia' => 'Reflexos anula; consulte o texto',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Cria uma massa de fios pegajosos que prendem criaturas.',
+                'descricao' => 'Você conjura uma massa densa de fios pegajosos e resistentes que preenche uma área de 6 m de raio, ancorada em superfícies sólidas (paredes, tetos, chão). A área é considerada terreno difícil para todos os efeitos. Toda criatura na área quando a magia é conjurada, ou que entre depois, deve fazer TR Reflexos: sucesso mostra que ela conseguiu evitar ficar completamente presa mas ainda deve tratar a área como terreno difícil e ficar coberta (concealment 20%); falha significa que fica agarrada pelas teias, incapaz de se mover. Uma criatura agarrada pode se libertar em ação de rodada completa com teste de Força CD 20 ou de Escapismo CD 20. Movimento é reduzido a 1,5 m por rodada para criaturas parcialmente presas. As teias são inflamáveis: chamas expostas fazem toda a área queimar em uma rodada, causando 2d4 de dano de fogo a quem estiver dentro e destruindo a magia. As teias não bloqueiam linha de efeito ou visão (concealment 20%), mas magias e ataques à distância que passem por elas têm 20% de dispersão. Duração de 10 min./nível é longa o suficiente para transformar um campo de batalha inteiro; dissipável. Componente material: um pedaço de teia de aranha.',
                 'classes' => ['Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -377,7 +377,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Criaturas e objetos em área de 3 m de raio',
                 'duracao' => '1 rodada/nível', 'teste_resistencia' => 'Vontade parcial',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Cobre tudo em poeira brilhante que cega e impede invisibilidade.',
+                'descricao' => 'Uma nuvem de poeira dourada cintilante se espalha em área de 3 m de raio, cobrindo tudo — criaturas, objetos e o próprio ar. Cada criatura na área deve fazer TR Vontade: sucesso significa apenas ficar coberta por poeira brilhante, mas falha adiciona cegueira por 1 rodada por nível. As criaturas afetadas (mesmo que passem no TR) ficam bem visíveis: qualquer efeito de invisibilidade ou disfarce ilusório é anulado enquanto a poeira estiver presente, e cada afetado emite luz suficiente para ser visto claramente até 12 m de distância. Ideal para revelar assassinos invisíveis, ladrões ocultos, magos disfarçados ou dopplegangers em multidão. A duração de 1 rodada/nível é curta, mas suficiente para eliminar surpresas em uma emboscada e permitir que aliados ataquem alvos que fugiriam da percepção. Componente material: uma pitada de mica moída (ou pó de outro mineral brilhante).',
                 'classes' => ['Bardo' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -386,7 +386,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Pessoal', 'alvo_area_efeito' => 'Você',
                 'duracao' => '10 min./nível (D)', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Revela criaturas e objetos invisíveis.',
+                'descricao' => 'Sua visão adquire uma clareza sobrenatural que penetra ilusões de encobrimento — você percebe criaturas e objetos invisíveis (por magias como Invisibilidade, Invisibilidade Superior, Encobrimento, Escondido em Sombras, etc.) como se estivessem parcialmente visíveis: silhuetas etéreas, contornos difusos ou vultos translúcidos. A magia não permite ver criaturas ou objetos etéreos (para isso é preciso Visão Verdadeira ou Ver o Etéreo), nem revela criaturas escondidas por meios mundanos (Furtividade, cobertura, escuridão comum). Também não anula efeitos de encobrimento parcial — apenas invisibilidade real. A duração é generosa (10 min./nível) e a magia pode ser dispensada. Como magia pessoal, apenas o conjurador se beneficia. Excelente para explorar catacumbas, torres de mago ou áreas onde inimigos podem estar invisíveis; combinada com uma lanterna, praticamente elimina emboscadas por criaturas comuns. Componente material: um punhado de talco cobrindo o rosto do conjurador durante a conjuração.',
                 'classes' => ['Bardo' => 3, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -395,7 +395,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => '18 m', 'alvo_area_efeito' => 'Emanação em quadrante de 18 m',
                 'duracao' => 'Concentração, até 1 min./nível', 'teste_resistencia' => 'Vontade anula',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Permite ouvir os pensamentos superficiais de criaturas.',
+                'descricao' => 'Você projeta sua percepção em uma emanação em quadrante de 18 m à frente e capta os pensamentos superficiais das criaturas na área. A informação obtida cresce a cada rodada de concentração: na 1ª rodada, apenas a presença ou ausência de pensamentos (não afeta criaturas com Inteligência 1 ou inteligentemente sem mente como zumbis, gosmas ou plantas); na 2ª, o número de mentes distintas e as pontuações de Inteligência mais altas; na 3ª, os pensamentos superficiais atuais de cada mente detectada (o que a criatura está pensando conscientemente no momento). Cada criatura na área com Inteligência 3 ou mais tem direito a TR Vontade — se passar, você não capta seus pensamentos. Barreiras densas bloqueiam o efeito (as mesmas de Detectar Magia). Você não lê a mente completa nem acessa segredos guardados profundamente — apenas o pensamento consciente do momento presente. Ideal para interrogação, espionagem sutil ou identificação de dopplegangers e infiltrados. Componente foco: uma moeda de cobre (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Bardo' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -404,7 +404,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'O alvo ganha +4 de melhoria na Força.',
+                'descricao' => 'A criatura tocada ganha músculos sobrenaturalmente reforçados, recebendo bônus de melhoria de +4 na Força durante 1 minuto por nível de conjurador. O bônus aumenta as capacidades derivadas da Força na hora: bônus de ataque e dano com armas de melee (+2), verificações de Força e perícias baseadas em FOR (Escalar, Nadar, Saltar, Quebrar), carga suportada. Por ser bônus de melhoria, não empilha com outras fontes de melhoria (poções, itens permanentes de Força, outras aplicações da mesma magia), prevalecendo sempre o maior. Como magia benéfica, o TR e a RM podem ser voluntariamente ignorados pelo alvo. Componente material: alguns pêlos ou uma pitada de esterco de um touro (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Clérigo' => 2, 'Druida' => 2, 'Paladino' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -413,7 +413,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'O alvo ganha +4 de melhoria na Destreza.',
+                'descricao' => 'A criatura tocada se torna anormalmente ágil e reflexiva, recebendo bônus de melhoria de +4 na Destreza durante 1 minuto por nível de conjurador. O bônus reflete-se em vantagens imediatas: +2 nas jogadas de ataque à distância, +2 em Reflexos e Classe de Armadura (bônus de DES), e +2 em todas as perícias baseadas em Destreza (Acrobacia, Furtividade, Cavalgar, Prestidigitação, Abrir Fechaduras etc.). Como bônus de melhoria, não empilha com outras fontes do mesmo tipo. Como magia benéfica, o TR e RM podem ser voluntariamente ignorados. Combina de forma excelente com magias como Rapidez e Invisibilidade em ladinos ou patrulheiros. Componente material: alguns pêlos de gato (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Bardo' => 2, 'Druida' => 2, 'Patrulheiro' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -422,7 +422,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'O alvo ganha +4 de melhoria na Constituição.',
+                'descricao' => 'A criatura tocada ganha vigor sobrenatural, recebendo bônus de melhoria de +4 na Constituição durante 1 minuto por nível de conjurador. O aumento traz efeitos imediatos: +2 em testes de resistência de Fortitude, +2 em verificações de CON (segurar respiração, resistir a fadiga, permanecer consciente após dano severo), e — crucialmente — 2 PVs temporários adicionais por Dado de Vida do alvo (que somem quando a magia termina, junto com o bônus). Um bárbaro de 10° nível com CON 16 e Resistência do Urso ganha, portanto, 20 PVs temporários enquanto a magia durar. Como bônus de melhoria, não empilha com outras fontes do mesmo tipo. Como magia benéfica, o TR e RM podem ser voluntariamente ignorados. Se a magia terminar durante um combate, os PVs temporários se dissipam primeiro — o alvo pode sobreviver mesmo se essa perda o colocaria em números negativos, desde que ainda tenha PVs reais. Componente material: alguns pêlos ou uma pitada de esterco de urso (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Clérigo' => 2, 'Druida' => 2, 'Paladino' => 2, 'Patrulheiro' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -431,7 +431,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'O alvo ganha +4 de melhoria na Inteligência.',
+                'descricao' => 'A criatura tocada tem sua mente magicamente aguçada, recebendo bônus de melhoria de +4 na Inteligência durante 1 minuto por nível de conjurador. Efeitos imediatos: +2 em perícias baseadas em Inteligência (Conhecimento em geral, Identificar Magia, Ofício, Decifrar Escrita, Avaliação); para conjuradores baseados em Inteligência (magos, sábios), a magia não concede acesso a novos espaços de magia por dia nem eleva a CD das magias existentes durante a curta duração — o INT temporário conta apenas para perícias e verificações. Como bônus de melhoria, não empilha com outras fontes do mesmo tipo. Como magia benéfica, o TR e RM podem ser voluntariamente ignorados. Aplicações típicas: buff pré-conversa importante para o bardo (empurrar Blefar, Diplomacia via Identificar Magia auxiliar), sessão de pesquisa mágica intensiva, decifrar armadilhas complexas. Componente material: alguns pêlos ou o rabo de uma raposa (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Bardo' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -440,7 +440,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'O alvo ganha +4 de melhoria na Sabedoria.',
+                'descricao' => 'A criatura tocada ganha percepção e intuição aumentadas, recebendo bônus de melhoria de +4 na Sabedoria durante 1 minuto por nível de conjurador. Efeitos: +2 em testes de resistência de Vontade, +2 em perícias baseadas em Sabedoria (Percepção, Sentir Motivação, Sobrevivência, Curar, Adestrar Animais, Profissão). Para conjuradores baseados em Sabedoria (clérigos, druidas, patrulheiros), a magia não concede acesso a novos espaços de magia por dia nem eleva a CD das magias durante a duração — o SAB temporário conta apenas para perícias e verificações. Como bônus de melhoria, não empilha com outras fontes do mesmo tipo. Como magia benéfica, o TR e RM podem ser voluntariamente ignorados. Combina bem com Guiar Aliado ou uso intenso de Sentir Motivação em situações sociais tensas. Componente material: algumas penas de coruja (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Clérigo' => 2, 'Druida' => 2, 'Paladino' => 2, 'Patrulheiro' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -449,7 +449,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => '1 min./nível', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'O alvo ganha +4 de melhoria no Carisma.',
+                'descricao' => 'A criatura tocada exala carisma sobrenatural — porte confiante, voz melodiosa, presença magnética —, recebendo bônus de melhoria de +4 no Carisma durante 1 minuto por nível de conjurador. Efeitos imediatos: +2 em todas as perícias baseadas em Carisma (Blefar, Diplomacia, Enganação, Intimidar, Adestrar Animais, Cavalgar, Uso Mágico), +2 em capacidades de expulsão de mortos-vivos (para clérigos/paladinos). Para conjuradores baseados em Carisma (feiticeiros, bardos, paladinos), a magia não concede novos espaços de magia por dia nem eleva CD das magias durante a curta duração — o CAR temporário conta apenas para perícias e verificações. Como bônus de melhoria, não empilha com outras fontes do mesmo tipo. Como magia benéfica, o TR e RM podem ser voluntariamente ignorados. Predileta antes de audiências com nobreza, negociações delicadas ou expulsões críticas contra hordas de mortos-vivos. Componente material: algumas penas de águia (arcano); ou o foco divino habitual (divino).',
                 'classes' => ['Bardo' => 2, 'Clérigo' => 2, 'Paladino' => 2, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -458,7 +458,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Pessoal ou próximo (7,5 m + 1,5 m/2 níveis)', 'alvo_area_efeito' => 'Você, um objeto ou uma criatura',
                 'duracao' => '1 min./nível (D)', 'teste_resistencia' => 'Nenhum',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Permite mover-se verticalmente a até 6 m por rodada.',
+                'descricao' => 'O alvo (você, um objeto ou uma criatura à distância próxima) fica suspenso no ar, capaz de subir ou descer verticalmente pela ação da sua vontade. O deslocamento vertical é de até 6 m por rodada em qualquer direção (ou 12 m em rodadas de dobrar movimento). A magia não permite movimento horizontal: o alvo permanece na mesma coluna vertical, precisando empurrar-se contra uma parede ou objeto para deslocar-se lateralmente (perícia Escalar, ou o vento em ambientes abertos). Um alvo relutante tem direito a TR Vontade e RM. A duração de 1 min./nível é dispensável. Combina naturalmente com Voar em torres de mago ou combates em altura variada, mas é significativamente mais barata. Objetos levitados podem carregar até 4,5 kg + 4,5 kg por nível de conjurador de peso. Componente foco: um pequeno cabo de couro ou pedaço de metal dourado no formato de arco.',
                 'classes' => ['Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -467,7 +467,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Um ser vivo',
                 'duracao' => 'Permanente (D)', 'teste_resistencia' => 'Fortitude anula',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Torna um ser cego ou surdo permanentemente.',
+                'descricao' => 'Você aponta para uma única criatura viva dentro do alcance e ela deve fazer TR Fortitude ou ficar cega OU surda (você escolhe qual efeito aplicar na conjuração). O efeito é permanente até ser removido por Dissipar Magia, Remover Cegueira/Surdez, Restauração, Cura ou magias similares. Cegueira impõe penalidade -2 na CA, perda de bônus de Destreza na CA, chance de dispersão 50% contra ataques físicos, incapacidade de fazer ataques à distância eficazes, deslocamento reduzido à metade. Surdez impõe -4 na iniciativa, verificações de Percepção baseadas em audição falham automaticamente, chance de falha 20% em conjurar magias com componente verbal e desvantagem em conversar em ambientes barulhentos. A magia não afeta constructos, mortos-vivos sem olhos/ouvidos funcionais, elementais ou criaturas sem sensores equivalentes. Combina com Silêncio para desabilitar completamente um conjurador inimigo (surdez impede conjurar V, Silêncio impede lançar V da área). Barata para o poder que oferece, e o efeito permanente é muitas vezes o suficiente para tirar um inimigo importante de combate futuro.',
                 'classes' => ['Bardo' => 2, 'Clérigo' => 3, 'Mago' => 2, 'Feiticeiro' => 2],
             ],
             [
@@ -476,7 +476,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Longo (120 m + 12 m/nível)', 'alvo_area_efeito' => 'Área de 6 m de raio',
                 'duracao' => '1 min./nível (D)', 'teste_resistencia' => 'Vontade anula; consulte o texto',
                 'resistencia_magia' => 'Não', 'versao' => '3.5',
-                'descricao' => 'Nenhum som pode ser criado ou passar pela área.',
+                'descricao' => 'Uma zona de silêncio absoluto de 6 m de raio surge no local designado ou centrada em uma criatura tocada. Dentro da área, nenhum som pode ser criado ou passar — vozes, passos, música, magias com componente verbal, sinos, gritos de dor. Se centrada em objeto ou local, a área é fixa; se centrada em criatura, se move com ela e alvo tem direito a TR Vontade (RM aplica-se). Criaturas hostis conjuradoras dentro da área não podem lançar magias com componente V, o que efetivamente desativa a maioria dos conjuradores; criaturas fora da área não ouvem nada de dentro. A magia bloqueia efeitos sonoros hostis (gritos aterrorizantes, magias sônicas — Palavra do Poder, Lamento da Banshee, Grito etc.), mas também impede aliados conjuradores de trabalhar dentro. Duração de 1 min./nível é longa; dissipável. Aplicação tática: ancorar em pedra pequena e lançar em direção ao mago inimigo (RM aplica-se ao objeto), ou lançar preventivamente em um aliado ladino que precisa se aproximar sem alertar guardas. Também neutraliza a maioria dos exorcismos e conjurações verbais de rituais de invocação.',
                 'classes' => ['Bardo' => 2, 'Clérigo' => 2],
             ],
             [
@@ -485,7 +485,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Toque', 'alvo_area_efeito' => 'Criatura tocada',
                 'duracao' => 'Instantânea', 'teste_resistencia' => 'Vontade anula (inofensiva)',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Cura 2d8 + 1/nível (máx. +10) de dano.',
+                'descricao' => 'Canalizando energia positiva por um toque, você cura 2d8 pontos de dano + 1 por nível de conjurador (máximo +10). Como as demais magias de cura da linha, o efeito é invertido contra mortos-vivos: contra um morto-vivo, funciona como ataque de toque em melee que causa o mesmo dano (TR Vontade metade). Cura em média 12-13 PVs por espaço de 2° círculo — o mais eficiente ponto de cura por espaço de magia na maior parte da progressão. Preferida por clérigos e druidas para tratamento de campo entre combates; um clérigo de 5° com CON razoável e vários espaços de 2° pode restaurar todo o grupo confortavelmente após uma batalha difícil. Contra mortos-vivos, a Resistência à Magia aplica-se; para curas em aliados, o TR anular pode ser voluntariamente ignorado. Não removem venenos, doenças, cegueira, dreno de níveis ou envelhecimento — para isso, magias específicas ainda são necessárias.',
                 'classes' => ['Bardo' => 2, 'Clérigo' => 2, 'Druida' => 3, 'Paladino' => 3, 'Patrulheiro' => 3],
             ],
             [
@@ -494,7 +494,7 @@ class MagiaSeeder extends Seeder
                 'alcance' => 'Médio (30 m + 3 m/nível)', 'alvo_area_efeito' => 'Um humanoide',
                 'duracao' => '1 rodada/nível (D)', 'teste_resistencia' => 'Vontade anula',
                 'resistencia_magia' => 'Sim', 'versao' => '3.5',
-                'descricao' => 'Paralisa um humanoide.',
+                'descricao' => 'Você aponta para um único humanoide dentro do alcance e trava sua vontade contra a própria consciência. Se falhar no TR Vontade, o alvo fica completamente paralisado: incapaz de mover-se, atacar, falar ou lançar magias. Fica com atitude indefesa (ataques automáticos de toque, coup de grâce possível). A duração é de 1 rodada/nível, mas o alvo pode fazer novo TR Vontade a cada rodada no início do próprio turno para se libertar antecipadamente. Como magia com descritor [Mental] e [Compulsão], não afeta criaturas imunes a efeitos mentais (Vontade de Ferro, Mente em Branco) nem tipos além de humanoides (não afeta gigantes, feras, aberrações, mortos-vivos, elementais, plantas, dragões, fadas etc.). A magia atinge criaturas úmidas: um alvo submerso ou em queda continua sob os efeitos da água/gravidade (afoga-se, cai livremente). Componente foco: um pequeno pedaço de ferro em forma reta (arcano); ou o foco divino habitual (divino). Combinação clássica: um mago paralisa um oponente-chave humanoide enquanto o ladino se posiciona para coup de grâce — uma execução instantânea automática.',
                 'classes' => ['Bardo' => 2, 'Clérigo' => 2, 'Mago' => 3, 'Feiticeiro' => 3],
             ],
             // ── NÍVEL 3 ───────────────────────────────────────────────────────
