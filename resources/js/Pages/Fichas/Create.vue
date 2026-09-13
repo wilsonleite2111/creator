@@ -826,21 +826,12 @@ const podeAvancar = computed(() => {
     return true;
 });
 
-// ---------- Geração padrão de tamanho e idade (PHB 3.5) ----------
-const tamanhoPorRaca = {
-    'anao': 'Médio',
-    'elfo': 'Médio',
-    'gnomo': 'Pequeno',
-    'halfling': 'Pequeno',
-    'humano': 'Médio',
-    'meio-elfo': 'Médio',
-    'meio-orc': 'Médio',
-};
+// ---------- Geração padrão de idade e altura (PHB 3.5) ----------
 
 // Idade adulta base e dados de idade para aventureiros por classe (Tabela 6-4 PHB 3.5).
 // Grupos de classe: 'quick' (bárbaro/ladino/feiticeiro), 'moderate' (bardo/guerreiro/paladino/patrulheiro), 'slow' (clérigo/druida/monge/mago).
 const idadePorRaca = {
-    'anao':      { adulto: 40,  quick: [3, 6], moderate: [5, 6], slow: [7, 6] },   // +NdX (N dados de X faces)
+    'anao':      { adulto: 40,  quick: [3, 6], moderate: [5, 6], slow: [7, 6] },
     'elfo':      { adulto: 110, quick: [4, 6], moderate: [6, 6], slow: [10, 6] },
     'gnomo':     { adulto: 40,  quick: [4, 6], moderate: [6, 6], slow: [9, 6] },
     'halfling':  { adulto: 20,  quick: [2, 4], moderate: [3, 6], slow: [4, 6] },
@@ -849,21 +840,28 @@ const idadePorRaca = {
     'meio-orc':  { adulto: 14,  quick: [1, 4], moderate: [1, 6], slow: [2, 6] },
 };
 
+// Altura base + dados aleatórios (Tabela 6-6 PHB 3.5), adaptada para metros.
+// altura = base_m + rolagem(n, faces) × incremento_cm / 100
+const alturaPorRaca = {
+    'anao':      { baseM: 1.10, dados: [2, 4],  incrementoCm: 3 },   // 1,16-1,34 m
+    'elfo':      { baseM: 1.35, dados: [2, 6],  incrementoCm: 4 },   // 1,43-1,83 m
+    'gnomo':     { baseM: 0.85, dados: [2, 4],  incrementoCm: 3 },   // 0,91-1,09 m
+    'halfling':  { baseM: 0.80, dados: [2, 4],  incrementoCm: 3 },   // 0,86-1,04 m
+    'humano':    { baseM: 1.45, dados: [2, 10], incrementoCm: 3 },   // 1,51-2,05 m
+    'meio-elfo': { baseM: 1.40, dados: [2, 8],  incrementoCm: 3 },   // 1,46-1,88 m
+    'meio-orc':  { baseM: 1.45, dados: [2, 12], incrementoCm: 3 },   // 1,51-2,17 m
+};
+
 const grupoClasseIdade = (slug) => {
     if (['barbaro', 'ladino', 'feiticeiro'].includes(slug)) return 'quick';
     if (['bardo', 'guerreiro', 'paladino', 'patrulheiro'].includes(slug)) return 'moderate';
-    return 'slow'; // clérigo, druida, monge, mago
+    return 'slow';
 };
 
 const rolarDados = (n, faces) => {
     let total = 0;
     for (let i = 0; i < n; i++) total += Math.floor(Math.random() * faces) + 1;
     return total;
-};
-
-const gerarTamanhoPadrao = () => {
-    const slug = racaSlug.value;
-    if (slug && tamanhoPorRaca[slug]) form.tamanho = tamanhoPorRaca[slug];
 };
 
 const gerarIdadePadrao = () => {
@@ -875,6 +873,35 @@ const gerarIdadePadrao = () => {
     const [n, faces] = dados[grupo];
     form.idade = dados.adulto + rolarDados(n, faces);
 };
+
+const gerarAlturaPadrao = () => {
+    const slug = racaSlug.value;
+    if (!slug || !alturaPorRaca[slug]) return;
+    const cfg = alturaPorRaca[slug];
+    const bonusCm = rolarDados(cfg.dados[0], cfg.dados[1]) * cfg.incrementoCm;
+    form.altura = Math.round((cfg.baseM + bonusCm / 100) * 100) / 100;
+};
+
+// Categoria de tamanho derivada da altura (PHB 3.5 Table 8-4 — dobra a cada categoria).
+const tamanhoPorAltura = (alturaM) => {
+    const cm = Number(alturaM) * 100;
+    if (!Number.isFinite(cm) || cm <= 0) return '';
+    if (cm <= 15) return 'Fino';
+    if (cm <= 30) return 'Diminuto';
+    if (cm <= 60) return 'Miúdo';
+    if (cm <= 120) return 'Pequeno';
+    if (cm <= 240) return 'Médio';
+    if (cm <= 480) return 'Grande';
+    if (cm <= 960) return 'Enorme';
+    if (cm <= 1920) return 'Imenso';
+    return 'Colossal';
+};
+
+// Sincroniza tamanho sempre que a altura mudar.
+watch(() => form.altura, (novo) => {
+    const t = tamanhoPorAltura(novo);
+    if (t) form.tamanho = t;
+});
 
 const scrollTopo = () => {
     if (typeof window !== 'undefined') {
@@ -952,6 +979,13 @@ const descartarRascunho = () => {
 };
 
 onMounted(() => {
+    // Se a URL contém ?fresh=1, começa do zero (usuário clicou em "Forjar novo herói").
+    const params = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : null;
+    const forcarNovo = params?.get('fresh') === '1';
+    if (forcarNovo) {
+        if (typeof window !== 'undefined') window.localStorage.removeItem(CHAVE_RASCUNHO);
+        return;
+    }
     restaurarRascunho();
 });
 
@@ -1043,19 +1077,6 @@ const submit = () => {
                         </div>
                     </div>
 
-                    <div v-if="rascunhoRestaurado" class="mt-6 p-4 bg-yellow-600/10 border-2 border-yellow-600/40 rounded-lg flex items-center justify-between">
-                        <div class="flex items-center gap-3">
-                            <i class="fa-solid fa-scroll text-yellow-700 text-xl"></i>
-                            <div>
-                                <p class="font-cinzel font-bold uppercase text-sm text-parchment-900">Rascunho restaurado</p>
-                                <p class="text-xs font-lora italic text-parchment-800">Um preenchimento anterior foi recuperado do navegador. Continue de onde parou ou descarte para começar do zero.</p>
-                            </div>
-                        </div>
-                        <button type="button" @click="descartarRascunho"
-                            class="px-4 py-2 rounded-lg font-cinzel font-bold text-sm bg-blood-700 text-parchment-100 hover:bg-blood-800 transition">
-                            <i class="fa-solid fa-trash mr-2"></i>Descartar
-                        </button>
-                    </div>
                 </div>
 
                 <!-- ============ PASSO 2: RAÇA ============ -->
@@ -1751,24 +1772,24 @@ const submit = () => {
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                             <div>
-                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Tamanho</label>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Altura (m)</label>
                                 <div class="flex gap-2">
-                                    <select v-model="form.tamanho"
+                                    <input v-model.number="form.altura" type="number" step="0.01" min="0"
+                                        placeholder="Ex.: 1.75"
                                         class="flex-1 bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
-                                        <option value="">—</option>
-                                        <option value="Minúsculo">Minúsculo</option>
-                                        <option value="Diminuto">Diminuto</option>
-                                        <option value="Miúdo">Miúdo</option>
-                                        <option value="Pequeno">Pequeno</option>
-                                        <option value="Médio">Médio</option>
-                                        <option value="Grande">Grande</option>
-                                        <option value="Enorme">Enorme</option>
-                                    </select>
-                                    <button type="button" @click="gerarTamanhoPadrao" :disabled="!selectedRaca"
-                                        :title="selectedRaca ? 'Preencher com o tamanho padrão da raça' : 'Escolha uma raça primeiro'"
+                                    <button type="button" @click="gerarAlturaPadrao" :disabled="!selectedRaca"
+                                        :title="selectedRaca ? 'Rolar altura pela raça (PHB 3.5)' : 'Escolha uma raça primeiro'"
                                         class="px-3 py-2 rounded-lg font-cinzel font-bold text-xs bg-parchment-300 hover:bg-blood-700 hover:text-white transition disabled:opacity-40 disabled:cursor-not-allowed">
                                         <i class="fa-solid fa-dice"></i>
                                     </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Tamanho</label>
+                                <div class="w-full bg-parchment-200/60 border-2 border-parchment-400 rounded-lg p-2 font-lora text-parchment-800 flex items-center justify-between">
+                                    <span :class="{'italic opacity-60': !form.tamanho}">{{ form.tamanho || '—' }}</span>
+                                    <span class="text-[10px] uppercase font-cinzel opacity-50" title="Derivado da altura">auto</span>
                                 </div>
                             </div>
 
@@ -1778,13 +1799,15 @@ const submit = () => {
                                     <input v-model.number="form.idade" type="number" min="1"
                                         class="flex-1 bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
                                     <button type="button" @click="gerarIdadePadrao" :disabled="!selectedRaca"
-                                        :title="selectedRaca ? 'Rolar dados de idade conforme raça + classe' : 'Escolha uma raça primeiro'"
+                                        :title="selectedRaca ? 'Rolar idade conforme raça + classe' : 'Escolha uma raça primeiro'"
                                         class="px-3 py-2 rounded-lg font-cinzel font-bold text-xs bg-parchment-300 hover:bg-blood-700 hover:text-white transition disabled:opacity-40 disabled:cursor-not-allowed">
                                         <i class="fa-solid fa-dice"></i>
                                     </button>
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                             <div>
                                 <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Sexo</label>
                                 <select v-model="form.sexo"
@@ -1794,15 +1817,6 @@ const submit = () => {
                                     <option value="Feminino">Feminino</option>
                                     <option value="Outro">Outro</option>
                                 </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Altura (m)</label>
-                                <input v-model.number="form.altura" type="number" step="0.01" min="0"
-                                    placeholder="Ex.: 1.75"
-                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
                             </div>
                             <div>
                                 <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Peso (kg)</label>
