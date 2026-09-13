@@ -10,6 +10,6 @@ class Arma extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nome', 'preco', 'dano_p', 'dano_m', 'critico', 'alcance', 'peso', 'tipo', 'categoria', 'uso'
+        'nome', 'preco', 'dano_p', 'dano_m', 'critico', 'alcance', 'peso', 'tipo', 'categoria', 'uso', 'descricao'
     ];
 }

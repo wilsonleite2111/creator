@@ -10,6 +10,6 @@ class Equipamento extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nome', 'preco', 'peso', 'descricao'
+        'nome', 'categoria', 'preco', 'peso', 'descricao'
     ];
 }
