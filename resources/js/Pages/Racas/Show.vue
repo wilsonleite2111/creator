@@ -21,6 +21,20 @@ const atributos = computed(() => [
     { label: 'Sabedoria', short: 'SAB', valor: props.raca.mod_sabedoria },
     { label: 'Carisma', short: 'CAR', valor: props.raca.mod_carisma },
 ]);
+
+const escapeHtml = (str) => str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const descricaoFormatada = computed(() => {
+    const raw = props.raca.descricao || 'Raça documentada nos antigos pergaminhos imperiais.';
+    return escapeHtml(raw)
+        .replace(/\*\*(.+?)\*\*/g, '<strong class="font-cinzel text-parchment-900">$1</strong>')
+        .replace(/\n/g, '<br>');
+});
 </script>
 
 <template>
@@ -61,9 +75,7 @@ const atributos = computed(() => [
                         <h2 class="font-cinzel font-bold text-parchment-900 uppercase tracking-widest text-sm mb-3 border-b border-parchment-400/40 pb-2">
                             <i class="fa-solid fa-scroll mr-2 text-blood-700"></i> Descrição
                         </h2>
-                        <p class="font-lora text-parchment-800 leading-relaxed whitespace-pre-line">
-                            {{ raca.descricao || 'Raça documentada nos antigos pergaminhos imperiais.' }}
-                        </p>
+                        <div class="font-lora text-parchment-800 leading-relaxed space-y-2" v-html="descricaoFormatada"></div>
                     </section>
 
                     <section>
