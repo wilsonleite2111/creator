@@ -410,7 +410,7 @@ watch(classeSlug, () => {
     });
 });
 
-// ---------- Talentos ----------
+// ---------- Talentos: slots e pré-requisitos ----------
 const slotsTalento = computed(() => 1 + (isHumano.value ? 1 : 0));
 const talentosDisponiveis = computed(() => slotsTalento.value - form.talentos.length);
 const talentosPorTipo = computed(() => {
@@ -421,11 +421,174 @@ const talentosPorTipo = computed(() => {
     return grupos;
 });
 
-const toggleTalento = (id) => {
-    const idx = form.talentos.indexOf(id);
-    if (idx >= 0) form.talentos.splice(idx, 1);
-    else if (talentosDisponiveis.value > 0) form.talentos.push(id);
+// Bônus Base de Ataque na classe atual (PHB 3.5): boa = nível, média = 3/4 nível, ruim = 1/2 nível (arredondado para baixo).
+const bbaDaClasse = computed(() => {
+    const c = selectedClasse.value;
+    if (!c) return 0;
+    const prog = String(c.bba_progressao || '').toLowerCase();
+    const nv = nivelPersonagem.value;
+    if (prog === 'boa') return nv;
+    if (prog === 'media') return Math.floor(nv * 3 / 4);
+    return Math.floor(nv / 2);
+});
+
+// Nível de conjurador: full casters = nível de personagem; paladino/patrulheiro entram no 4°; demais = 0.
+const nivelDeConjurador = computed(() => {
+    const slug = classeSlug.value;
+    const nv = nivelPersonagem.value;
+    if (['clerigo', 'druida', 'feiticeiro', 'mago', 'bardo'].includes(slug)) return nv;
+    if (['paladino', 'patrulheiro'].includes(slug)) return nv >= 4 ? nv - 3 : 0;
+    return 0;
+});
+
+const talentosPorNome = computed(() => {
+    const map = {};
+    (props.talentos || []).forEach(t => { map[t.nome] = t; });
+    return map;
+});
+
+const nomesTalentosSelecionados = computed(() =>
+    form.talentos.map(id => (props.talentos || []).find(t => t.id === id)?.nome).filter(Boolean)
+);
+
+const nomeAtributoParaChave = {
+    'Força': 'forca',
+    'Destreza': 'destreza',
+    'Constituição': 'constituicao',
+    'Inteligência': 'inteligencia',
+    'Sabedoria': 'sabedoria',
+    'Carisma': 'carisma',
 };
+
+const NOMES_CLASSES = ['Bárbaro', 'Bardo', 'Clérigo', 'Druida', 'Feiticeiro', 'Guerreiro', 'Ladino', 'Mago', 'Monge', 'Paladino', 'Patrulheiro'];
+
+// Avalia um requisito atômico (sem "ou"). Retorna { ok, texto } para uso na UI.
+const checarRequisitoAtomico = (req) => {
+    const t = String(req).trim();
+    if (!t) return { ok: true, texto: t };
+
+    // Atributo mínimo: "Força 13"
+    for (const [nome, chave] of Object.entries(nomeAtributoParaChave)) {
+        const m = t.match(new RegExp(`^${nome}\\s+(\\d+)$`, 'i'));
+        if (m) {
+            const alvo = Number(m[1]);
+            const atual = Number(form[chave + '_base'] || 0);
+            return { ok: atual >= alvo, texto: `${nome} ${alvo} (você: ${atual})` };
+        }
+    }
+
+    // BBA: "BBA +N"
+    const mBBA = t.match(/^BBA\s*\+?(\d+)$/i);
+    if (mBBA) {
+        const alvo = Number(mBBA[1]);
+        return { ok: bbaDaClasse.value >= alvo, texto: `BBA +${alvo} (você: +${bbaDaClasse.value})` };
+    }
+
+    // Nível de conjurador
+    const mConj = t.match(/^N[íi]vel de conjurador\s+(\d+)$/i);
+    if (mConj) {
+        const alvo = Number(mConj[1]);
+        return { ok: nivelDeConjurador.value >= alvo, texto: `Nível de conjurador ${alvo} (você: ${nivelDeConjurador.value})` };
+    }
+
+    // Expulsar mortos-vivos: só Clérigo (todos os níveis) ou Paladino a partir do 4°
+    if (/^Capacidade de expulsar mortos-vivos$/i.test(t)) {
+        const slug = classeSlug.value;
+        const ok = slug === 'clerigo' || (slug === 'paladino' && nivelPersonagem.value >= 4);
+        return { ok, texto: t };
+    }
+
+    // Proficiência com a arma: assumida como satisfeita (guerreiros/etc já cobrem armas marciais/simples).
+    if (/^Profici[êe]ncia com a arma$/i.test(t)) return { ok: true, texto: t };
+
+    // Classe + nível: "Guerreiro 8", "Monge 1"
+    for (const nomeClasse of NOMES_CLASSES) {
+        const m = t.match(new RegExp(`^${nomeClasse}\\s+(\\d+)$`, 'i'));
+        if (m) {
+            const alvo = Number(m[1]);
+            const slug = slugify(nomeClasse);
+            const ok = classeSlug.value === slug && nivelPersonagem.value >= alvo;
+            return { ok, texto: `${nomeClasse} ${alvo}` };
+        }
+    }
+
+    // Talento por nome
+    if (talentosPorNome.value[t]) {
+        return { ok: nomesTalentosSelecionados.value.includes(t), texto: `Talento: ${t}` };
+    }
+
+    // Requisito não reconhecido: exibe como aviso e não bloqueia.
+    return { ok: true, texto: `${t} (não verificado)` };
+};
+
+// Avalia a string completa de pré-requisitos (separada por vírgulas, com possibilidade de "ou").
+const avaliarPreRequisitos = (talento) => {
+    const bruto = talento.pre_requisitos;
+    if (!bruto) return { ok: true, itens: [] };
+    const partes = String(bruto).split(',').map(s => s.trim()).filter(Boolean);
+    const itens = partes.map(parte => {
+        if (/\bou\b/i.test(parte)) {
+            const alternativas = parte.split(/\bou\b/i).map(s => s.trim()).filter(Boolean);
+            const avaliadas = alternativas.map(alt => checarRequisitoAtomico(alt));
+            return {
+                ok: avaliadas.some(a => a.ok),
+                texto: avaliadas.map(a => a.texto).join(' OU '),
+            };
+        }
+        return checarRequisitoAtomico(parte);
+    });
+    return { ok: itens.every(i => i.ok), itens };
+};
+
+const preReqsPorTalento = computed(() => {
+    const map = {};
+    (props.talentos || []).forEach(t => { map[t.id] = avaliarPreRequisitos(t); });
+    return map;
+});
+
+const talentoAtendePreRequisitos = (talento) => preReqsPorTalento.value[talento.id]?.ok ?? true;
+
+const toggleTalento = (id) => {
+    const talento = (props.talentos || []).find(t => t.id === id);
+    if (!talento) return;
+    const idx = form.talentos.indexOf(id);
+    if (idx >= 0) {
+        form.talentos.splice(idx, 1);
+        // Deselecionar em cadeia: se este talento era pré-requisito de outros selecionados, remove-os.
+        revalidarTalentosSelecionados();
+        return;
+    }
+    if (talentosDisponiveis.value <= 0) return;
+    if (!talentoAtendePreRequisitos(talento)) return;
+    form.talentos.push(id);
+};
+
+// Remove da seleção quaisquer talentos cujos pré-requisitos deixaram de ser atendidos.
+const revalidarTalentosSelecionados = () => {
+    let mudou = true;
+    while (mudou) {
+        mudou = false;
+        for (const id of [...form.talentos]) {
+            const t = (props.talentos || []).find(x => x.id === id);
+            if (!t) continue;
+            if (!talentoAtendePreRequisitos(t)) {
+                form.talentos.splice(form.talentos.indexOf(id), 1);
+                mudou = true;
+                break;
+            }
+        }
+    }
+};
+
+// Ao mudar de classe ou atributos base, revalida a seleção.
+watch([classeSlug, () => ({
+    forca: form.forca_base,
+    destreza: form.destreza_base,
+    constituicao: form.constituicao_base,
+    inteligencia: form.inteligencia_base,
+    sabedoria: form.sabedoria_base,
+    carisma: form.carisma_base,
+})], () => revalidarTalentosSelecionados(), { deep: true });
 
 // ---------- Navegação ----------
 const podeAvancar = computed(() => {
@@ -837,12 +1000,34 @@ const submit = () => form.post(route('fichas.store'));
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
                                 <button v-for="t in lista" :key="t.id" type="button"
                                     @click="toggleTalento(t.id)"
-                                    :disabled="!form.talentos.includes(t.id) && talentosDisponiveis === 0"
+                                    :disabled="(!form.talentos.includes(t.id)) && (!talentoAtendePreRequisitos(t) || talentosDisponiveis === 0)"
                                     :class="['text-left p-3 rounded-lg border-2 transition',
-                                            form.talentos.includes(t.id) ? 'border-blood-700 bg-blood-700/10 shadow' : 'border-parchment-300 hover:border-parchment-600 disabled:opacity-40 disabled:hover:border-parchment-300']">
-                                    <p class="font-cinzel font-bold text-sm">{{ t.nome }}</p>
-                                    <p v-if="t.pre_requisitos" class="text-[10px] italic opacity-60">Pré: {{ t.pre_requisitos }}</p>
-                                    <p class="text-xs font-lora mt-1">{{ t.beneficio }}</p>
+                                            form.talentos.includes(t.id)
+                                                ? 'border-blood-700 bg-blood-700/10 shadow'
+                                                : !talentoAtendePreRequisitos(t)
+                                                    ? 'border-parchment-300 bg-parchment-300/30 opacity-50 cursor-not-allowed'
+                                                    : 'border-parchment-300 hover:border-parchment-600 disabled:opacity-40 disabled:hover:border-parchment-300']">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <p class="font-cinzel font-bold text-sm">{{ t.nome }}</p>
+                                        <i v-if="!talentoAtendePreRequisitos(t)"
+                                           class="fa-solid fa-lock text-blood-700 text-xs mt-0.5"
+                                           title="Pré-requisitos não atendidos"></i>
+                                        <i v-else-if="form.talentos.includes(t.id)"
+                                           class="fa-solid fa-check text-green-700 text-xs mt-0.5"></i>
+                                    </div>
+
+                                    <div v-if="t.pre_requisitos && preReqsPorTalento[t.id]?.itens?.length" class="mt-1 space-y-0.5">
+                                        <p class="text-[10px] font-cinzel uppercase opacity-60 tracking-widest">Pré-requisitos</p>
+                                        <ul class="text-[10px] italic space-y-0.5">
+                                            <li v-for="(item, idx) in preReqsPorTalento[t.id].itens" :key="idx"
+                                                :class="item.ok ? 'text-green-700' : 'text-blood-700'">
+                                                <i :class="['fa-solid mr-1', item.ok ? 'fa-circle-check' : 'fa-circle-xmark']"></i>
+                                                {{ item.texto }}
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                    <p class="text-xs font-lora mt-2">{{ t.beneficio }}</p>
                                 </button>
                             </div>
                         </div>
