@@ -73,14 +73,19 @@ const destroy = (id) => {
                     </p>
 
                     <div class="flex justify-between items-center pt-4 border-t border-parchment-400/30">
-                        <Link :href="route('talentos.edit', talento.id)"
+                        <Link :href="route('talentos.show', talento.id)"
                             class="text-xs font-cinzel font-bold text-blood-700 hover:text-blood-800 transition flex items-center group/link">
-                            Editar
-                            <i class="fa-solid fa-pen-to-square ml-2 group-hover/link:translate-x-1 transition-transform"></i>
+                            Estudar Talento
+                            <i class="fa-solid fa-arrow-right ml-2 group-hover/link:translate-x-1 transition-transform"></i>
                         </Link>
-                        <button @click="destroy(talento.id)" class="text-parchment-800 opacity-40 hover:opacity-100 hover:text-blood-700 transition">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
+                        <div class="flex items-center gap-3">
+                            <Link :href="route('talentos.edit', talento.id)" class="text-parchment-800 opacity-40 hover:opacity-100 transition">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </Link>
+                            <button @click="destroy(talento.id)" class="text-parchment-800 opacity-40 hover:opacity-100 hover:text-blood-700 transition">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

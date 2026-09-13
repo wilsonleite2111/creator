@@ -36,7 +36,7 @@ class TalentoController extends Controller
 
     public function show(Talento $talento)
     {
-        return Inertia::render('Talentos/Edit', ['talento' => $talento]);
+        return Inertia::render('Talentos/Show', ['talento' => $talento]);
     }
 
     public function edit(Talento $talento)
