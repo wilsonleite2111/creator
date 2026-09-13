@@ -15,10 +15,11 @@ const props = defineProps({
     equipamentos: Array
 });
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 const step = ref(1);
 
 const stepLabels = [
+    'Identidade',
     'Linhagem',
     'Vocação',
     'Ritual dos Atributos',
@@ -592,21 +593,35 @@ watch([classeSlug, () => ({
 
 // ---------- Navegação ----------
 const podeAvancar = computed(() => {
-    if (step.value === 1) return !!form.raca_id;
-    if (step.value === 2) return !!form.classe_id;
-    if (step.value === 3) {
+    if (step.value === 1) return !!form.nome_personagem?.trim() && !!form.nome_jogador?.trim() && !!form.tendencia_id;
+    if (step.value === 2) return !!form.raca_id;
+    if (step.value === 3) return !!form.classe_id;
+    if (step.value === 4) {
         if (form.metodo_atributos === 'point_buy') return pontosRestantes.value === 0;
         return poolRolagens.value.length > 0 && attributes.every(a => atribsAtribuidos.value[a.key] !== undefined);
     }
-    if (step.value === 4) return pontosPericiaRestantes.value >= 0;
-    if (step.value === 5) return form.talentos.length === slotsTalento.value;
+    if (step.value === 5) return pontosPericiaRestantes.value >= 0;
+    if (step.value === 6) return form.talentos.length === slotsTalento.value;
     return true;
 });
 
 const nextStep = () => { if (step.value < TOTAL_STEPS && podeAvancar.value) step.value++; };
 const prevStep = () => { if (step.value > 1) step.value--; };
 
-const submit = () => form.post(route('fichas.store'));
+// Auto-computa campos derivados antes de submeter: PV, BBA e resistências-base a partir da classe/CON.
+const submit = () => {
+    const c = selectedClasse.value;
+    if (c) {
+        const conMod = getMod(form.constituicao_base);
+        // No 1° nível, PV = dado de vida máximo + mod CON (mínimo 1).
+        form.pv_max = Math.max(1, Number(c.dado_vida || 4) + conMod);
+        form.bab = bbaDaClasse.value;
+        form.fortitude_base = c.resistencia_fortitude === 'boa' ? 2 : 0;
+        form.reflexos_base = c.resistencia_reflexos === 'boa' ? 2 : 0;
+        form.vontade_base = c.resistencia_vontade === 'boa' ? 2 : 0;
+    }
+    form.post(route('fichas.store'));
+};
 </script>
 
 <template>
@@ -633,8 +648,58 @@ const submit = () => form.post(route('fichas.store'));
 
             <form @submit.prevent="submit" class="glass-parchment p-8 md:p-12 rounded-2xl shadow-2xl border border-parchment-400 relative overflow-hidden">
 
-                <!-- ============ PASSO 1: RAÇA ============ -->
-                <div v-if="step === 1" class="space-y-8">
+                <!-- ============ PASSO 1: IDENTIDADE ============ -->
+                <div v-if="step === 1" class="space-y-6">
+                    <div class="text-center max-w-2xl mx-auto mb-4">
+                        <p class="font-lora italic text-parchment-800">
+                            Antes da forja começar, dê nome e propósito à sua alma. O nome do herói ecoará em canções de taverna; a tendência guiará suas escolhas ao longo da jornada.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Nome do Personagem *</label>
+                            <input v-model="form.nome_personagem" type="text" maxlength="100"
+                                placeholder="Ex.: Aragorn, Thorin, Elara..."
+                                class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-lora focus:border-blood-700 outline-none transition shadow-inner">
+                            <p v-if="form.errors.nome_personagem" class="text-blood-700 text-xs mt-1">{{ form.errors.nome_personagem }}</p>
+                        </div>
+                        <div>
+                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Nome do Jogador *</label>
+                            <input v-model="form.nome_jogador" type="text" maxlength="100"
+                                placeholder="Seu nome"
+                                class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-lora focus:border-blood-700 outline-none transition shadow-inner">
+                            <p v-if="form.errors.nome_jogador" class="text-blood-700 text-xs mt-1">{{ form.errors.nome_jogador }}</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Tendência *</label>
+                            <select v-model="form.tendencia_id"
+                                class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-lora focus:border-blood-700 outline-none transition shadow-inner">
+                                <option :value="null">Selecione uma tendência...</option>
+                                <option v-for="t in tendencias" :key="t.id" :value="t.id">
+                                    {{ t.nome }}<template v-if="t.apelido"> — {{ t.apelido }}</template>
+                                </option>
+                            </select>
+                            <p v-if="form.errors.tendencia_id" class="text-blood-700 text-xs mt-1">{{ form.errors.tendencia_id }}</p>
+                        </div>
+                        <div>
+                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Divindade (opcional)</label>
+                            <select v-model="form.divindade"
+                                class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-lora focus:border-blood-700 outline-none transition shadow-inner">
+                                <option value="">— Nenhuma —</option>
+                                <option v-for="d in divindades" :key="d.id" :value="d.nome">
+                                    {{ d.nome }}<template v-if="d.titulo"> — {{ d.titulo }}</template>
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ PASSO 2: RAÇA ============ -->
+                <div v-if="step === 2" class="space-y-8">
                     <div>
                         <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Raça</label>
                         <select v-model="form.raca_id"
@@ -705,8 +770,8 @@ const submit = () => form.post(route('fichas.store'));
                     </div>
                 </div>
 
-                <!-- ============ PASSO 2: CLASSE ============ -->
-                <div v-if="step === 2" class="space-y-8">
+                <!-- ============ PASSO 3: CLASSE ============ -->
+                <div v-if="step === 3" class="space-y-8">
                     <div>
                         <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Classe</label>
                         <select v-model="form.classe_id"
@@ -781,8 +846,8 @@ const submit = () => form.post(route('fichas.store'));
                     </div>
                 </div>
 
-                <!-- ============ PASSO 3: ATRIBUTOS ============ -->
-                <div v-if="step === 3" class="space-y-8">
+                <!-- ============ PASSO 4: ATRIBUTOS ============ -->
+                <div v-if="step === 4" class="space-y-8">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <button type="button" @click="form.metodo_atributos = 'four_d6'"
                             :class="['p-4 rounded-xl border-2 transition text-left', form.metodo_atributos === 'four_d6' ? 'border-blood-700 bg-blood-700/10 shadow-lg' : 'border-parchment-400 hover:border-parchment-600']">
@@ -891,8 +956,8 @@ const submit = () => form.post(route('fichas.store'));
                     </div>
                 </div>
 
-                <!-- ============ PASSO 4: PERÍCIAS ============ -->
-                <div v-if="step === 4" class="space-y-6">
+                <!-- ============ PASSO 5: PERÍCIAS ============ -->
+                <div v-if="step === 5" class="space-y-6">
                     <div v-if="!selectedClasse" class="p-6 bg-blood-700/10 border border-blood-700 rounded-lg font-lora italic text-center">
                         Escolha uma classe no passo 2 para calcular seus pontos de perícia.
                     </div>
@@ -976,8 +1041,8 @@ const submit = () => form.post(route('fichas.store'));
                     </div>
                 </div>
 
-                <!-- ============ PASSO 5: TALENTOS ============ -->
-                <div v-if="step === 5" class="space-y-6">
+                <!-- ============ PASSO 6: TALENTOS ============ -->
+                <div v-if="step === 6" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                         <div class="p-4 rounded-lg bg-parchment-200 border border-parchment-400">
                             <p class="text-[10px] uppercase font-cinzel opacity-60">Slots</p>
@@ -1032,6 +1097,19 @@ const submit = () => form.post(route('fichas.store'));
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Erros globais (aparecem se o submit falhar na validação do servidor) -->
+                <div v-if="Object.keys(form.errors).length" class="mt-8 p-4 bg-blood-700/10 border-2 border-blood-700 rounded-lg">
+                    <p class="font-cinzel font-bold text-blood-800 uppercase text-sm mb-2">
+                        <i class="fa-solid fa-triangle-exclamation mr-2"></i>
+                        A forja rejeitou o registro. Corrija os itens abaixo:
+                    </p>
+                    <ul class="text-sm font-lora text-blood-800 list-disc list-inside space-y-1">
+                        <li v-for="(msg, campo) in form.errors" :key="campo">
+                            <span class="font-bold">{{ campo }}:</span> {{ msg }}
+                        </li>
+                    </ul>
                 </div>
 
                 <!-- Navegação -->
