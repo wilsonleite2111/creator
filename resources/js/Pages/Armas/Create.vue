@@ -58,7 +58,7 @@ const submit = () => form.post(route('armas.store'));
                     </div>
                     <div>
                         <label class="block font-cinzel font-bold text-parchment-900 text-sm uppercase tracking-wide mb-2">Categoria</label>
-                        <input v-model="form.categoria" type="text" placeholder="Ex: Simples, Marcial..." class="w-full bg-parchment-100 border border-parchment-400 rounded-lg px-4 py-2 font-lora focus:outline-none focus:border-blood-700" />
+                        <input v-model="form.categoria" type="text" placeholder="Ex: Simples, Comum, Exótica" class="w-full bg-parchment-100 border border-parchment-400 rounded-lg px-4 py-2 font-lora focus:outline-none focus:border-blood-700" />
                     </div>
                     <div>
                         <label class="block font-cinzel font-bold text-parchment-900 text-sm uppercase tracking-wide mb-2">Uso</label>

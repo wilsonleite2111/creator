@@ -84,7 +84,7 @@ const descricaoFormatada = computed(() => {
 
                     <section>
                         <h2 class="font-cinzel font-bold text-parchment-900 uppercase tracking-widest text-sm mb-3 border-b border-parchment-400/40 pb-2">
-                            <i class="fa-solid fa-swords mr-2 text-blood-700"></i> Combate
+                            <i class="fa-solid fa-khanda mr-2 text-blood-700"></i> Combate
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="flex items-center space-x-4 bg-parchment-200/50 p-4 rounded-lg border border-parchment-300">

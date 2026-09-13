@@ -35,7 +35,7 @@ const navItems = [
     { name: 'Divindades', route: 'divindades.index', icon: 'fa-sun', color: 'text-blood-700', group: 'Criação' },
     { name: 'Tendências', route: 'tendencias.index', icon: 'fa-compass', color: 'text-blood-700', group: 'Criação' },
     { name: 'Magias', route: 'magias.index', icon: 'fa-wand-sparkles', color: 'text-magic-600', group: 'Equipamento & Grimório' },
-    { name: 'Armas', route: 'armas.index', icon: 'fa-sword', color: 'text-blood-700', group: 'Equipamento & Grimório' },
+    { name: 'Armas', route: 'armas.index', icon: 'fa-khanda', color: 'text-blood-700', group: 'Equipamento & Grimório' },
     { name: 'Armaduras', route: 'armaduras.index', icon: 'fa-shield-halved', color: 'text-blood-700', group: 'Equipamento & Grimório' },
     { name: 'Itens', route: 'equipamentos.index', icon: 'fa-sack-xmark', color: 'text-blood-700', group: 'Equipamento & Grimório' },
 ];

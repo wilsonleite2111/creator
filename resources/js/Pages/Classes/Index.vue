@@ -59,7 +59,7 @@ const classesFiltradas = computed(() => filtrarPorNome(props.classes, busca.valu
 
                     <div class="grid grid-cols-2 gap-2 text-[10px] font-cinzel font-bold uppercase tracking-tighter">
                         <div class="flex items-center space-x-2 bg-parchment-200/50 p-2 rounded border border-parchment-300">
-                            <i class="fa-solid fa-sword text-blood-700"></i>
+                            <i class="fa-solid fa-khanda text-blood-700"></i>
                             <span>BBA: {{ classe.bba_progressao }}</span>
                         </div>
                         <div class="flex items-center space-x-2 bg-parchment-200/50 p-2 rounded border border-parchment-300">

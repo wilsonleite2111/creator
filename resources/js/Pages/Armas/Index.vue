@@ -9,8 +9,8 @@ const props = defineProps({
     armas: Array
 });
 
-const ORDEM_CATEGORIAS = ['Simples', 'Marcial', 'Exótica'];
-const LABEL_CATEGORIAS = { 'Simples': 'Simples', 'Marcial': 'Marciais', 'Exótica': 'Exóticas' };
+const ORDEM_CATEGORIAS = ['Simples', 'Comum', 'Exótica'];
+const LABEL_CATEGORIAS = { 'Simples': 'Simples', 'Comum': 'Comuns', 'Exótica': 'Exóticas' };
 const ORDEM_USOS = ['Leve', 'Uma Mão', 'Duas Mãos', 'Distância'];
 
 const busca = ref('');

@@ -738,8 +738,23 @@ const podeAvancar = computed(() => {
     return true;
 });
 
-const nextStep = () => { if (step.value < TOTAL_STEPS && podeAvancar.value) step.value++; };
-const prevStep = () => { if (step.value > 1) step.value--; };
+const scrollTopo = () => {
+    if (typeof window !== 'undefined') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+};
+const nextStep = () => {
+    if (step.value < TOTAL_STEPS && podeAvancar.value) {
+        step.value++;
+        scrollTopo();
+    }
+};
+const prevStep = () => {
+    if (step.value > 1) {
+        step.value--;
+        scrollTopo();
+    }
+};
 
 // Auto-computa campos derivados antes de submeter: PV, BBA, resistências-base, ouro final e CA/deslocamento da armadura equipada.
 const submit = () => {
