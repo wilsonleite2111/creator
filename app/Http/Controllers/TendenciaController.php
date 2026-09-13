@@ -34,7 +34,7 @@ class TendenciaController extends Controller
 
     public function show(Tendencia $tendencia)
     {
-        return Inertia::render('Tendencias/Edit', ['tendencia' => $tendencia]);
+        return Inertia::render('Tendencias/Show', ['tendencia' => $tendencia]);
     }
 
     public function edit(Tendencia $tendencia)
