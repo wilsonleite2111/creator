@@ -409,17 +409,11 @@ const atualizarInputPericia = (id, event) => {
     });
 };
 
-// Ao mudar de classe, reclampa graduações para respeitar novo teto (perícias que caíram para fora da classe têm teto menor; proibidas zeram).
+// Ao mudar de classe, zera todas as graduações. O orçamento total, a lista de perícias de
+// classe e as perícias proibidas são radicalmente diferentes de uma classe para outra, então
+// o usuário precisa redistribuir do zero em vez de arrastar graduações potencialmente inválidas.
 watch(classeSlug, () => {
-    Object.keys(form.pericias).forEach(id => {
-        const p = (props.pericias || []).find(x => x.id === Number(id));
-        if (!p) return;
-        const teto = maxGraduacoesDaPericia(p);
-        if (form.pericias[id] > teto) {
-            if (teto === 0) delete form.pericias[id];
-            else form.pericias[id] = teto;
-        }
-    });
+    Object.keys(form.pericias).forEach(id => delete form.pericias[id]);
 });
 
 // ---------- Talentos: slots e pré-requisitos ----------
