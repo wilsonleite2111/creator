@@ -163,9 +163,28 @@ class FichaController extends Controller
             }
         }
 
+        // Armaduras: aceita mapa { id: quantidade } (novo) ou array de IDs (compatibilidade).
         if ($request->has('armaduras')) {
-            foreach ($request->armaduras as $armadura_id) {
-                $ficha->armaduras()->attach($armadura_id, ['esta_equipado' => true]);
+            $armadurasInput = $request->armaduras;
+            if (is_array($armadurasInput)) {
+                $primeirasChaves = array_keys($armadurasInput);
+                $ehMapa = !empty($primeirasChaves) && !is_int($primeirasChaves[0] ?? null);
+                if (!$ehMapa) {
+                    $todosInteiros = collect($armadurasInput)->every(fn ($v) => is_int($v) || (is_string($v) && ctype_digit($v)));
+                    $ehMapa = $todosInteiros;
+                }
+                if ($ehMapa) {
+                    foreach ($armadurasInput as $armadura_id => $qty) {
+                        $q = (int) $qty;
+                        if ($q > 0) {
+                            $ficha->armaduras()->attach($armadura_id, ['quantidade' => $q, 'esta_equipado' => true]);
+                        }
+                    }
+                } else {
+                    foreach ($armadurasInput as $armadura_id) {
+                        $ficha->armaduras()->attach($armadura_id, ['quantidade' => 1, 'esta_equipado' => true]);
+                    }
+                }
             }
         }
 

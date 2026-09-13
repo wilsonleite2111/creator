@@ -74,7 +74,7 @@ const form = useForm({
     pericias: {},
     talentos: [],
     armas: {},         // { id: quantidade }
-    armaduras: [],     // [id, id, ...] — armaduras não têm quantidade no pivot
+    armaduras: {},     // { id: quantidade }
     equipamentos: {},  // { id: quantidade }
 });
 
@@ -720,8 +720,80 @@ const setQtd = (mapa, id, qty) => {
 const incQtd = (mapa, id) => setQtd(mapa, id, (mapa[id] || 0) + 1);
 const decQtd = (mapa, id) => setQtd(mapa, id, (mapa[id] || 0) - 1);
 
-// Aba ativa do passo 7.
+// Aba ativa do passo 7 (nível 1 — Armaduras / Armas / Equipamentos).
 const abaArsenal = ref('armaduras');
+
+// Sub-abas dentro de cada aba principal (nível 2 — categoria específica).
+const subAbaArmaduras = ref('Leve');
+const subAbaArmas = ref('Simples');
+const subAbaEquipamentos = ref('Equipamentos de aventura');
+
+const ORDEM_TIPOS_ARMADURA = ['Leve', 'Média', 'Pesada', 'Escudo'];
+const LABEL_TIPOS_ARMADURA = { 'Leve': 'Leves', 'Média': 'Médias', 'Pesada': 'Pesadas', 'Escudo': 'Escudos' };
+
+const ORDEM_CATS_ARMA = ['Simples', 'Comum', 'Exótica'];
+const LABEL_CATS_ARMA = { 'Simples': 'Simples', 'Comum': 'Comuns', 'Exótica': 'Exóticas' };
+const ORDEM_USOS_ARMA = ['Leve', 'Uma Mão', 'Duas Mãos', 'Distância'];
+
+const ORDEM_CATS_EQUIP = [
+    'Equipamentos de aventura',
+    'Itens e substâncias especiais',
+    'Instrumentos de classe e kits de perícia',
+    'Indumentária',
+    'Comida, bebida e hospedagem',
+    'Montarias e equipamentos relacionados',
+    'Transporte',
+    'Conjuração e serviços',
+];
+
+const armadurasAgrupadas = computed(() => {
+    const grupos = {};
+    (props.armaduras || []).forEach(a => {
+        const tipo = a.tipo || 'Outras';
+        (grupos[tipo] = grupos[tipo] || []).push(a);
+    });
+    return grupos;
+});
+
+const armasDaCategoriaSelecionada = computed(() => {
+    const grupos = {};
+    (props.armas || []).forEach(a => {
+        if ((a.categoria || 'Outras') !== subAbaArmas.value) return;
+        const uso = a.uso || 'Outras';
+        (grupos[uso] = grupos[uso] || []).push(a);
+    });
+    return grupos;
+});
+
+const equipamentosDaCategoriaSelecionada = computed(() =>
+    (props.equipamentos || []).filter(e => (e.categoria || 'Outros') === subAbaEquipamentos.value)
+);
+
+const contarQuantidadeMapa = (mapa) => Object.values(mapa || {}).reduce((s, q) => s + Number(q || 0), 0);
+const contarPorTipoArmadura = (tipo) => {
+    let total = 0;
+    for (const [id, qty] of Object.entries(form.armaduras || {})) {
+        const arm = (props.armaduras || []).find(a => a.id === Number(id));
+        if (arm && arm.tipo === tipo) total += Number(qty || 0);
+    }
+    return total;
+};
+const contarPorCategoriaArma = (cat) => {
+    let total = 0;
+    for (const [id, qty] of Object.entries(form.armas || {})) {
+        const arm = (props.armas || []).find(a => a.id === Number(id));
+        if (arm && arm.categoria === cat) total += Number(qty || 0);
+    }
+    return total;
+};
+const contarPorCategoriaEquip = (cat) => {
+    let total = 0;
+    for (const [id, qty] of Object.entries(form.equipamentos || {})) {
+        const eq = (props.equipamentos || []).find(e => e.id === Number(id));
+        if (eq && eq.categoria === cat) total += Number(qty || 0);
+    }
+    return total;
+};
 
 // ---------- Navegação ----------
 const podeAvancar = computed(() => {
@@ -1291,121 +1363,195 @@ const submit = () => {
                             <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-blood-700/60 inline-block"></span> <strong>Máximo</strong>: {{ cargaPesadaMax }} kg</span>
                         </div>
 
-                        <!-- Abas do Arsenal -->
+                        <!-- Abas do Arsenal (nível 1) -->
                         <div class="flex border-b-2 border-parchment-400 gap-1">
                             <button type="button" @click="abaArsenal = 'armaduras'"
                                 :class="['px-6 py-3 font-cinzel font-bold uppercase text-sm tracking-wider rounded-t-lg border-2 border-b-0 transition',
                                     abaArsenal === 'armaduras' ? 'bg-parchment-100 border-parchment-400 text-blood-800' : 'bg-parchment-300/40 border-transparent text-parchment-700 hover:text-parchment-900']">
                                 <i class="fa-solid fa-shield-halved mr-2"></i>
                                 Armaduras
-                                <span v-if="form.armaduras.length" class="ml-2 text-xs bg-blood-700 text-parchment-100 rounded-full px-2 py-0.5">{{ form.armaduras.length }}</span>
+                                <span v-if="contarQuantidadeMapa(form.armaduras)" class="ml-2 text-xs bg-blood-700 text-parchment-100 rounded-full px-2 py-0.5">{{ contarQuantidadeMapa(form.armaduras) }}</span>
                             </button>
                             <button type="button" @click="abaArsenal = 'armas'"
                                 :class="['px-6 py-3 font-cinzel font-bold uppercase text-sm tracking-wider rounded-t-lg border-2 border-b-0 transition',
                                     abaArsenal === 'armas' ? 'bg-parchment-100 border-parchment-400 text-blood-800' : 'bg-parchment-300/40 border-transparent text-parchment-700 hover:text-parchment-900']">
                                 <i class="fa-solid fa-khanda mr-2"></i>
                                 Armas
-                                <span v-if="Object.keys(form.armas).length" class="ml-2 text-xs bg-blood-700 text-parchment-100 rounded-full px-2 py-0.5">{{ Object.values(form.armas).reduce((s, q) => s + Number(q || 0), 0) }}</span>
+                                <span v-if="contarQuantidadeMapa(form.armas)" class="ml-2 text-xs bg-blood-700 text-parchment-100 rounded-full px-2 py-0.5">{{ contarQuantidadeMapa(form.armas) }}</span>
                             </button>
                             <button type="button" @click="abaArsenal = 'equipamentos'"
                                 :class="['px-6 py-3 font-cinzel font-bold uppercase text-sm tracking-wider rounded-t-lg border-2 border-b-0 transition',
                                     abaArsenal === 'equipamentos' ? 'bg-parchment-100 border-parchment-400 text-blood-800' : 'bg-parchment-300/40 border-transparent text-parchment-700 hover:text-parchment-900']">
                                 <i class="fa-solid fa-bag-shopping mr-2"></i>
                                 Equipamentos
-                                <span v-if="Object.keys(form.equipamentos).length" class="ml-2 text-xs bg-blood-700 text-parchment-100 rounded-full px-2 py-0.5">{{ Object.values(form.equipamentos).reduce((s, q) => s + Number(q || 0), 0) }}</span>
+                                <span v-if="contarQuantidadeMapa(form.equipamentos)" class="ml-2 text-xs bg-blood-700 text-parchment-100 rounded-full px-2 py-0.5">{{ contarQuantidadeMapa(form.equipamentos) }}</span>
                             </button>
                         </div>
 
-                        <!-- ABA: ARMADURAS (toggle simples — não há quantidade) -->
-                        <div v-show="abaArsenal === 'armaduras'" class="space-y-4">
-                            <p class="text-xs italic font-lora text-parchment-700">
-                                <i class="fa-solid fa-info-circle mr-1"></i>
-                                Armaduras funcionam como itens únicos (uma ou nenhuma). Você pode carregar mais de uma peça se quiser (ex.: armadura reserva), clicando novamente para desmarcar.
-                            </p>
-                            <div v-for="(lista, tipo) in armadurasPorTipo" :key="tipo" class="mb-4">
-                                <p class="font-cinzel font-bold uppercase text-xs text-parchment-700 mb-2">{{ tipo }}</p>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                    <button v-for="a in lista" :key="a.id" type="button"
-                                        @click="toggleItem(form.armaduras, a.id)"
-                                        :class="['text-left p-3 rounded-lg border-2 transition text-sm',
-                                            form.armaduras.includes(a.id) ? 'border-blood-700 bg-blood-700/10 shadow' : 'border-parchment-300 hover:border-parchment-600']">
-                                        <div class="flex items-start justify-between gap-2">
-                                            <p class="font-cinzel font-bold">{{ a.nome }}</p>
-                                            <i v-if="form.armaduras.includes(a.id)" class="fa-solid fa-check text-green-700 text-xs mt-0.5"></i>
-                                        </div>
-                                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[11px] font-lora">
-                                            <span><strong>CA</strong>: +{{ a.bonus_ca }}</span>
-                                            <span v-if="a.destreza_max !== null"><strong>DES máx</strong>: +{{ a.destreza_max }}</span>
-                                            <span><strong>Peso</strong>: {{ a.peso }} kg</span>
-                                            <span class="text-blood-700"><strong>Preço</strong>: {{ a.preco }}</span>
-                                        </div>
+                        <!-- ABA ARMADURAS: sub-abas laterais + tabela -->
+                        <div v-show="abaArsenal === 'armaduras'" class="flex gap-6">
+                            <div class="flex-shrink-0 w-40">
+                                <p class="font-cinzel text-xs font-bold uppercase tracking-widest text-parchment-700 mb-2 px-1">Tipo</p>
+                                <div class="flex flex-col gap-1">
+                                    <button v-for="tipo in ORDEM_TIPOS_ARMADURA" :key="tipo" type="button"
+                                        @click="subAbaArmaduras = tipo"
+                                        :class="['text-left px-3 py-2 rounded-lg font-cinzel text-xs font-bold transition-all border',
+                                            subAbaArmaduras === tipo ? 'bg-blood-700 text-parchment-100 border-blood-800 shadow-md' : 'bg-parchment-200/60 text-parchment-800 border-parchment-300 hover:bg-parchment-300']">
+                                        {{ LABEL_TIPOS_ARMADURA[tipo] }}
+                                        <span v-if="contarPorTipoArmadura(tipo)" class="ml-1 text-[10px] bg-parchment-100/80 text-blood-800 rounded-full px-1.5">{{ contarPorTipoArmadura(tipo) }}</span>
                                     </button>
                                 </div>
                             </div>
+
+                            <div class="flex-1 min-w-0">
+                                <v-card class="glass-parchment border border-parchment-400" elevation="2">
+                                    <v-table class="bg-transparent" density="compact">
+                                        <thead class="bg-parchment-300/80 font-cinzel">
+                                            <tr>
+                                                <th class="text-left text-xs">Nome</th>
+                                                <th class="text-center text-xs">CA</th>
+                                                <th class="text-center text-xs">DES máx</th>
+                                                <th class="text-center text-xs">Penal</th>
+                                                <th class="text-left text-xs">Peso</th>
+                                                <th class="text-left text-xs">Preço</th>
+                                                <th class="text-center text-xs">Qtd</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-lora">
+                                            <tr v-for="a in armadurasAgrupadas[subAbaArmaduras] || []" :key="a.id"
+                                                :class="['hover:bg-parchment-200/60 transition-colors', (form.armaduras[a.id] || 0) > 0 ? 'bg-blood-700/5' : '']">
+                                                <td class="font-bold font-cinzel text-sm">{{ a.nome }}</td>
+                                                <td class="text-center text-xs">+{{ a.bonus_ca }}</td>
+                                                <td class="text-center text-xs">{{ a.destreza_max !== null ? '+' + a.destreza_max : '—' }}</td>
+                                                <td class="text-center text-xs">{{ a.penalidade_armadura }}</td>
+                                                <td class="text-xs">{{ a.peso }} kg</td>
+                                                <td class="text-xs text-blood-700 font-bold">{{ a.preco }}</td>
+                                                <td class="text-center">
+                                                    <div class="flex items-center justify-center gap-1">
+                                                        <button type="button" @click="decQtd(form.armaduras, a.id)" :disabled="!form.armaduras[a.id]"
+                                                            class="w-6 h-6 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold disabled:opacity-30 disabled:cursor-not-allowed transition text-sm">−</button>
+                                                        <span class="w-6 text-center font-cinzel font-bold text-sm">{{ form.armaduras[a.id] || 0 }}</span>
+                                                        <button type="button" @click="incQtd(form.armaduras, a.id)"
+                                                            class="w-6 h-6 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold transition text-sm">+</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </v-table>
+                                </v-card>
+                            </div>
                         </div>
 
-                        <!-- ABA: ARMAS (com quantidade) -->
-                        <div v-show="abaArsenal === 'armas'" class="space-y-4">
-                            <p class="text-xs italic font-lora text-parchment-700">
-                                <i class="fa-solid fa-info-circle mr-1"></i>
-                                Use os botões − e + para ajustar quantidades (ex.: 4 adagas de arremesso, 2 lanças curtas).
-                            </p>
-                            <div v-for="(lista, categoria) in armasPorCategoria" :key="categoria" class="mb-4">
-                                <p class="font-cinzel font-bold uppercase text-xs text-parchment-700 mb-2">{{ categoria }}</p>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                    <div v-for="w in lista" :key="w.id"
-                                        :class="['flex items-center gap-3 p-3 rounded-lg border-2 transition text-sm',
-                                            (form.armas[w.id] || 0) > 0 ? 'border-blood-700 bg-blood-700/10' : 'border-parchment-300']">
-                                        <div class="flex-1 min-w-0">
-                                            <p class="font-cinzel font-bold">{{ w.nome }}</p>
-                                            <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[11px] font-lora">
-                                                <span><strong>Dano</strong>: {{ w.dano_m }}</span>
-                                                <span><strong>Crit</strong>: {{ w.critico }}</span>
-                                                <span v-if="w.alcance && w.alcance !== '-'"><strong>Alcance</strong>: {{ w.alcance }}</span>
-                                                <span><strong>Peso</strong>: {{ w.peso }} kg</span>
-                                                <span class="text-blood-700"><strong>Preço</strong>: {{ w.preco }}</span>
-                                            </div>
-                                        </div>
-                                        <div class="flex items-center gap-1.5 flex-shrink-0">
-                                            <button type="button" @click="decQtd(form.armas, w.id)"
-                                                :disabled="!form.armas[w.id]"
-                                                class="w-8 h-8 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold text-lg disabled:opacity-30 disabled:cursor-not-allowed transition">−</button>
-                                            <span class="w-8 text-center font-cinzel font-bold text-lg">{{ form.armas[w.id] || 0 }}</span>
-                                            <button type="button" @click="incQtd(form.armas, w.id)"
-                                                class="w-8 h-8 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold text-lg transition">+</button>
-                                        </div>
+                        <!-- ABA ARMAS: sub-abas laterais + tabelas agrupadas por uso -->
+                        <div v-show="abaArsenal === 'armas'" class="flex gap-6">
+                            <div class="flex-shrink-0 w-40">
+                                <p class="font-cinzel text-xs font-bold uppercase tracking-widest text-parchment-700 mb-2 px-1">Categoria</p>
+                                <div class="flex flex-col gap-1">
+                                    <button v-for="cat in ORDEM_CATS_ARMA" :key="cat" type="button"
+                                        @click="subAbaArmas = cat"
+                                        :class="['text-left px-3 py-2 rounded-lg font-cinzel text-xs font-bold transition-all border',
+                                            subAbaArmas === cat ? 'bg-blood-700 text-parchment-100 border-blood-800 shadow-md' : 'bg-parchment-200/60 text-parchment-800 border-parchment-300 hover:bg-parchment-300']">
+                                        {{ LABEL_CATS_ARMA[cat] }}
+                                        <span v-if="contarPorCategoriaArma(cat)" class="ml-1 text-[10px] bg-parchment-100/80 text-blood-800 rounded-full px-1.5">{{ contarPorCategoriaArma(cat) }}</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="flex-1 min-w-0 space-y-4">
+                                <div v-for="uso in ORDEM_USOS_ARMA" :key="uso" v-show="(armasDaCategoriaSelecionada[uso] || []).length">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h4 class="font-cinzel font-bold text-parchment-900 uppercase tracking-wide text-xs">{{ uso }}</h4>
+                                        <div class="flex-1 h-px bg-parchment-400/50"></div>
+                                        <span class="text-[10px] font-cinzel text-parchment-600">{{ (armasDaCategoriaSelecionada[uso] || []).length }}</span>
                                     </div>
+                                    <v-card class="glass-parchment border border-parchment-400" elevation="1">
+                                        <v-table class="bg-transparent" density="compact">
+                                            <thead class="bg-parchment-300/80 font-cinzel">
+                                                <tr>
+                                                    <th class="text-left text-xs">Nome</th>
+                                                    <th class="text-center text-xs">Dano</th>
+                                                    <th class="text-center text-xs">Crítico</th>
+                                                    <th class="text-center text-xs">Alcance</th>
+                                                    <th class="text-left text-xs">Peso</th>
+                                                    <th class="text-left text-xs">Preço</th>
+                                                    <th class="text-center text-xs">Qtd</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="font-lora">
+                                                <tr v-for="w in armasDaCategoriaSelecionada[uso]" :key="w.id"
+                                                    :class="['hover:bg-parchment-200/60 transition-colors', (form.armas[w.id] || 0) > 0 ? 'bg-blood-700/5' : '']">
+                                                    <td class="font-bold font-cinzel text-sm">{{ w.nome }}</td>
+                                                    <td class="text-center text-xs">{{ w.dano_m }}</td>
+                                                    <td class="text-center text-xs">{{ w.critico }}</td>
+                                                    <td class="text-center text-xs">{{ w.alcance && w.alcance !== '—' ? w.alcance : '—' }}</td>
+                                                    <td class="text-xs">{{ w.peso }} kg</td>
+                                                    <td class="text-xs text-blood-700 font-bold">{{ w.preco }}</td>
+                                                    <td class="text-center">
+                                                        <div class="flex items-center justify-center gap-1">
+                                                            <button type="button" @click="decQtd(form.armas, w.id)" :disabled="!form.armas[w.id]"
+                                                                class="w-6 h-6 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold disabled:opacity-30 disabled:cursor-not-allowed transition text-sm">−</button>
+                                                            <span class="w-6 text-center font-cinzel font-bold text-sm">{{ form.armas[w.id] || 0 }}</span>
+                                                            <button type="button" @click="incQtd(form.armas, w.id)"
+                                                                class="w-6 h-6 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold transition text-sm">+</button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </v-table>
+                                    </v-card>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- ABA: EQUIPAMENTOS (com quantidade) -->
-                        <div v-show="abaArsenal === 'equipamentos'" class="space-y-4">
-                            <p class="text-xs italic font-lora text-parchment-700">
-                                <i class="fa-solid fa-info-circle mr-1"></i>
-                                Provisões e itens diversos aceitam quantidades (ex.: 4 rações para viagem, 5 tochas, 2 potes de óleo).
-                            </p>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-                                <div v-for="e in equipamentos" :key="e.id"
-                                    :class="['flex items-center gap-3 p-3 rounded-lg border-2 transition text-sm',
-                                        (form.equipamentos[e.id] || 0) > 0 ? 'border-blood-700 bg-blood-700/10' : 'border-parchment-300']">
-                                    <div class="flex-1 min-w-0">
-                                        <p class="font-cinzel font-bold">{{ e.nome }}</p>
-                                        <p v-if="e.descricao" class="text-[11px] italic opacity-70 mt-0.5">{{ e.descricao }}</p>
-                                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[11px] font-lora">
-                                            <span><strong>Peso</strong>: {{ e.peso }} kg</span>
-                                            <span class="text-blood-700"><strong>Preço</strong>: {{ e.preco }}</span>
-                                        </div>
-                                    </div>
-                                    <div class="flex items-center gap-1.5 flex-shrink-0">
-                                        <button type="button" @click="decQtd(form.equipamentos, e.id)"
-                                            :disabled="!form.equipamentos[e.id]"
-                                            class="w-8 h-8 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold text-lg disabled:opacity-30 disabled:cursor-not-allowed transition">−</button>
-                                        <span class="w-8 text-center font-cinzel font-bold text-lg">{{ form.equipamentos[e.id] || 0 }}</span>
-                                        <button type="button" @click="incQtd(form.equipamentos, e.id)"
-                                            class="w-8 h-8 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold text-lg transition">+</button>
-                                    </div>
+                        <!-- ABA EQUIPAMENTOS: sub-abas laterais + tabela -->
+                        <div v-show="abaArsenal === 'equipamentos'" class="flex gap-6">
+                            <div class="flex-shrink-0 w-52">
+                                <p class="font-cinzel text-xs font-bold uppercase tracking-widest text-parchment-700 mb-2 px-1">Categoria</p>
+                                <div class="flex flex-col gap-1">
+                                    <button v-for="cat in ORDEM_CATS_EQUIP" :key="cat" type="button"
+                                        @click="subAbaEquipamentos = cat"
+                                        :class="['text-left px-3 py-2 rounded-lg font-cinzel text-[11px] font-bold leading-tight transition-all border',
+                                            subAbaEquipamentos === cat ? 'bg-blood-700 text-parchment-100 border-blood-800 shadow-md' : 'bg-parchment-200/60 text-parchment-800 border-parchment-300 hover:bg-parchment-300']">
+                                        {{ cat }}
+                                        <span v-if="contarPorCategoriaEquip(cat)" class="ml-1 text-[10px] bg-parchment-100/80 text-blood-800 rounded-full px-1.5">{{ contarPorCategoriaEquip(cat) }}</span>
+                                    </button>
                                 </div>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <v-card class="glass-parchment border border-parchment-400" elevation="2">
+                                    <v-table class="bg-transparent" density="compact">
+                                        <thead class="bg-parchment-300/80 font-cinzel">
+                                            <tr>
+                                                <th class="text-left text-xs">Nome</th>
+                                                <th class="text-left text-xs">Descrição</th>
+                                                <th class="text-left text-xs">Peso</th>
+                                                <th class="text-left text-xs">Preço</th>
+                                                <th class="text-center text-xs">Qtd</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="font-lora">
+                                            <tr v-for="e in equipamentosDaCategoriaSelecionada" :key="e.id"
+                                                :class="['hover:bg-parchment-200/60 transition-colors', (form.equipamentos[e.id] || 0) > 0 ? 'bg-blood-700/5' : '']">
+                                                <td class="font-bold font-cinzel text-sm">{{ e.nome }}</td>
+                                                <td class="text-xs italic text-parchment-700 max-w-md">
+                                                    <span class="line-clamp-2">{{ e.descricao }}</span>
+                                                </td>
+                                                <td class="text-xs">{{ e.peso }} kg</td>
+                                                <td class="text-xs text-blood-700 font-bold">{{ e.preco }}</td>
+                                                <td class="text-center">
+                                                    <div class="flex items-center justify-center gap-1">
+                                                        <button type="button" @click="decQtd(form.equipamentos, e.id)" :disabled="!form.equipamentos[e.id]"
+                                                            class="w-6 h-6 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold disabled:opacity-30 disabled:cursor-not-allowed transition text-sm">−</button>
+                                                        <span class="w-6 text-center font-cinzel font-bold text-sm">{{ form.equipamentos[e.id] || 0 }}</span>
+                                                        <button type="button" @click="incQtd(form.equipamentos, e.id)"
+                                                            class="w-6 h-6 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold transition text-sm">+</button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </v-table>
+                                </v-card>
                             </div>
                         </div>
                     </template>
