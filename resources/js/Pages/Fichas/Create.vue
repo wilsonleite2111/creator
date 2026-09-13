@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, nextTick } from 'vue';
 
 const props = defineProps({
     racas: Array,
@@ -23,7 +23,7 @@ const stepLabels = [
     'Linhagem',
     'Vocação',
     'Ritual dos Atributos',
-    'Treinamento',
+    'Perícias',
     'Talentos & Dons',
     'Arsenal & Provisões'
 ];
@@ -397,6 +397,16 @@ const setPericia = (id, val) => {
 
     if (nSolicitado === 0) delete form.pericias[id];
     else form.pericias[id] = nSolicitado;
+};
+
+// Wrapper para o input do passo 5: aplica setPericia e força o DOM a exibir o valor real.
+// Sem isso, se o setPericia bloquear a mudança (ex.: orçamento zerado), o número digitado
+// permanece no input mesmo sem estado reactivo mudando.
+const atualizarInputPericia = (id, event) => {
+    setPericia(id, event.target.value);
+    nextTick(() => {
+        if (event.target) event.target.value = form.pericias[id] ?? 0;
+    });
 };
 
 // Ao mudar de classe, reclampa graduações para respeitar novo teto (perícias que caíram para fora da classe têm teto menor; proibidas zeram).
@@ -1158,9 +1168,9 @@ const submit = () => {
                                 <p class="text-[9px] font-cinzel opacity-60 uppercase leading-none">Grad</p>
                                 <input type="number" min="0" :max="maxGraduacoesDaPericia(p)"
                                     :value="form.pericias[p.id] ?? 0"
-                                    @input="e => setPericia(p.id, e.target.value)"
-                                    :disabled="ehPericiaProibida(p)"
-                                    :title="ehPericiaProibida(p) ? 'Exclusiva de outra classe' : `Máx ${maxGraduacoesDaPericia(p)} · custa ${custoDaPericia(p)} pt(s)/grad`"
+                                    @input="e => atualizarInputPericia(p.id, e)"
+                                    :disabled="ehPericiaProibida(p) || (pontosPericiaRestantes <= 0 && graduacoesDaPericia(p) === 0)"
+                                    :title="ehPericiaProibida(p) ? 'Exclusiva de outra classe' : pontosPericiaRestantes <= 0 && graduacoesDaPericia(p) === 0 ? 'Sem pontos restantes' : `Máx ${maxGraduacoesDaPericia(p)} · custa ${custoDaPericia(p)} pt(s)/grad`"
                                     class="w-12 bg-parchment-100 border border-parchment-400 rounded px-1 py-0.5 text-center font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed">
                                 <p class="text-[9px] font-cinzel opacity-50 leading-none mt-0.5">/{{ maxGraduacoesDaPericia(p) }}</p>
                             </div>
