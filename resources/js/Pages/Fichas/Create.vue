@@ -181,6 +181,7 @@ const formatarDescricao = (raw) => escapeHtml(raw)
     .replace(/\n/g, '<br>');
 
 const racaDescricaoFormatada = computed(() => selectedRaca.value ? formatarDescricao(selectedRaca.value.descricao) : '');
+const classeDescricaoFormatada = computed(() => selectedClasse.value ? formatarDescricao(selectedClasse.value.descricao) : '');
 
 // ---------- Atributos: 3 métodos ----------
 const roll = (sides) => Math.floor(Math.random() * sides) + 1;
@@ -460,7 +461,7 @@ const submit = () => form.post(route('fichas.store'));
                         <div class="w-full md:w-2/5 space-y-4">
                             <template v-if="selectedClasse">
                                 <h3 class="text-3xl font-cinzel font-bold text-blood-800 uppercase tracking-wider">{{ selectedClasse.nome }}</h3>
-                                <p class="font-lora italic text-parchment-800">{{ selectedClasse.descricao }}</p>
+                                <div class="font-lora italic text-parchment-800 leading-relaxed max-h-96 overflow-y-auto pr-2 space-y-1" v-html="classeDescricaoFormatada"></div>
 
                                 <div class="grid grid-cols-2 gap-3 pt-2">
                                     <div class="bg-parchment-100 rounded-lg p-3 border border-parchment-400">
