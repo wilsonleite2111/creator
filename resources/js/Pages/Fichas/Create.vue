@@ -77,15 +77,29 @@ const form = useForm({
 });
 
 const attributes = [
-    { key: 'forca',        label: 'Força',        short: 'FOR', icon: 'fa-dumbbell' },
-    { key: 'destreza',     label: 'Destreza',     short: 'DES', icon: 'fa-feather-pointed' },
-    { key: 'constituicao', label: 'Constituição', short: 'CON', icon: 'fa-heart-pulse' },
-    { key: 'inteligencia', label: 'Inteligência', short: 'INT', icon: 'fa-brain' },
-    { key: 'sabedoria',    label: 'Sabedoria',    short: 'SAB', icon: 'fa-eye' },
-    { key: 'carisma',      label: 'Carisma',      short: 'CAR', icon: 'fa-crown' }
+    { key: 'forca',        label: 'Força',        short: 'FOR', icon: 'fa-dumbbell',       modKey: 'mod_forca' },
+    { key: 'destreza',     label: 'Destreza',     short: 'DES', icon: 'fa-feather-pointed', modKey: 'mod_destreza' },
+    { key: 'constituicao', label: 'Constituição', short: 'CON', icon: 'fa-heart-pulse',    modKey: 'mod_constituicao' },
+    { key: 'inteligencia', label: 'Inteligência', short: 'INT', icon: 'fa-brain',          modKey: 'mod_inteligencia' },
+    { key: 'sabedoria',    label: 'Sabedoria',    short: 'SAB', icon: 'fa-eye',            modKey: 'mod_sabedoria' },
+    { key: 'carisma',      label: 'Carisma',      short: 'CAR', icon: 'fa-crown',          modKey: 'mod_carisma' }
 ];
 
 const getMod = (val) => Math.floor(((val || 10) - 10) / 2);
+
+// Valor bruto do atributo (rolado ou comprado), ANTES do modificador racial.
+const atributosRaw = ref(Object.fromEntries(attributes.map(a => [a.key, 10])));
+
+// Modificador racial por atributo, extraído da raça selecionada.
+const modRacialPor = computed(() => {
+    const r = selectedRaca.value;
+    const obj = {};
+    attributes.forEach(a => { obj[a.key] = r ? (Number(r[a.modKey]) || 0) : 0; });
+    return obj;
+});
+
+// Valor final do atributo = bruto + modificador racial.
+const atributoFinal = (key) => (atributosRaw.value[key] ?? 10) + (modRacialPor.value[key] ?? 0);
 
 const slugify = (str) => (str || '')
     .toLowerCase()
@@ -174,7 +188,7 @@ const rolarPool = () => {
     let n = 0;
     poolRolagens.value = Array(qtd).fill(0);
     atribsAtribuidos.value = {};
-    attributes.forEach(a => { form[a.key + '_base'] = 10; });
+    attributes.forEach(a => { atributosRaw.value[a.key] = 10; });
     const t = setInterval(() => {
         poolRolagens.value = poolRolagens.value.map(() => gerador());
         n++;
@@ -190,13 +204,13 @@ const atribuirValor = (attrKey, poolIdx) => {
     if (anterior) delete atribsAtribuidos.value[anterior[0]];
     const anteriorDoAttr = atribsAtribuidos.value[attrKey];
     atribsAtribuidos.value[attrKey] = poolIdx;
-    form[attrKey + '_base'] = poolRolagens.value[poolIdx];
+    atributosRaw.value[attrKey] = poolRolagens.value[poolIdx];
     if (anteriorDoAttr === undefined) return;
 };
 
 const limparAtribuicao = (attrKey) => {
     delete atribsAtribuidos.value[attrKey];
-    form[attrKey + '_base'] = 10;
+    atributosRaw.value[attrKey] = 10;
 };
 
 const poolLivre = computed(() => poolRolagens.value.map((v, i) => ({ v, i, usado: Object.values(atribsAtribuidos.value).includes(i) })));
@@ -207,30 +221,37 @@ const custoPointBuy = { 8: 0, 9: 1, 10: 2, 11: 3, 12: 4, 13: 5, 14: 6, 15: 8, 16
 
 const pontosGastos = computed(() => {
     if (form.metodo_atributos !== 'point_buy') return 0;
-    return attributes.reduce((sum, a) => sum + (custoPointBuy[form[a.key + '_base']] ?? 0), 0);
+    return attributes.reduce((sum, a) => sum + (custoPointBuy[atributosRaw.value[a.key]] ?? 0), 0);
 });
 const pontosRestantes = computed(() => POINT_BUY_TOTAL - pontosGastos.value);
 
 const incAtributo = (key) => {
-    const atual = form[key + '_base'];
+    const atual = atributosRaw.value[key];
     if (atual >= 18) return;
     const proximo = atual + 1;
     const custoExtra = (custoPointBuy[proximo] ?? 99) - (custoPointBuy[atual] ?? 0);
     if (custoExtra > pontosRestantes.value) return;
-    form[key + '_base'] = proximo;
+    atributosRaw.value[key] = proximo;
 };
 const decAtributo = (key) => {
-    const atual = form[key + '_base'];
+    const atual = atributosRaw.value[key];
     if (atual <= 8) return;
-    form[key + '_base'] = atual - 1;
+    atributosRaw.value[key] = atual - 1;
 };
 
 watch(() => form.metodo_atributos, (novo) => {
     poolRolagens.value = [];
     atribsAtribuidos.value = {};
     const base = novo === 'point_buy' ? 8 : 10;
-    attributes.forEach(a => { form[a.key + '_base'] = base; });
+    attributes.forEach(a => { atributosRaw.value[a.key] = base; });
 });
+
+// Sincroniza form.forca_base etc. com o total (raw + racial) sempre que qualquer um mudar.
+watch([atributosRaw, modRacialPor], () => {
+    attributes.forEach(a => {
+        form[a.key + '_base'] = atributoFinal(a.key);
+    });
+}, { deep: true, immediate: true });
 
 // ---------- Perícias: orçamento ----------
 const modInt = computed(() => getMod(form.inteligencia_base));
@@ -501,6 +522,12 @@ const submit = () => form.post(route('fichas.store'));
                         </div>
                     </div>
 
+                    <!-- Aviso se raça ainda não escolhida -->
+                    <div v-if="!selectedRaca" class="p-3 bg-blood-700/10 border border-blood-700/40 rounded-lg font-lora italic text-sm text-center text-parchment-800">
+                        <i class="fa-solid fa-triangle-exclamation mr-2 text-blood-700"></i>
+                        Nenhuma raça selecionada — os atributos abaixo mostram apenas o valor base, sem modificadores raciais.
+                    </div>
+
                     <!-- Grade de Atributos -->
                     <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                         <div v-for="attr in attributes" :key="attr.key"
@@ -513,15 +540,15 @@ const submit = () => form.post(route('fichas.store'));
                             <div v-if="form.metodo_atributos === 'point_buy'" class="flex items-center gap-3">
                                 <button type="button" @click="decAtributo(attr.key)"
                                     class="w-8 h-8 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold">−</button>
-                                <span class="text-4xl font-cinzel font-bold w-14 text-center">{{ form[attr.key + '_base'] }}</span>
+                                <span class="text-3xl font-cinzel font-bold w-12 text-center">{{ atributosRaw[attr.key] }}</span>
                                 <button type="button" @click="incAtributo(attr.key)"
                                     class="w-8 h-8 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-bold">+</button>
                             </div>
 
                             <!-- Rolagens: select do pool -->
-                            <div v-else>
+                            <div v-else class="flex flex-col items-center">
                                 <div v-if="atribsAtribuidos[attr.key] === undefined" class="text-parchment-600 italic text-xs mb-2">Não atribuído</div>
-                                <div v-else class="text-4xl font-cinzel font-bold mb-2">{{ form[attr.key + '_base'] }}</div>
+                                <div v-else class="text-3xl font-cinzel font-bold mb-2">{{ atributosRaw[attr.key] }}</div>
                                 <select :value="atribsAtribuidos[attr.key] ?? ''"
                                     @change="e => e.target.value === '' ? limparAtribuicao(attr.key) : atribuirValor(attr.key, Number(e.target.value))"
                                     :disabled="!poolRolagens.length"
@@ -533,10 +560,25 @@ const submit = () => form.post(route('fichas.store'));
                                 </select>
                             </div>
 
-                            <p class="mt-3 text-xs font-cinzel opacity-60 uppercase">Mod</p>
-                            <span :class="['text-xl font-bold font-cinzel', getMod(form[attr.key + '_base']) >= 0 ? 'text-green-700' : 'text-blood-700']">
-                                {{ getMod(form[attr.key + '_base']) >= 0 ? '+' : '' }}{{ getMod(form[attr.key + '_base']) }}
-                            </span>
+                            <!-- Modificador racial + total -->
+                            <div v-if="modRacialPor[attr.key] !== 0" class="mt-3 flex items-center gap-2 text-xs font-cinzel">
+                                <span class="opacity-60 uppercase">Raça</span>
+                                <span :class="['px-2 py-0.5 rounded font-bold', modRacialPor[attr.key] > 0 ? 'bg-green-700/20 text-green-800' : 'bg-blood-700/20 text-blood-800']">
+                                    {{ modRacialPor[attr.key] > 0 ? '+' : '' }}{{ modRacialPor[attr.key] }}
+                                </span>
+                            </div>
+
+                            <div class="mt-3 pt-2 border-t border-parchment-300 w-full text-center">
+                                <p class="text-[10px] font-cinzel opacity-60 uppercase">Total</p>
+                                <div class="flex items-baseline justify-center gap-3">
+                                    <span :class="['text-2xl font-cinzel font-bold', modRacialPor[attr.key] > 0 ? 'text-green-700' : modRacialPor[attr.key] < 0 ? 'text-blood-700' : 'text-parchment-900']">
+                                        {{ atributoFinal(attr.key) }}
+                                    </span>
+                                    <span :class="['text-sm font-bold font-cinzel', getMod(atributoFinal(attr.key)) >= 0 ? 'text-green-700' : 'text-blood-700']">
+                                        ({{ getMod(atributoFinal(attr.key)) >= 0 ? '+' : '' }}{{ getMod(atributoFinal(attr.key)) }})
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
