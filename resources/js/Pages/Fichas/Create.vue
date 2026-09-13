@@ -1,7 +1,7 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import { Head, useForm } from '@inertiajs/vue3';
-import { ref, computed, watch, nextTick } from 'vue';
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
 
 const props = defineProps({
     racas: Array,
@@ -15,17 +15,24 @@ const props = defineProps({
     equipamentos: Array
 });
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 8;
 const step = ref(1);
 
 const stepLabels = [
-    'Identidade',
+    'Sistema & Nível',
     'Linhagem',
     'Vocação',
     'Ritual dos Atributos',
     'Perícias',
     'Talentos & Dons',
-    'Arsenal & Provisões'
+    'Arsenal & Provisões',
+    'Identidade & Aparência'
+];
+
+const SISTEMAS = [
+    { id: '3.5', label: 'D&D 3.5', disponivel: true },
+    { id: '5.0', label: 'D&D 5.0 (em breve)', disponivel: false },
+    { id: 'pathfinder', label: 'Pathfinder (em breve)', disponivel: false },
 ];
 
 const form = useForm({
@@ -36,6 +43,14 @@ const form = useForm({
     classe_id: null,
     tendencia_id: props.tendencias?.[0]?.id ?? null,
     divindade: '',
+    sexo: '',
+    idade: null,
+    altura: null,
+    peso: null,
+    olhos: '',
+    cabelos: '',
+    pele: '',
+    tamanho: '',
     nivel: 1,
     ouro: 100,
     forca_base: 10,
@@ -797,7 +812,7 @@ const contarPorCategoriaEquip = (cat) => {
 
 // ---------- Navegação ----------
 const podeAvancar = computed(() => {
-    if (step.value === 1) return !!form.nome_personagem?.trim() && !!form.nome_jogador?.trim() && !!form.tendencia_id;
+    if (step.value === 1) return !!form.versao && Number(form.nivel) >= 1 && Number(form.nivel) <= 20;
     if (step.value === 2) return !!form.raca_id;
     if (step.value === 3) return !!form.classe_id;
     if (step.value === 4) {
@@ -807,8 +822,59 @@ const podeAvancar = computed(() => {
     if (step.value === 5) return pontosPericiaRestantes.value >= 0;
     if (step.value === 6) return form.talentos.length === slotsTalento.value;
     if (step.value === 7) return ouroRestante.value >= 0 && pesoTotal.value <= cargaPesadaMax.value;
+    if (step.value === 8) return !!form.nome_personagem?.trim() && !!form.nome_jogador?.trim() && !!form.tendencia_id;
     return true;
 });
+
+// ---------- Geração padrão de tamanho e idade (PHB 3.5) ----------
+const tamanhoPorRaca = {
+    'anao': 'Médio',
+    'elfo': 'Médio',
+    'gnomo': 'Pequeno',
+    'halfling': 'Pequeno',
+    'humano': 'Médio',
+    'meio-elfo': 'Médio',
+    'meio-orc': 'Médio',
+};
+
+// Idade adulta base e dados de idade para aventureiros por classe (Tabela 6-4 PHB 3.5).
+// Grupos de classe: 'quick' (bárbaro/ladino/feiticeiro), 'moderate' (bardo/guerreiro/paladino/patrulheiro), 'slow' (clérigo/druida/monge/mago).
+const idadePorRaca = {
+    'anao':      { adulto: 40,  quick: [3, 6], moderate: [5, 6], slow: [7, 6] },   // +NdX (N dados de X faces)
+    'elfo':      { adulto: 110, quick: [4, 6], moderate: [6, 6], slow: [10, 6] },
+    'gnomo':     { adulto: 40,  quick: [4, 6], moderate: [6, 6], slow: [9, 6] },
+    'halfling':  { adulto: 20,  quick: [2, 4], moderate: [3, 6], slow: [4, 6] },
+    'humano':    { adulto: 15,  quick: [1, 4], moderate: [1, 6], slow: [2, 6] },
+    'meio-elfo': { adulto: 20,  quick: [1, 6], moderate: [2, 6], slow: [3, 6] },
+    'meio-orc':  { adulto: 14,  quick: [1, 4], moderate: [1, 6], slow: [2, 6] },
+};
+
+const grupoClasseIdade = (slug) => {
+    if (['barbaro', 'ladino', 'feiticeiro'].includes(slug)) return 'quick';
+    if (['bardo', 'guerreiro', 'paladino', 'patrulheiro'].includes(slug)) return 'moderate';
+    return 'slow'; // clérigo, druida, monge, mago
+};
+
+const rolarDados = (n, faces) => {
+    let total = 0;
+    for (let i = 0; i < n; i++) total += Math.floor(Math.random() * faces) + 1;
+    return total;
+};
+
+const gerarTamanhoPadrao = () => {
+    const slug = racaSlug.value;
+    if (slug && tamanhoPorRaca[slug]) form.tamanho = tamanhoPorRaca[slug];
+};
+
+const gerarIdadePadrao = () => {
+    const slug = racaSlug.value;
+    const cSlug = classeSlug.value;
+    if (!slug || !idadePorRaca[slug]) return;
+    const dados = idadePorRaca[slug];
+    const grupo = cSlug ? grupoClasseIdade(cSlug) : 'moderate';
+    const [n, faces] = dados[grupo];
+    form.idade = dados.adulto + rolarDados(n, faces);
+};
 
 const scrollTopo = () => {
     if (typeof window !== 'undefined') {
@@ -828,6 +894,70 @@ const prevStep = () => {
     }
 };
 
+// ---------- Rascunho: persiste o preenchimento no localStorage ----------
+const CHAVE_RASCUNHO = 'forja-de-almas:rascunho';
+const rascunhoRestaurado = ref(false);
+
+const salvarRascunho = () => {
+    if (typeof window === 'undefined') return;
+    try {
+        const snapshot = {
+            step: step.value,
+            form: form.data(),
+            atributosRaw: atributosRaw.value,
+            atribsAtribuidos: atribsAtribuidos.value,
+            poolRolagens: poolRolagens.value,
+            abaArsenal: abaArsenal.value,
+            subAbaArmaduras: subAbaArmaduras.value,
+            subAbaArmas: subAbaArmas.value,
+            subAbaEquipamentos: subAbaEquipamentos.value,
+            timestamp: Date.now(),
+        };
+        window.localStorage.setItem(CHAVE_RASCUNHO, JSON.stringify(snapshot));
+    } catch (e) {
+        // Ignora erros de quota; melhor não interromper o fluxo por conta do rascunho.
+    }
+};
+
+const restaurarRascunho = () => {
+    if (typeof window === 'undefined') return false;
+    try {
+        const raw = window.localStorage.getItem(CHAVE_RASCUNHO);
+        if (!raw) return false;
+        const snapshot = JSON.parse(raw);
+        if (!snapshot?.form) return false;
+        Object.entries(snapshot.form).forEach(([k, v]) => {
+            if (k in form) form[k] = v;
+        });
+        if (snapshot.atributosRaw) Object.assign(atributosRaw.value, snapshot.atributosRaw);
+        if (snapshot.atribsAtribuidos) atribsAtribuidos.value = { ...snapshot.atribsAtribuidos };
+        if (Array.isArray(snapshot.poolRolagens)) poolRolagens.value = [...snapshot.poolRolagens];
+        if (snapshot.abaArsenal) abaArsenal.value = snapshot.abaArsenal;
+        if (snapshot.subAbaArmaduras) subAbaArmaduras.value = snapshot.subAbaArmaduras;
+        if (snapshot.subAbaArmas) subAbaArmas.value = snapshot.subAbaArmas;
+        if (snapshot.subAbaEquipamentos) subAbaEquipamentos.value = snapshot.subAbaEquipamentos;
+        if (snapshot.step) step.value = Math.min(TOTAL_STEPS, Math.max(1, Number(snapshot.step)));
+        rascunhoRestaurado.value = true;
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
+
+const descartarRascunho = () => {
+    if (typeof window === 'undefined') return;
+    if (!confirm('Descartar o rascunho salvo? Todos os dados preenchidos serão perdidos.')) return;
+    window.localStorage.removeItem(CHAVE_RASCUNHO);
+    window.location.reload();
+};
+
+onMounted(() => {
+    restaurarRascunho();
+});
+
+// Salva rascunho a cada mudança relevante (debounced pela reatividade).
+watch([step, () => form.data(), atributosRaw, atribsAtribuidos, poolRolagens], () => salvarRascunho(), { deep: true });
+
 // Auto-computa campos derivados antes de submeter: PV, BBA, resistências-base, ouro final e CA/deslocamento da armadura equipada.
 const submit = () => {
     const c = selectedClasse.value;
@@ -846,7 +976,11 @@ const submit = () => {
     form.dinheiro_pl = Math.floor(restante);
     form.dinheiro_pp = Math.floor((restante - Math.floor(restante)) * 10 + 0.001);
     form.dinheiro_pc = 0;
-    form.post(route('fichas.store'));
+    form.post(route('fichas.store'), {
+        onSuccess: () => {
+            if (typeof window !== 'undefined') window.localStorage.removeItem(CHAVE_RASCUNHO);
+        },
+    });
 };
 </script>
 
@@ -874,53 +1008,53 @@ const submit = () => {
 
             <form @submit.prevent="submit" class="glass-parchment p-8 md:p-12 rounded-2xl shadow-2xl border border-parchment-400 relative overflow-hidden">
 
-                <!-- ============ PASSO 1: IDENTIDADE ============ -->
+                <!-- ============ PASSO 1: SISTEMA & NÍVEL ============ -->
                 <div v-if="step === 1" class="space-y-6">
                     <div class="text-center max-w-2xl mx-auto mb-4">
                         <p class="font-lora italic text-parchment-800">
-                            Antes da forja começar, dê nome e propósito à sua alma. O nome do herói ecoará em canções de taverna; a tendência guiará suas escolhas ao longo da jornada.
+                            Escolha o sistema de regras e o nível de experiência inicial do seu herói. O sistema determina as fórmulas de dados, magias e habilidades disponíveis; o nível define quão veterano será o personagem no início da jornada.
                         </p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Nome do Personagem *</label>
-                            <input v-model="form.nome_personagem" type="text" maxlength="100"
-                                placeholder="Ex.: Aragorn, Thorin, Elara..."
+                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Sistema *</label>
+                            <select v-model="form.versao"
                                 class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-lora focus:border-blood-700 outline-none transition shadow-inner">
-                            <p v-if="form.errors.nome_personagem" class="text-blood-700 text-xs mt-1">{{ form.errors.nome_personagem }}</p>
+                                <option v-for="s in SISTEMAS" :key="s.id" :value="s.id" :disabled="!s.disponivel">
+                                    {{ s.label }}
+                                </option>
+                            </select>
+                            <p class="text-xs italic text-parchment-700 mt-1"><i class="fa-solid fa-info-circle mr-1"></i>Atualmente apenas D&D 3.5 está disponível.</p>
                         </div>
+
                         <div>
-                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Nome do Jogador *</label>
-                            <input v-model="form.nome_jogador" type="text" maxlength="100"
-                                placeholder="Seu nome"
-                                class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-lora focus:border-blood-700 outline-none transition shadow-inner">
-                            <p v-if="form.errors.nome_jogador" class="text-blood-700 text-xs mt-1">{{ form.errors.nome_jogador }}</p>
+                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Nível do Personagem *</label>
+                            <div class="flex items-center gap-3">
+                                <button type="button" @click="form.nivel = Math.max(1, Number(form.nivel) - 1)"
+                                    class="w-10 h-10 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-cinzel font-bold text-lg transition">−</button>
+                                <input type="number" v-model.number="form.nivel" min="1" max="20"
+                                    class="w-24 bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-cinzel font-bold text-center text-2xl focus:border-blood-700 outline-none transition shadow-inner">
+                                <button type="button" @click="form.nivel = Math.min(20, Number(form.nivel) + 1)"
+                                    class="w-10 h-10 rounded-full bg-parchment-300 hover:bg-blood-700 hover:text-white font-cinzel font-bold text-lg transition">+</button>
+                                <span class="font-lora italic text-parchment-700 text-sm ml-2">de 1 a 20</span>
+                            </div>
+                            <p v-if="form.errors.nivel" class="text-blood-700 text-xs mt-1">{{ form.errors.nivel }}</p>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Tendência *</label>
-                            <select v-model="form.tendencia_id"
-                                class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-lora focus:border-blood-700 outline-none transition shadow-inner">
-                                <option :value="null">Selecione uma tendência...</option>
-                                <option v-for="t in tendencias" :key="t.id" :value="t.id">
-                                    {{ t.nome }}<template v-if="t.apelido"> — {{ t.apelido }}</template>
-                                </option>
-                            </select>
-                            <p v-if="form.errors.tendencia_id" class="text-blood-700 text-xs mt-1">{{ form.errors.tendencia_id }}</p>
+                    <div v-if="rascunhoRestaurado" class="mt-6 p-4 bg-yellow-600/10 border-2 border-yellow-600/40 rounded-lg flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <i class="fa-solid fa-scroll text-yellow-700 text-xl"></i>
+                            <div>
+                                <p class="font-cinzel font-bold uppercase text-sm text-parchment-900">Rascunho restaurado</p>
+                                <p class="text-xs font-lora italic text-parchment-800">Um preenchimento anterior foi recuperado do navegador. Continue de onde parou ou descarte para começar do zero.</p>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Divindade (opcional)</label>
-                            <select v-model="form.divindade"
-                                class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-3 font-lora focus:border-blood-700 outline-none transition shadow-inner">
-                                <option value="">— Nenhuma —</option>
-                                <option v-for="d in divindades" :key="d.id" :value="d.nome">
-                                    {{ d.nome }}<template v-if="d.titulo"> — {{ d.titulo }}</template>
-                                </option>
-                            </select>
-                        </div>
+                        <button type="button" @click="descartarRascunho"
+                            class="px-4 py-2 rounded-lg font-cinzel font-bold text-sm bg-blood-700 text-parchment-100 hover:bg-blood-800 transition">
+                            <i class="fa-solid fa-trash mr-2"></i>Descartar
+                        </button>
                     </div>
                 </div>
 
@@ -1555,6 +1689,147 @@ const submit = () => {
                             </div>
                         </div>
                     </template>
+                </div>
+
+                <!-- ============ PASSO 8: IDENTIDADE & APARÊNCIA ============ -->
+                <div v-if="step === 8" class="space-y-6">
+                    <div class="text-center max-w-2xl mx-auto mb-4">
+                        <p class="font-lora italic text-parchment-800">
+                            Dê nome e rosto à sua alma forjada. O nome do herói ecoará em canções de taverna, a tendência guiará suas escolhas e a aparência será lembrada por aqueles que cruzarem seu caminho.
+                        </p>
+                    </div>
+
+                    <!-- Identidade -->
+                    <div class="glass-parchment p-6 rounded-xl border border-parchment-400">
+                        <h3 class="font-cinzel font-bold uppercase text-sm text-blood-800 mb-4 border-b border-parchment-400 pb-2">
+                            <i class="fa-solid fa-id-card mr-2"></i>Identidade
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Nome do Personagem *</label>
+                                <input v-model="form.nome_personagem" type="text" maxlength="100"
+                                    placeholder="Ex.: Aragorn, Thorin, Elara..."
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2.5 font-lora focus:border-blood-700 outline-none transition shadow-inner">
+                                <p v-if="form.errors.nome_personagem" class="text-blood-700 text-xs mt-1">{{ form.errors.nome_personagem }}</p>
+                            </div>
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Nome do Jogador *</label>
+                                <input v-model="form.nome_jogador" type="text" maxlength="100"
+                                    placeholder="Seu nome"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2.5 font-lora focus:border-blood-700 outline-none transition shadow-inner">
+                                <p v-if="form.errors.nome_jogador" class="text-blood-700 text-xs mt-1">{{ form.errors.nome_jogador }}</p>
+                            </div>
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Tendência *</label>
+                                <select v-model="form.tendencia_id"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2.5 font-lora focus:border-blood-700 outline-none transition shadow-inner">
+                                    <option :value="null">Selecione uma tendência...</option>
+                                    <option v-for="t in tendencias" :key="t.id" :value="t.id">
+                                        {{ t.nome }}<template v-if="t.apelido"> — {{ t.apelido }}</template>
+                                    </option>
+                                </select>
+                                <p v-if="form.errors.tendencia_id" class="text-blood-700 text-xs mt-1">{{ form.errors.tendencia_id }}</p>
+                            </div>
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Divindade (opcional)</label>
+                                <select v-model="form.divindade"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2.5 font-lora focus:border-blood-700 outline-none transition shadow-inner">
+                                    <option value="">— Nenhuma —</option>
+                                    <option v-for="d in divindades" :key="d.id" :value="d.nome">
+                                        {{ d.nome }}<template v-if="d.titulo"> — {{ d.titulo }}</template>
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aparência -->
+                    <div class="glass-parchment p-6 rounded-xl border border-parchment-400">
+                        <h3 class="font-cinzel font-bold uppercase text-sm text-blood-800 mb-4 border-b border-parchment-400 pb-2">
+                            <i class="fa-solid fa-user mr-2"></i>Aparência
+                        </h3>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Tamanho</label>
+                                <div class="flex gap-2">
+                                    <select v-model="form.tamanho"
+                                        class="flex-1 bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
+                                        <option value="">—</option>
+                                        <option value="Minúsculo">Minúsculo</option>
+                                        <option value="Diminuto">Diminuto</option>
+                                        <option value="Miúdo">Miúdo</option>
+                                        <option value="Pequeno">Pequeno</option>
+                                        <option value="Médio">Médio</option>
+                                        <option value="Grande">Grande</option>
+                                        <option value="Enorme">Enorme</option>
+                                    </select>
+                                    <button type="button" @click="gerarTamanhoPadrao" :disabled="!selectedRaca"
+                                        :title="selectedRaca ? 'Preencher com o tamanho padrão da raça' : 'Escolha uma raça primeiro'"
+                                        class="px-3 py-2 rounded-lg font-cinzel font-bold text-xs bg-parchment-300 hover:bg-blood-700 hover:text-white transition disabled:opacity-40 disabled:cursor-not-allowed">
+                                        <i class="fa-solid fa-dice"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Idade (anos)</label>
+                                <div class="flex gap-2">
+                                    <input v-model.number="form.idade" type="number" min="1"
+                                        class="flex-1 bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
+                                    <button type="button" @click="gerarIdadePadrao" :disabled="!selectedRaca"
+                                        :title="selectedRaca ? 'Rolar dados de idade conforme raça + classe' : 'Escolha uma raça primeiro'"
+                                        class="px-3 py-2 rounded-lg font-cinzel font-bold text-xs bg-parchment-300 hover:bg-blood-700 hover:text-white transition disabled:opacity-40 disabled:cursor-not-allowed">
+                                        <i class="fa-solid fa-dice"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Sexo</label>
+                                <select v-model="form.sexo"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
+                                    <option value="">—</option>
+                                    <option value="Masculino">Masculino</option>
+                                    <option value="Feminino">Feminino</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Altura (m)</label>
+                                <input v-model.number="form.altura" type="number" step="0.01" min="0"
+                                    placeholder="Ex.: 1.75"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Peso (kg)</label>
+                                <input v-model.number="form.peso" type="number" step="0.1" min="0"
+                                    placeholder="Ex.: 78"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Olhos</label>
+                                <input v-model="form.olhos" type="text" maxlength="50" placeholder="Cor dos olhos"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Cabelos</label>
+                                <input v-model="form.cabelos" type="text" maxlength="50" placeholder="Cor / estilo"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
+                            </div>
+                            <div>
+                                <label class="block font-cinzel font-bold text-parchment-900 mb-1 uppercase text-xs">Pele</label>
+                                <input v-model="form.pele" type="text" maxlength="50" placeholder="Tom / marcas"
+                                    class="w-full bg-parchment-100 border-2 border-parchment-400 rounded-lg p-2 font-lora focus:border-blood-700 outline-none transition">
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Erros globais (aparecem se o submit falhar na validação do servidor) -->
