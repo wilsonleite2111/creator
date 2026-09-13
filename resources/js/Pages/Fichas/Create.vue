@@ -279,8 +279,50 @@ const pontosPericiaGastos = computed(() =>
 );
 const pontosPericiaRestantes = computed(() => pontosPericiaMax.value - pontosPericiaGastos.value);
 
+// Nível 1: máximo de graduações = nível do personagem + 3 = 4 (para perícias de classe).
+// Perícias de fora da classe custam 2 pts/rank, mas o TETO em pts gastos ainda é 4 (equivalente a 2 ranks).
+const MAX_GRADUACOES_POR_PERICIA = computed(() => Number(form.nivel || 1) + 3);
+
+// Bônus raciais por perícia (PHB 3.5). Alguns são condicionais no PHB (ex.: anão em pedra/metal); aqui aplicamos o valor cheio como aproximação da ficha.
+const bonusRacialPorPericia = {
+    'anao':      { 'Avaliação': 2, 'Ofícios': 2, 'Procurar': 2 },
+    'elfo':      { 'Ouvir': 2, 'Observar': 2, 'Procurar': 2 },
+    'gnomo':     { 'Ouvir': 2, 'Ofícios': 2 },
+    'halfling':  { 'Escalar': 2, 'Saltar': 2, 'Furtividade': 2, 'Ouvir': 2 },
+    'meio-elfo': { 'Ouvir': 1, 'Observar': 1, 'Procurar': 1, 'Diplomacia': 2, 'Obter Informação': 2 },
+};
+
+const racaSlug = computed(() => slugify(selectedRaca.value?.nome));
+
+const bonusRacialDaPericia = (pericia) => {
+    const slug = racaSlug.value;
+    if (!slug) return 0;
+    const mapa = bonusRacialPorPericia[slug];
+    return (mapa && mapa[pericia.nome]) ?? 0;
+};
+
+const habilidadeParaChave = {
+    'FOR': 'forca',
+    'DES': 'destreza',
+    'CON': 'constituicao',
+    'INT': 'inteligencia',
+    'SAB': 'sabedoria',
+    'CAR': 'carisma',
+};
+
+const modDaHabilidade = (pericia) => {
+    const chave = habilidadeParaChave[pericia.habilidade_chave];
+    if (!chave) return 0;
+    return getMod(form[chave + '_base']);
+};
+
+const graduacoesDaPericia = (pericia) => Number(form.pericias[pericia.id] || 0);
+
+const totalDaPericia = (pericia) => graduacoesDaPericia(pericia) + modDaHabilidade(pericia) + bonusRacialDaPericia(pericia);
+
 const setPericia = (id, val) => {
-    const n = Math.max(0, Math.floor(Number(val) || 0));
+    const teto = MAX_GRADUACOES_POR_PERICIA.value;
+    const n = Math.max(0, Math.min(teto, Math.floor(Number(val) || 0)));
     if (n === 0) delete form.pericias[id];
     else form.pericias[id] = n;
 };
@@ -609,9 +651,9 @@ const submit = () => form.post(route('fichas.store'));
                         Escolha uma classe no passo 2 para calcular seus pontos de perícia.
                     </div>
 
-                    <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                    <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
                         <div class="p-4 rounded-lg bg-parchment-200 border border-parchment-400">
-                            <p class="text-[10px] uppercase font-cinzel opacity-60">Total (nível 1)</p>
+                            <p class="text-[10px] uppercase font-cinzel opacity-60">Total (nível {{ form.nivel }})</p>
                             <p class="text-2xl font-cinzel font-bold">{{ pontosPericiaMax }}</p>
                         </div>
                         <div class="p-4 rounded-lg bg-parchment-200 border border-parchment-400">
@@ -623,19 +665,54 @@ const submit = () => form.post(route('fichas.store'));
                             <p class="text-[10px] uppercase opacity-60">Restantes</p>
                             <p class="text-2xl">{{ pontosPericiaRestantes }}</p>
                         </div>
+                        <div class="p-4 rounded-lg bg-parchment-200 border border-parchment-400">
+                            <p class="text-[10px] uppercase font-cinzel opacity-60">Máx / Perícia</p>
+                            <p class="text-2xl font-cinzel font-bold">{{ MAX_GRADUACOES_POR_PERICIA }}</p>
+                        </div>
                     </div>
 
-                    <div class="max-h-[500px] overflow-y-auto pr-2 grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="max-h-[500px] overflow-y-auto pr-2 grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div v-for="p in pericias" :key="p.id"
-                            class="flex items-center justify-between p-3 bg-parchment-200/50 rounded-lg border border-parchment-300">
-                            <div>
-                                <p class="font-lora text-sm font-bold">{{ p.nome }}</p>
+                            class="flex items-center gap-3 p-3 bg-parchment-200/50 rounded-lg border border-parchment-300">
+                            <!-- Nome + habilidade chave -->
+                            <div class="flex-1 min-w-0">
+                                <p class="font-lora text-sm font-bold truncate">{{ p.nome }}</p>
                                 <p class="text-[10px] uppercase opacity-50 font-cinzel">{{ p.habilidade_chave }}</p>
                             </div>
-                            <input type="number" min="0"
-                                :value="form.pericias[p.id] ?? 0"
-                                @input="e => setPericia(p.id, e.target.value)"
-                                class="w-16 bg-parchment-100 border border-parchment-400 rounded p-1 text-center font-bold">
+
+                            <!-- Modificador da habilidade chave -->
+                            <div class="text-center w-10">
+                                <p class="text-[9px] font-cinzel opacity-60 uppercase leading-none">Hab</p>
+                                <p :class="['text-sm font-bold font-cinzel leading-tight', modDaHabilidade(p) >= 0 ? 'text-green-700' : 'text-blood-700']">
+                                    {{ modDaHabilidade(p) >= 0 ? '+' : '' }}{{ modDaHabilidade(p) }}
+                                </p>
+                            </div>
+
+                            <!-- Bônus racial (só aparece se != 0) -->
+                            <div v-if="bonusRacialDaPericia(p) !== 0" class="text-center w-10">
+                                <p class="text-[9px] font-cinzel opacity-60 uppercase leading-none">Raça</p>
+                                <p :class="['text-sm font-bold font-cinzel leading-tight', bonusRacialDaPericia(p) > 0 ? 'text-blue-700' : 'text-blood-700']">
+                                    {{ bonusRacialDaPericia(p) > 0 ? '+' : '' }}{{ bonusRacialDaPericia(p) }}
+                                </p>
+                            </div>
+
+                            <!-- Graduações (input) -->
+                            <div class="text-center">
+                                <p class="text-[9px] font-cinzel opacity-60 uppercase leading-none">Grad</p>
+                                <input type="number" min="0" :max="MAX_GRADUACOES_POR_PERICIA"
+                                    :value="form.pericias[p.id] ?? 0"
+                                    @input="e => setPericia(p.id, e.target.value)"
+                                    :title="`Máximo ${MAX_GRADUACOES_POR_PERICIA} no nível ${form.nivel}`"
+                                    class="w-12 bg-parchment-100 border border-parchment-400 rounded px-1 py-0.5 text-center font-bold text-sm">
+                            </div>
+
+                            <!-- Total -->
+                            <div class="text-center w-12 border-l border-parchment-400 pl-2">
+                                <p class="text-[9px] font-cinzel opacity-60 uppercase leading-none">Total</p>
+                                <p :class="['text-lg font-bold font-cinzel leading-tight', totalDaPericia(p) >= 0 ? 'text-parchment-900' : 'text-blood-700']">
+                                    {{ totalDaPericia(p) >= 0 ? '+' : '' }}{{ totalDaPericia(p) }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
