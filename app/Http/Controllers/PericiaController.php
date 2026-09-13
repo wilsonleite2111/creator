@@ -34,7 +34,7 @@ class PericiaController extends Controller
 
     public function show(Pericia $pericia)
     {
-        return Inertia::render('Pericias/Edit', ['pericia' => $pericia]);
+        return Inertia::render('Pericias/Show', ['pericia' => $pericia]);
     }
 
     public function edit(Pericia $pericia)
