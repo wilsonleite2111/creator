@@ -169,6 +169,19 @@ const modRaciais = computed(() => {
 
 const isHumano = computed(() => slugify(selectedRaca.value?.nome) === 'humano');
 
+const escapeHtml = (str) => (str ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+
+const formatarDescricao = (raw) => escapeHtml(raw)
+    .replace(/\*\*(.+?)\*\*/g, '<strong class="font-cinzel text-parchment-900 not-italic">$1</strong>')
+    .replace(/\n/g, '<br>');
+
+const racaDescricaoFormatada = computed(() => selectedRaca.value ? formatarDescricao(selectedRaca.value.descricao) : '');
+
 // ---------- Atributos: 3 métodos ----------
 const roll = (sides) => Math.floor(Math.random() * sides) + 1;
 const roll4d6DropLowest = () => {
@@ -375,7 +388,7 @@ const submit = () => form.post(route('fichas.store'));
                         <div class="w-full md:w-2/5 space-y-4">
                             <template v-if="selectedRaca">
                                 <h3 class="text-3xl font-cinzel font-bold text-blood-800 uppercase tracking-wider">{{ selectedRaca.nome }}</h3>
-                                <p class="font-lora italic text-parchment-800">{{ selectedRaca.descricao }}</p>
+                                <div class="font-lora italic text-parchment-800 leading-relaxed max-h-96 overflow-y-auto pr-2 space-y-1" v-html="racaDescricaoFormatada"></div>
 
                                 <div class="grid grid-cols-2 gap-3 pt-2">
                                     <div class="bg-parchment-100 rounded-lg p-3 border border-parchment-400">
