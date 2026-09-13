@@ -37,7 +37,7 @@ class DivindadeController extends Controller
 
     public function show(Divindade $divindade)
     {
-        return Inertia::render('Divindades/Edit', ['divindade' => $divindade]);
+        return Inertia::render('Divindades/Show', ['divindade' => $divindade]);
     }
 
     public function edit(Divindade $divindade)
