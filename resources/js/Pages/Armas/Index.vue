@@ -2,16 +2,53 @@
 import AppLayout from '@/Layouts/AppLayout.vue';
 import SearchInput from '@/Components/SearchInput.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { filtrarPorNome } from '@/utils/busca';
 
 const props = defineProps({
     armas: Array
 });
 
+const ORDEM_CATEGORIAS = ['Simples', 'Marcial', 'Exótica'];
+const LABEL_CATEGORIAS = { 'Simples': 'Simples', 'Marcial': 'Marciais', 'Exótica': 'Exóticas' };
+const ORDEM_USOS = ['Leve', 'Uma Mão', 'Duas Mãos', 'Distância'];
+
 const busca = ref('');
+const categoriaAtiva = ref('Simples');
 
 const armasFiltradas = computed(() => filtrarPorNome(props.armas, busca.value));
+
+const armasPorCategoria = computed(() => {
+    const grupos = {};
+    for (const arma of armasFiltradas.value) {
+        const cat = arma.categoria || 'Outras';
+        (grupos[cat] = grupos[cat] || []).push(arma);
+    }
+    return grupos;
+});
+
+const armasDaCategoria = computed(() => {
+    const grupos = {};
+    for (const arma of (armasPorCategoria.value[categoriaAtiva.value] || [])) {
+        const uso = arma.uso || 'Outras';
+        (grupos[uso] = grupos[uso] || []).push(arma);
+    }
+    return grupos;
+});
+
+const usosOrdenados = computed(() => {
+    const chaves = Object.keys(armasDaCategoria.value);
+    return chaves.sort((a, b) => ORDEM_USOS.indexOf(a) - ORDEM_USOS.indexOf(b));
+});
+
+watch(busca, () => {
+    const atual = armasPorCategoria.value[categoriaAtiva.value] || [];
+    if (atual.length) return;
+    const comResultado = ORDEM_CATEGORIAS.find(c => (armasPorCategoria.value[c] || []).length > 0);
+    if (comResultado) categoriaAtiva.value = comResultado;
+});
+
+const totalEncontrado = computed(() => armasFiltradas.value.length);
 
 const destroy = (id) => {
     if (confirm('Remover esta arma do arsenal?')) {
@@ -27,7 +64,7 @@ const destroy = (id) => {
         <div class="mb-8 border-b-2 border-parchment-800 pb-4 flex items-center justify-between">
             <div>
                 <h1 class="text-4xl font-cinzel font-bold text-parchment-900 drop-shadow-sm">
-                    <i class="fa-solid fa-sword text-blood-700 mr-3"></i>Arsenal de Armas
+                    <i class="fa-solid fa-khanda text-blood-700 mr-3"></i>Arsenal de Armas
                 </h1>
                 <p class="text-parchment-800 mt-2 italic font-lora">"Cada lâmina conta sua própria história de batalha."</p>
             </div>
@@ -39,54 +76,88 @@ const destroy = (id) => {
         <SearchInput
             v-model="busca"
             placeholder="Buscar arma pelo nome..."
-            :resultados="armasFiltradas.length"
+            :resultados="totalEncontrado"
             :total="armas.length"
         />
 
-        <v-card class="glass-parchment border border-parchment-400" elevation="4">
-            <v-table class="bg-transparent">
-                <thead class="bg-parchment-300 font-cinzel">
-                    <tr>
-                        <th class="text-left">Nome</th>
-                        <th class="text-left">Dano (P)</th>
-                        <th class="text-left">Dano (M)</th>
-                        <th class="text-left">Crítico</th>
-                        <th class="text-left">Alcance</th>
-                        <th class="text-left">Tipo</th>
-                        <th class="text-left">Categoria</th>
-                        <th class="text-left">Preço</th>
-                        <th class="text-center">Ações</th>
-                    </tr>
-                </thead>
-                <tbody class="font-lora">
-                    <tr v-for="arma in armasFiltradas" :key="arma.id" class="hover:bg-parchment-200 transition-colors">
-                        <td class="font-bold font-cinzel">{{ arma.nome }}</td>
-                        <td>{{ arma.dano_p ?? '—' }}</td>
-                        <td>{{ arma.dano_m ?? '—' }}</td>
-                        <td>{{ arma.critico ?? '—' }}</td>
-                        <td>{{ arma.alcance ?? '—' }}</td>
-                        <td>{{ arma.tipo ?? '—' }}</td>
-                        <td>{{ arma.categoria ?? '—' }}</td>
-                        <td>{{ arma.preco ?? '—' }}</td>
-                        <td class="text-center">
-                            <div class="flex justify-center space-x-3">
-                                <Link :href="route('armas.edit', arma.id)" class="text-blue-600 hover:text-blue-800 transition">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </Link>
-                                <button @click="destroy(arma.id)" class="text-blood-700 hover:text-blood-900 transition">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr v-if="armasFiltradas.length === 0">
-                        <td colspan="9" class="text-center py-12 italic text-parchment-600">
-                            <template v-if="armas.length === 0">Nenhuma arma registrada no arsenal.</template>
-                            <template v-else>Nenhuma arma encontrada para "{{ busca }}".</template>
-                        </td>
-                    </tr>
-                </tbody>
-            </v-table>
-        </v-card>
+        <div v-if="armas.length === 0" class="text-center py-24 italic text-parchment-600 font-lora text-lg">
+            Nenhuma arma registrada no arsenal.
+        </div>
+
+        <div v-else-if="totalEncontrado === 0" class="text-center py-24 italic text-parchment-600 font-lora text-lg">
+            Nenhuma arma encontrada para "{{ busca }}".
+        </div>
+
+        <div v-else class="flex gap-6">
+            <!-- Tabs de categoria -->
+            <div class="flex-shrink-0 w-44">
+                <p class="font-cinzel text-xs font-bold uppercase tracking-widest text-parchment-700 mb-3 px-1">Categorias</p>
+                <div class="flex flex-col gap-1">
+                    <button v-for="cat in ORDEM_CATEGORIAS" :key="cat"
+                        v-show="(armasPorCategoria[cat] || []).length > 0"
+                        @click="categoriaAtiva = cat"
+                        :class="[
+                            'text-left px-4 py-2.5 rounded-lg font-cinzel text-sm font-bold transition-all duration-200 border',
+                            categoriaAtiva === cat
+                                ? 'bg-blood-700 text-parchment-100 border-blood-800 shadow-md'
+                                : 'bg-parchment-200/60 text-parchment-800 border-parchment-300 hover:bg-parchment-300 hover:border-parchment-400'
+                        ]">
+                        {{ LABEL_CATEGORIAS[cat] }}
+                        <span :class="['ml-1 text-[10px] font-normal', categoriaAtiva === cat ? 'text-parchment-200' : 'text-parchment-600']">
+                            ({{ (armasPorCategoria[cat] || []).length }})
+                        </span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Conteúdo das armas -->
+            <div class="flex-1 min-w-0 space-y-6">
+                <div v-for="uso in usosOrdenados" :key="uso">
+                    <div class="flex items-center gap-3 mb-3">
+                        <h2 class="font-cinzel font-bold text-parchment-900 uppercase tracking-wide text-sm">{{ uso }}</h2>
+                        <div class="flex-1 h-px bg-parchment-400/50"></div>
+                        <span class="text-xs font-cinzel text-parchment-600">{{ armasDaCategoria[uso].length }}</span>
+                    </div>
+
+                    <v-card class="glass-parchment border border-parchment-400" elevation="2">
+                        <v-table class="bg-transparent" density="compact">
+                            <thead class="bg-parchment-300/80 font-cinzel">
+                                <tr>
+                                    <th class="text-left text-xs">Nome</th>
+                                    <th class="text-left text-xs">Dano M</th>
+                                    <th class="text-left text-xs">Crítico</th>
+                                    <th class="text-left text-xs">Alcance</th>
+                                    <th class="text-left text-xs">Tipo</th>
+                                    <th class="text-left text-xs">Peso</th>
+                                    <th class="text-left text-xs">Preço</th>
+                                    <th class="text-center text-xs">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody class="font-lora">
+                                <tr v-for="arma in armasDaCategoria[uso]" :key="arma.id" class="hover:bg-parchment-200/60 transition-colors">
+                                    <td class="font-bold font-cinzel text-sm">{{ arma.nome }}</td>
+                                    <td class="text-xs">{{ arma.dano_m ?? '—' }}</td>
+                                    <td class="text-xs">{{ arma.critico ?? '—' }}</td>
+                                    <td class="text-xs">{{ arma.alcance ?? '—' }}</td>
+                                    <td class="text-xs italic text-parchment-700">{{ arma.tipo ?? '—' }}</td>
+                                    <td class="text-xs">{{ arma.peso }} kg</td>
+                                    <td class="text-xs text-blood-700 font-bold">{{ arma.preco ?? '—' }}</td>
+                                    <td class="text-center">
+                                        <div class="flex justify-center space-x-2">
+                                            <Link :href="route('armas.edit', arma.id)" class="text-blue-600 hover:text-blue-800 transition">
+                                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            </Link>
+                                            <button @click="destroy(arma.id)" class="text-blood-700 hover:text-blood-900 transition">
+                                                <i class="fa-solid fa-trash text-xs"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </v-table>
+                    </v-card>
+                </div>
+            </div>
+        </div>
     </AppLayout>
 </template>
