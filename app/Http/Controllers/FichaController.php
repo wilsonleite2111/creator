@@ -136,9 +136,30 @@ class FichaController extends Controller
             $ficha->talentos()->sync($request->input('talentos', []));
         }
 
+        // Armas: aceita mapa { id: quantidade } (novo formato) ou array de IDs (compatibilidade).
         if ($request->has('armas')) {
-            foreach ($request->armas as $arma_id) {
-                $ficha->armas()->attach($arma_id, ['quantidade' => 1, 'esta_equipado' => true]);
+            $armasInput = $request->armas;
+            if (is_array($armasInput)) {
+                $primeirasChaves = array_keys($armasInput);
+                $ehMapa = !empty($primeirasChaves) && !is_int($primeirasChaves[0] ?? null);
+                // Se todas as chaves forem numéricas mas os valores forem inteiros positivos, tratamos como mapa id=>qtd.
+                if (!$ehMapa) {
+                    // Detecção heurística: se cada valor for um inteiro (quantidade), assume mapa.
+                    $todosInteiros = collect($armasInput)->every(fn ($v) => is_int($v) || (is_string($v) && ctype_digit($v)));
+                    $ehMapa = $todosInteiros;
+                }
+                if ($ehMapa) {
+                    foreach ($armasInput as $arma_id => $qty) {
+                        $q = (int) $qty;
+                        if ($q > 0) {
+                            $ficha->armas()->attach($arma_id, ['quantidade' => $q, 'esta_equipado' => true]);
+                        }
+                    }
+                } else {
+                    foreach ($armasInput as $arma_id) {
+                        $ficha->armas()->attach($arma_id, ['quantidade' => 1, 'esta_equipado' => true]);
+                    }
+                }
             }
         }
 
@@ -148,9 +169,28 @@ class FichaController extends Controller
             }
         }
 
+        // Equipamentos: mesmo padrão de armas.
         if ($request->has('equipamentos')) {
-            foreach ($request->equipamentos as $equip_id) {
-                $ficha->equipamentos()->attach($equip_id, ['quantidade' => 1]);
+            $equipInput = $request->equipamentos;
+            if (is_array($equipInput)) {
+                $primeirasChaves = array_keys($equipInput);
+                $ehMapa = !empty($primeirasChaves) && !is_int($primeirasChaves[0] ?? null);
+                if (!$ehMapa) {
+                    $todosInteiros = collect($equipInput)->every(fn ($v) => is_int($v) || (is_string($v) && ctype_digit($v)));
+                    $ehMapa = $todosInteiros;
+                }
+                if ($ehMapa) {
+                    foreach ($equipInput as $equip_id => $qty) {
+                        $q = (int) $qty;
+                        if ($q > 0) {
+                            $ficha->equipamentos()->attach($equip_id, ['quantidade' => $q]);
+                        }
+                    }
+                } else {
+                    foreach ($equipInput as $equip_id) {
+                        $ficha->equipamentos()->attach($equip_id, ['quantidade' => 1]);
+                    }
+                }
             }
         }
 
