@@ -15,7 +15,7 @@ const props = defineProps({
     equipamentos: Array
 });
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 7;
 const step = ref(1);
 
 const stepLabels = [
@@ -24,7 +24,8 @@ const stepLabels = [
     'Vocação',
     'Ritual dos Atributos',
     'Treinamento',
-    'Talentos & Dons'
+    'Talentos & Dons',
+    'Arsenal & Provisões'
 ];
 
 const form = useForm({
@@ -591,6 +592,113 @@ watch([classeSlug, () => ({
     carisma: form.carisma_base,
 })], () => revalidarTalentosSelecionados(), { deep: true });
 
+// ---------- Arsenal: ouro inicial, capacidade de carga e cálculo de compras ----------
+
+// Peças de ouro iniciais no 1° nível por classe (média dos dados PHB 3.5).
+const ouroInicialPorClasse = {
+    'barbaro':     100,   // 4d4 × 10
+    'bardo':       100,   // 4d4 × 10
+    'clerigo':     125,   // 5d4 × 10
+    'druida':      50,    // 2d4 × 10
+    'feiticeiro':  75,    // 3d4 × 10
+    'guerreiro':   150,   // 6d4 × 10
+    'ladino':      125,   // 5d4 × 10
+    'mago':        75,    // 3d4 × 10
+    'monge':       12.5,  // 5d4 (monges começam sem × 10 — voto de pobreza)
+    'paladino':    150,   // 6d4 × 10
+    'patrulheiro': 150,   // 6d4 × 10
+};
+
+const ouroInicial = computed(() => ouroInicialPorClasse[classeSlug.value] ?? 0);
+
+// Capacidade de carga máxima (pesada, em kg) — PHB 3.5 Table 9-1 convertida da tabela em libras (lb/2).
+const cargaPesadaPorForca = {
+    1: 5,   2: 10,  3: 15,  4: 20,  5: 25,  6: 30,  7: 35,  8: 40,  9: 45,
+    10: 50, 11: 58, 12: 65, 13: 75, 14: 88, 15: 100, 16: 115, 17: 130, 18: 150,
+    19: 175, 20: 200, 21: 230, 22: 260, 23: 300, 24: 350, 25: 400,
+    26: 460, 27: 520, 28: 600, 29: 700, 30: 800,
+};
+
+const forcaFinal = computed(() => Math.min(30, Math.max(1, Number(form.forca_base || 10))));
+const cargaPesadaMax = computed(() => cargaPesadaPorForca[forcaFinal.value] ?? 50);
+const cargaMediaMax = computed(() => Math.round((cargaPesadaMax.value * 2 / 3) * 10) / 10);
+const cargaLeveMax  = computed(() => Math.round((cargaPesadaMax.value / 3) * 10) / 10);
+
+// Converte string tipo "10 PO", "5 PP", "3 PC", "1.500 PO" para peças de ouro (float). "-" ou vazio = 0.
+const parsePreco = (str) => {
+    if (!str) return 0;
+    const s = String(str).trim();
+    if (s === '-' || s === '—') return 0;
+    const m = s.match(/^([\d.,]+)\s*(PO|PP|PC)$/i);
+    if (!m) return 0;
+    const valor = Number(m[1].replace(/\./g, '').replace(',', '.'));
+    if (!Number.isFinite(valor)) return 0;
+    const moeda = m[2].toUpperCase();
+    if (moeda === 'PO') return valor;
+    if (moeda === 'PP') return valor / 10;
+    if (moeda === 'PC') return valor / 100;
+    return 0;
+};
+
+// Somas dinâmicas de peso e ouro gasto.
+const somaSelecionados = (lista, ids, campo, fn) => {
+    let total = 0;
+    for (const id of ids) {
+        const item = (lista || []).find(x => x.id === id);
+        if (!item) continue;
+        total += fn ? fn(item) : (Number(item[campo]) || 0);
+    }
+    return total;
+};
+
+const pesoArmas       = computed(() => somaSelecionados(props.armas,       form.armas,       'peso'));
+const pesoArmaduras   = computed(() => somaSelecionados(props.armaduras,   form.armaduras,   'peso'));
+const pesoEquipamentos = computed(() => somaSelecionados(props.equipamentos, form.equipamentos, 'peso'));
+
+const pesoTotal = computed(() => Math.round((pesoArmas.value + pesoArmaduras.value + pesoEquipamentos.value) * 100) / 100);
+
+const ouroGasto = computed(() =>
+    Math.round((
+        somaSelecionados(props.armas,       form.armas,       null, i => parsePreco(i.preco)) +
+        somaSelecionados(props.armaduras,   form.armaduras,   null, i => parsePreco(i.preco)) +
+        somaSelecionados(props.equipamentos, form.equipamentos, null, i => parsePreco(i.preco))
+    ) * 100) / 100
+);
+
+const ouroRestante = computed(() => Math.round((ouroInicial.value - ouroGasto.value) * 100) / 100);
+
+const nivelCarga = computed(() => {
+    const p = pesoTotal.value;
+    if (p > cargaPesadaMax.value) return { label: 'Excedida', cor: 'bg-blood-700 text-parchment-100' };
+    if (p > cargaMediaMax.value)  return { label: 'Pesada',   cor: 'bg-orange-700 text-parchment-100' };
+    if (p > cargaLeveMax.value)   return { label: 'Média',    cor: 'bg-yellow-600 text-parchment-100' };
+    return { label: 'Leve', cor: 'bg-green-700 text-parchment-100' };
+});
+
+const armasPorCategoria = computed(() => {
+    const grupos = {};
+    (props.armas || []).forEach(a => {
+        const chave = `${a.categoria || 'Outras'} — ${a.uso || 'Corpo-a-corpo'}`;
+        (grupos[chave] = grupos[chave] || []).push(a);
+    });
+    return grupos;
+});
+
+const armadurasPorTipo = computed(() => {
+    const grupos = {};
+    (props.armaduras || []).forEach(a => {
+        const chave = a.tipo || 'Outras';
+        (grupos[chave] = grupos[chave] || []).push(a);
+    });
+    return grupos;
+});
+
+const toggleItem = (arr, id) => {
+    const idx = arr.indexOf(id);
+    if (idx >= 0) arr.splice(idx, 1);
+    else arr.push(id);
+};
+
 // ---------- Navegação ----------
 const podeAvancar = computed(() => {
     if (step.value === 1) return !!form.nome_personagem?.trim() && !!form.nome_jogador?.trim() && !!form.tendencia_id;
@@ -602,13 +710,14 @@ const podeAvancar = computed(() => {
     }
     if (step.value === 5) return pontosPericiaRestantes.value >= 0;
     if (step.value === 6) return form.talentos.length === slotsTalento.value;
+    if (step.value === 7) return ouroRestante.value >= 0 && pesoTotal.value <= cargaPesadaMax.value;
     return true;
 });
 
 const nextStep = () => { if (step.value < TOTAL_STEPS && podeAvancar.value) step.value++; };
 const prevStep = () => { if (step.value > 1) step.value--; };
 
-// Auto-computa campos derivados antes de submeter: PV, BBA e resistências-base a partir da classe/CON.
+// Auto-computa campos derivados antes de submeter: PV, BBA, resistências-base, ouro final e CA/deslocamento da armadura equipada.
 const submit = () => {
     const c = selectedClasse.value;
     if (c) {
@@ -620,6 +729,12 @@ const submit = () => {
         form.reflexos_base = c.resistencia_reflexos === 'boa' ? 2 : 0;
         form.vontade_base = c.resistencia_vontade === 'boa' ? 2 : 0;
     }
+    // Ouro restante após compras vira o dinheiro em pl (peças de ouro) e frações em pp (prata).
+    const restante = Math.max(0, ouroRestante.value);
+    form.ouro = restante;
+    form.dinheiro_pl = Math.floor(restante);
+    form.dinheiro_pp = Math.floor((restante - Math.floor(restante)) * 10 + 0.001);
+    form.dinheiro_pc = 0;
     form.post(route('fichas.store'));
 };
 </script>
@@ -1097,6 +1212,124 @@ const submit = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- ============ PASSO 7: ARSENAL & PROVISÕES ============ -->
+                <div v-if="step === 7" class="space-y-6">
+                    <div v-if="!selectedClasse" class="p-6 bg-blood-700/10 border border-blood-700 rounded-lg font-lora italic text-center">
+                        Escolha uma classe no passo 3 para calcular seu ouro inicial.
+                    </div>
+
+                    <template v-else>
+                        <!-- Painel de status: ouro e carga -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                            <div class="p-3 rounded-lg bg-parchment-200 border border-parchment-400">
+                                <p class="text-[10px] uppercase font-cinzel opacity-60">Ouro Inicial</p>
+                                <p class="text-xl font-cinzel font-bold text-parchment-900">{{ ouroInicial }} PO</p>
+                            </div>
+                            <div class="p-3 rounded-lg bg-parchment-200 border border-parchment-400">
+                                <p class="text-[10px] uppercase font-cinzel opacity-60">Gasto</p>
+                                <p class="text-xl font-cinzel font-bold text-parchment-900">{{ ouroGasto }} PO</p>
+                            </div>
+                            <div :class="['p-3 rounded-lg border font-cinzel font-bold',
+                                ouroRestante < 0 ? 'bg-blood-700 text-parchment-100 border-blood-800' : 'bg-green-700/10 border-green-700/40']">
+                                <p class="text-[10px] uppercase opacity-60">Restante</p>
+                                <p class="text-xl">{{ ouroRestante }} PO</p>
+                            </div>
+                            <div :class="['p-3 rounded-lg border font-cinzel', nivelCarga.cor]">
+                                <p class="text-[10px] uppercase opacity-70">Carga</p>
+                                <p class="text-xl font-bold">{{ pesoTotal }} kg</p>
+                                <p class="text-[10px] opacity-70">{{ nivelCarga.label }}</p>
+                            </div>
+                        </div>
+
+                        <!-- Capacidade de carga por FOR -->
+                        <div class="p-3 bg-parchment-100 border border-parchment-300 rounded-lg text-xs font-lora text-parchment-800 flex flex-wrap gap-4 justify-center items-center">
+                            <span class="font-cinzel font-bold uppercase text-[10px] opacity-70">Capacidade (FOR {{ forcaFinal }})</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-green-700/60 inline-block"></span> <strong>Leve</strong>: até {{ cargaLeveMax }} kg</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-yellow-600/60 inline-block"></span> <strong>Média</strong>: até {{ cargaMediaMax }} kg</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-orange-700/60 inline-block"></span> <strong>Pesada</strong>: até {{ cargaPesadaMax }} kg</span>
+                            <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-blood-700/60 inline-block"></span> <strong>Máximo</strong>: {{ cargaPesadaMax }} kg</span>
+                        </div>
+
+                        <!-- ARMADURAS -->
+                        <section>
+                            <h3 class="font-cinzel font-bold uppercase text-sm text-blood-800 mb-3 border-b-2 border-parchment-400 pb-1">
+                                <i class="fa-solid fa-shield-halved mr-2"></i> Armaduras
+                            </h3>
+                            <div v-for="(lista, tipo) in armadurasPorTipo" :key="tipo" class="mb-4">
+                                <p class="font-cinzel font-bold uppercase text-xs text-parchment-700 mb-2">{{ tipo }}</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    <button v-for="a in lista" :key="a.id" type="button"
+                                        @click="toggleItem(form.armaduras, a.id)"
+                                        :class="['text-left p-3 rounded-lg border-2 transition text-sm',
+                                            form.armaduras.includes(a.id) ? 'border-blood-700 bg-blood-700/10 shadow' : 'border-parchment-300 hover:border-parchment-600']">
+                                        <div class="flex items-start justify-between gap-2">
+                                            <p class="font-cinzel font-bold">{{ a.nome }}</p>
+                                            <i v-if="form.armaduras.includes(a.id)" class="fa-solid fa-check text-green-700 text-xs mt-0.5"></i>
+                                        </div>
+                                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[11px] font-lora">
+                                            <span><strong>CA</strong>: +{{ a.bonus_ca }}</span>
+                                            <span v-if="a.destreza_max !== null"><strong>DES máx</strong>: +{{ a.destreza_max }}</span>
+                                            <span><strong>Peso</strong>: {{ a.peso }} kg</span>
+                                            <span class="text-blood-700"><strong>Preço</strong>: {{ a.preco }}</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ARMAS -->
+                        <section>
+                            <h3 class="font-cinzel font-bold uppercase text-sm text-blood-800 mb-3 border-b-2 border-parchment-400 pb-1">
+                                <i class="fa-solid fa-khanda mr-2"></i> Armas
+                            </h3>
+                            <div v-for="(lista, categoria) in armasPorCategoria" :key="categoria" class="mb-4">
+                                <p class="font-cinzel font-bold uppercase text-xs text-parchment-700 mb-2">{{ categoria }}</p>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                    <button v-for="w in lista" :key="w.id" type="button"
+                                        @click="toggleItem(form.armas, w.id)"
+                                        :class="['text-left p-3 rounded-lg border-2 transition text-sm',
+                                            form.armas.includes(w.id) ? 'border-blood-700 bg-blood-700/10 shadow' : 'border-parchment-300 hover:border-parchment-600']">
+                                        <div class="flex items-start justify-between gap-2">
+                                            <p class="font-cinzel font-bold">{{ w.nome }}</p>
+                                            <i v-if="form.armas.includes(w.id)" class="fa-solid fa-check text-green-700 text-xs mt-0.5"></i>
+                                        </div>
+                                        <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[11px] font-lora">
+                                            <span><strong>Dano</strong>: {{ w.dano_m }}</span>
+                                            <span><strong>Crit</strong>: {{ w.critico }}</span>
+                                            <span v-if="w.alcance && w.alcance !== '-'"><strong>Alcance</strong>: {{ w.alcance }}</span>
+                                            <span><strong>Peso</strong>: {{ w.peso }} kg</span>
+                                            <span class="text-blood-700"><strong>Preço</strong>: {{ w.preco }}</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- EQUIPAMENTOS -->
+                        <section>
+                            <h3 class="font-cinzel font-bold uppercase text-sm text-blood-800 mb-3 border-b-2 border-parchment-400 pb-1">
+                                <i class="fa-solid fa-bag-shopping mr-2"></i> Equipamentos
+                            </h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                <button v-for="e in equipamentos" :key="e.id" type="button"
+                                    @click="toggleItem(form.equipamentos, e.id)"
+                                    :class="['text-left p-3 rounded-lg border-2 transition text-sm',
+                                        form.equipamentos.includes(e.id) ? 'border-blood-700 bg-blood-700/10 shadow' : 'border-parchment-300 hover:border-parchment-600']">
+                                    <div class="flex items-start justify-between gap-2">
+                                        <p class="font-cinzel font-bold">{{ e.nome }}</p>
+                                        <i v-if="form.equipamentos.includes(e.id)" class="fa-solid fa-check text-green-700 text-xs mt-0.5"></i>
+                                    </div>
+                                    <p v-if="e.descricao" class="text-[11px] italic opacity-70 mt-0.5">{{ e.descricao }}</p>
+                                    <div class="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[11px] font-lora">
+                                        <span><strong>Peso</strong>: {{ e.peso }} kg</span>
+                                        <span class="text-blood-700"><strong>Preço</strong>: {{ e.preco }}</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </section>
+                    </template>
                 </div>
 
                 <!-- Erros globais (aparecem se o submit falhar na validação do servidor) -->
