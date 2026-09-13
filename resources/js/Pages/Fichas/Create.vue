@@ -267,21 +267,73 @@ watch([atributosRaw, modRacialPor], () => {
     });
 }, { deep: true, immediate: true });
 
-// ---------- Perícias: orçamento ----------
+// ---------- Perícias: orçamento e regras de classe (PHB 3.5) ----------
 const modInt = computed(() => getMod(form.inteligencia_base));
 const pontosPericiaMax = computed(() => {
     const base = Number(selectedClasse.value?.pontos_pericia ?? 2);
     const total = Math.max(1, base + modInt.value) * 4;
     return total + (isHumano.value ? 4 : 0);
 });
+
+// Perícias de classe por classe (PHB 3.5). Perícias FORA dessa lista são "fora da classe": custam 2 pts por graduação e o teto de graduações é metade.
+const periciasClassePor = {
+    'barbaro':     ['Adestrar Animais', 'Cavalgar', 'Escalar', 'Intimidar', 'Natação', 'Ofícios', 'Ouvir', 'Saltar', 'Sobrevivência'],
+    'bardo':       ['Avaliação', 'Equilíbrio', 'Blefar', 'Escalar', 'Concentração', 'Ofícios', 'Decifrar Escrita', 'Diplomacia', 'Disfarce', 'Arte da Fuga', 'Obter Informação', 'Esconder-se', 'Saltar', 'Conhecimento (Arcano)', 'Conhecimento (Arquitetura e Engenharia)', 'Conhecimento (Dungeon)', 'Conhecimento (Geografia)', 'Conhecimento (História)', 'Conhecimento (Local)', 'Conhecimento (Natureza)', 'Conhecimento (Nobreza e Realeza)', 'Conhecimento (Os Planos)', 'Conhecimento (Religião)', 'Ouvir', 'Furtividade', 'Atuação', 'Profissão', 'Sentir Motivação', 'Prestidigitação', 'Identificar Magia', 'Natação', 'Acrobacia', 'Usar Instrumento Mágico'],
+    'clerigo':     ['Concentração', 'Ofícios', 'Diplomacia', 'Cura', 'Conhecimento (Arcano)', 'Conhecimento (História)', 'Conhecimento (Religião)', 'Conhecimento (Os Planos)', 'Profissão', 'Identificar Magia'],
+    'druida':      ['Concentração', 'Ofícios', 'Diplomacia', 'Adestrar Animais', 'Cura', 'Conhecimento (Natureza)', 'Ouvir', 'Profissão', 'Cavalgar', 'Identificar Magia', 'Observar', 'Sobrevivência', 'Natação'],
+    'feiticeiro':  ['Blefar', 'Concentração', 'Ofícios', 'Conhecimento (Arcano)', 'Profissão', 'Identificar Magia'],
+    'guerreiro':   ['Escalar', 'Ofícios', 'Adestrar Animais', 'Intimidar', 'Saltar', 'Cavalgar', 'Natação'],
+    'ladino':      ['Avaliação', 'Equilíbrio', 'Blefar', 'Escalar', 'Ofícios', 'Decifrar Escrita', 'Diplomacia', 'Operar Mecanismo', 'Disfarce', 'Arte da Fuga', 'Falsificação', 'Obter Informação', 'Esconder-se', 'Intimidar', 'Saltar', 'Conhecimento (Local)', 'Ouvir', 'Furtividade', 'Abrir Fechaduras', 'Atuação', 'Profissão', 'Procurar', 'Sentir Motivação', 'Prestidigitação', 'Observar', 'Natação', 'Acrobacia', 'Usar Instrumento Mágico', 'Usar Cordas'],
+    'mago':        ['Concentração', 'Ofícios', 'Decifrar Escrita', 'Conhecimento (Arcano)', 'Conhecimento (Arquitetura e Engenharia)', 'Conhecimento (Dungeon)', 'Conhecimento (Geografia)', 'Conhecimento (História)', 'Conhecimento (Local)', 'Conhecimento (Natureza)', 'Conhecimento (Nobreza e Realeza)', 'Conhecimento (Os Planos)', 'Conhecimento (Religião)', 'Profissão', 'Identificar Magia'],
+    'monge':       ['Equilíbrio', 'Escalar', 'Concentração', 'Ofícios', 'Diplomacia', 'Arte da Fuga', 'Esconder-se', 'Saltar', 'Conhecimento (Arcano)', 'Conhecimento (Religião)', 'Ouvir', 'Furtividade', 'Atuação', 'Profissão', 'Sentir Motivação', 'Observar', 'Natação', 'Acrobacia'],
+    'paladino':    ['Concentração', 'Ofícios', 'Diplomacia', 'Adestrar Animais', 'Cura', 'Conhecimento (Nobreza e Realeza)', 'Conhecimento (Religião)', 'Profissão', 'Cavalgar', 'Sentir Motivação'],
+    'patrulheiro': ['Escalar', 'Concentração', 'Ofícios', 'Adestrar Animais', 'Cura', 'Esconder-se', 'Saltar', 'Conhecimento (Dungeon)', 'Conhecimento (Geografia)', 'Conhecimento (Natureza)', 'Ouvir', 'Furtividade', 'Profissão', 'Cavalgar', 'Procurar', 'Observar', 'Sobrevivência', 'Natação', 'Usar Cordas'],
+};
+
+// Perícias trained-only que exigem ao menos uma graduação na classe: ao ler estritamente, o PHB 3.5 não proíbe fora-da-classe, mas para desincentivar aplicaremos exclusividade em algumas.
+// Convenção: uma perícia é "exclusiva" quando aparece em apenas UMA lista de classe.
+const periciasExclusivas = computed(() => {
+    const contagem = {};
+    Object.values(periciasClassePor).forEach(lista => lista.forEach(nome => { contagem[nome] = (contagem[nome] || 0) + 1; }));
+    const exclusivas = {};
+    Object.entries(periciasClassePor).forEach(([classe, lista]) => {
+        lista.forEach(nome => { if (contagem[nome] === 1) exclusivas[nome] = classe; });
+    });
+    return exclusivas;
+});
+
+const classeSlug = computed(() => slugify(selectedClasse.value?.nome));
+
+const ehPericiaDeClasse = (pericia) => {
+    const slug = classeSlug.value;
+    if (!slug) return false;
+    const lista = periciasClassePor[slug];
+    return Array.isArray(lista) && lista.includes(pericia.nome);
+};
+
+const ehPericiaProibida = (pericia) => {
+    const dono = periciasExclusivas.value[pericia.nome];
+    return !!dono && dono !== classeSlug.value;
+};
+
+const custoDaPericia = (pericia) => ehPericiaDeClasse(pericia) ? 1 : 2;
+
+const nivelPersonagem = computed(() => Number(form.nivel || 1));
+
+const maxGraduacoesDaPericia = (pericia) => {
+    if (ehPericiaProibida(pericia)) return 0;
+    const teto = nivelPersonagem.value + 3;
+    return ehPericiaDeClasse(pericia) ? teto : Math.floor(teto / 2);
+};
+
+const graduacoesDaPericia = (pericia) => Number(form.pericias[pericia.id] || 0);
+
+const pontosGastosDaPericia = (pericia) => graduacoesDaPericia(pericia) * custoDaPericia(pericia);
+
 const pontosPericiaGastos = computed(() =>
-    Object.values(form.pericias).reduce((s, v) => s + (Number(v) || 0), 0)
+    (props.pericias || []).reduce((soma, p) => soma + pontosGastosDaPericia(p), 0)
 );
 const pontosPericiaRestantes = computed(() => pontosPericiaMax.value - pontosPericiaGastos.value);
-
-// Nível 1: máximo de graduações = nível do personagem + 3 = 4 (para perícias de classe).
-// Perícias de fora da classe custam 2 pts/rank, mas o TETO em pts gastos ainda é 4 (equivalente a 2 ranks).
-const MAX_GRADUACOES_POR_PERICIA = computed(() => Number(form.nivel || 1) + 3);
 
 // Bônus raciais por perícia (PHB 3.5). Alguns são condicionais no PHB (ex.: anão em pedra/metal); aqui aplicamos o valor cheio como aproximação da ficha.
 const bonusRacialPorPericia = {
@@ -316,16 +368,47 @@ const modDaHabilidade = (pericia) => {
     return getMod(form[chave + '_base']);
 };
 
-const graduacoesDaPericia = (pericia) => Number(form.pericias[pericia.id] || 0);
-
 const totalDaPericia = (pericia) => graduacoesDaPericia(pericia) + modDaHabilidade(pericia) + bonusRacialDaPericia(pericia);
 
 const setPericia = (id, val) => {
-    const teto = MAX_GRADUACOES_POR_PERICIA.value;
-    const n = Math.max(0, Math.min(teto, Math.floor(Number(val) || 0)));
-    if (n === 0) delete form.pericias[id];
-    else form.pericias[id] = n;
+    const pericia = (props.pericias || []).find(p => p.id === id);
+    if (!pericia) return;
+    if (ehPericiaProibida(pericia)) {
+        delete form.pericias[id];
+        return;
+    }
+    const teto = maxGraduacoesDaPericia(pericia);
+    const nSolicitado = Math.max(0, Math.min(teto, Math.floor(Number(val) || 0)));
+
+    // Impede exceder o orçamento total considerando o custo dessa perícia.
+    const atual = graduacoesDaPericia(pericia);
+    const custo = custoDaPericia(pericia);
+    const delta = nSolicitado - atual;
+    if (delta > 0 && delta * custo > pontosPericiaRestantes.value) {
+        // Limita ao máximo permitido pelo saldo.
+        const cabe = Math.floor(pontosPericiaRestantes.value / custo);
+        const permitido = atual + Math.max(0, cabe);
+        if (permitido === 0) delete form.pericias[id];
+        else form.pericias[id] = permitido;
+        return;
+    }
+
+    if (nSolicitado === 0) delete form.pericias[id];
+    else form.pericias[id] = nSolicitado;
 };
+
+// Ao mudar de classe, reclampa graduações para respeitar novo teto (perícias que caíram para fora da classe têm teto menor; proibidas zeram).
+watch(classeSlug, () => {
+    Object.keys(form.pericias).forEach(id => {
+        const p = (props.pericias || []).find(x => x.id === Number(id));
+        if (!p) return;
+        const teto = maxGraduacoesDaPericia(p);
+        if (form.pericias[id] > teto) {
+            if (teto === 0) delete form.pericias[id];
+            else form.pericias[id] = teto;
+        }
+    });
+});
 
 // ---------- Talentos ----------
 const slotsTalento = computed(() => 1 + (isHumano.value ? 1 : 0));
@@ -651,7 +734,7 @@ const submit = () => form.post(route('fichas.store'));
                         Escolha uma classe no passo 2 para calcular seus pontos de perícia.
                     </div>
 
-                    <div v-else class="grid grid-cols-1 md:grid-cols-4 gap-4 text-center">
+                    <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                         <div class="p-4 rounded-lg bg-parchment-200 border border-parchment-400">
                             <p class="text-[10px] uppercase font-cinzel opacity-60">Total (nível {{ form.nivel }})</p>
                             <p class="text-2xl font-cinzel font-bold">{{ pontosPericiaMax }}</p>
@@ -665,19 +748,30 @@ const submit = () => form.post(route('fichas.store'));
                             <p class="text-[10px] uppercase opacity-60">Restantes</p>
                             <p class="text-2xl">{{ pontosPericiaRestantes }}</p>
                         </div>
-                        <div class="p-4 rounded-lg bg-parchment-200 border border-parchment-400">
-                            <p class="text-[10px] uppercase font-cinzel opacity-60">Máx / Perícia</p>
-                            <p class="text-2xl font-cinzel font-bold">{{ MAX_GRADUACOES_POR_PERICIA }}</p>
-                        </div>
+                    </div>
+
+                    <div v-if="selectedClasse" class="p-3 bg-parchment-100 border border-parchment-300 rounded-lg text-xs font-lora text-parchment-800 flex flex-wrap gap-4 justify-center items-center">
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-green-700/60 inline-block"></span> <strong>De classe</strong>: 1 pt/grad, teto {{ nivelPersonagem + 3 }}</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-parchment-500 inline-block"></span> <strong>Fora da classe</strong>: 2 pts/grad, teto {{ Math.floor((nivelPersonagem + 3) / 2) }}</span>
+                        <span class="flex items-center gap-1"><span class="w-3 h-3 rounded bg-blood-700/60 inline-block"></span> <strong>Exclusiva de outra classe</strong>: proibida</span>
                     </div>
 
                     <div class="max-h-[500px] overflow-y-auto pr-2 grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div v-for="p in pericias" :key="p.id"
-                            class="flex items-center gap-3 p-3 bg-parchment-200/50 rounded-lg border border-parchment-300">
-                            <!-- Nome + habilidade chave -->
+                            :class="['flex items-center gap-3 p-3 rounded-lg border',
+                                ehPericiaProibida(p) ? 'bg-blood-700/10 border-blood-700/40 opacity-60'
+                                : ehPericiaDeClasse(p) ? 'bg-green-700/10 border-green-700/40'
+                                : 'bg-parchment-200/50 border-parchment-300']">
+
+                            <!-- Nome + habilidade chave + selo de status -->
                             <div class="flex-1 min-w-0">
                                 <p class="font-lora text-sm font-bold truncate">{{ p.nome }}</p>
-                                <p class="text-[10px] uppercase opacity-50 font-cinzel">{{ p.habilidade_chave }}</p>
+                                <div class="flex items-center gap-2">
+                                    <p class="text-[10px] uppercase opacity-50 font-cinzel">{{ p.habilidade_chave }}</p>
+                                    <span v-if="ehPericiaProibida(p)" class="text-[9px] font-cinzel font-bold uppercase bg-blood-700 text-white px-1.5 py-0.5 rounded">Proibida</span>
+                                    <span v-else-if="ehPericiaDeClasse(p)" class="text-[9px] font-cinzel font-bold uppercase bg-green-700 text-white px-1.5 py-0.5 rounded">Classe · ×1</span>
+                                    <span v-else class="text-[9px] font-cinzel font-bold uppercase bg-parchment-500 text-parchment-100 px-1.5 py-0.5 rounded">Fora · ×2</span>
+                                </div>
                             </div>
 
                             <!-- Modificador da habilidade chave -->
@@ -699,11 +793,13 @@ const submit = () => form.post(route('fichas.store'));
                             <!-- Graduações (input) -->
                             <div class="text-center">
                                 <p class="text-[9px] font-cinzel opacity-60 uppercase leading-none">Grad</p>
-                                <input type="number" min="0" :max="MAX_GRADUACOES_POR_PERICIA"
+                                <input type="number" min="0" :max="maxGraduacoesDaPericia(p)"
                                     :value="form.pericias[p.id] ?? 0"
                                     @input="e => setPericia(p.id, e.target.value)"
-                                    :title="`Máximo ${MAX_GRADUACOES_POR_PERICIA} no nível ${form.nivel}`"
-                                    class="w-12 bg-parchment-100 border border-parchment-400 rounded px-1 py-0.5 text-center font-bold text-sm">
+                                    :disabled="ehPericiaProibida(p)"
+                                    :title="ehPericiaProibida(p) ? 'Exclusiva de outra classe' : `Máx ${maxGraduacoesDaPericia(p)} · custa ${custoDaPericia(p)} pt(s)/grad`"
+                                    class="w-12 bg-parchment-100 border border-parchment-400 rounded px-1 py-0.5 text-center font-bold text-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                                <p class="text-[9px] font-cinzel opacity-50 leading-none mt-0.5">/{{ maxGraduacoesDaPericia(p) }}</p>
                             </div>
 
                             <!-- Total -->
