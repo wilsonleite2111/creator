@@ -1,5 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
+import DiceBowl from '@/Components/DiceBowl.vue';
 import { Head, useForm } from '@inertiajs/vue3';
 import { ref, computed, watch, nextTick, onMounted } from 'vue';
 
@@ -12,22 +13,31 @@ const props = defineProps({
     talentos: Array,
     armas: Array,
     armaduras: Array,
-    equipamentos: Array
+    equipamentos: Array,
+    magias: { type: Array, default: () => [] }
 });
 
-const TOTAL_STEPS = 8;
 const step = ref(1);
 
-const stepLabels = [
-    'Sistema & Nível',
-    'Linhagem',
-    'Vocação',
-    'Ritual dos Atributos',
-    'Perícias',
-    'Talentos & Dons',
-    'Arsenal & Provisões',
-    'Identidade & Aparência'
-];
+// Lista dinâmica de passos — magias só aparece para classes conjuradoras.
+const passosDisponiveis = computed(() => {
+    const passos = [
+        { id: 'sistema',    label: 'Sistema & Nível' },
+        { id: 'raca',       label: 'Linhagem' },
+        { id: 'classe',     label: 'Vocação' },
+        { id: 'atributos',  label: 'Ritual dos Atributos' },
+        { id: 'pericias',   label: 'Perícias' },
+        { id: 'talentos',   label: 'Talentos & Dons' },
+        { id: 'arsenal',    label: 'Arsenal & Provisões' },
+    ];
+    if (usaMagia.value) passos.push({ id: 'magias', label: 'Grimório' });
+    passos.push({ id: 'identidade', label: 'Identidade & Aparência' });
+    return passos;
+});
+
+const TOTAL_STEPS = computed(() => passosDisponiveis.value.length);
+const stepLabels = computed(() => passosDisponiveis.value.map(p => p.label));
+const passoAtualId = computed(() => passosDisponiveis.value[step.value - 1]?.id);
 
 const SISTEMAS = [
     { id: '3.5', label: 'D&D 3.5', disponivel: true },
@@ -88,6 +98,7 @@ const form = useForm({
     metodo_atributos: 'point_buy',
     pericias: {},
     talentos: [],
+    magias: [],        // [magia_id, magia_id, ...]
     armas: {},         // { id: quantidade }
     armaduras: {},     // { id: quantidade }
     equipamentos: {},  // { id: quantidade }
@@ -211,23 +222,49 @@ const roll3d6 = () => roll(6) + roll(6) + roll(6);
 const poolRolagens = ref([]);      // valores rolados (aguardando distribuição)
 const atribsAtribuidos = ref({});  // { forca: idx_do_pool, ... }
 const rolando = ref(false);
+const bowlRef = ref(null);
+const rolagemAtual = ref(null);    // { indice, total, dados, soma } — mostrado durante animação
 
-const rolarPool = () => {
+// O servidor decide os valores (random_int no PHP); o Vue apenas encena a física.
+// Assim ninguém consegue trapacear "rolando" no console do navegador.
+const rolarPool = async () => {
+    if (rolando.value) return;
     rolando.value = true;
-    const gerador = form.metodo_atributos === 'four_d6' ? roll4d6DropLowest : roll3d6;
-    const qtd = form.metodo_atributos === 'four_d6' ? 6 : 12;
-    let n = 0;
-    poolRolagens.value = Array(qtd).fill(0);
+    poolRolagens.value = [];
     atribsAtribuidos.value = {};
     attributes.forEach(a => { atributosRaw.value[a.key] = 10; });
-    const t = setInterval(() => {
-        poolRolagens.value = poolRolagens.value.map(() => gerador());
-        n++;
-        if (n >= 6) {
-            clearInterval(t);
-            rolando.value = false;
-        }
-    }, 60);
+
+    let rolagens = [];
+    try {
+        const resp = await window.axios.post(route('rolagens.atributos'), {
+            metodo: form.metodo_atributos,
+        });
+        rolagens = resp.data.rolagens || [];
+    } catch (e) {
+        console.error('Falha ao consultar servidor para rolagem:', e);
+        const gerador = form.metodo_atributos === 'four_d6' ? roll4d6DropLowest : roll3d6;
+        const qtd = form.metodo_atributos === 'four_d6' ? 6 : 12;
+        poolRolagens.value = Array.from({ length: qtd }, () => gerador());
+        rolando.value = false;
+        return;
+    }
+
+    // Aguarda um tick para garantir que o <DiceBowl> montou depois do v-if.
+    await nextTick();
+
+    if (!bowlRef.value) {
+        poolRolagens.value = rolagens.map(r => r.soma);
+        rolando.value = false;
+        return;
+    }
+
+    for (let i = 0; i < rolagens.length; i++) {
+        rolagemAtual.value = { indice: i + 1, total: rolagens.length, ...rolagens[i] };
+        await bowlRef.value.roll(rolagens[i].dados);
+        poolRolagens.value.push(rolagens[i].soma);
+    }
+    rolagemAtual.value = null;
+    rolando.value = false;
 };
 
 const atribuirValor = (attrKey, poolIdx) => {
@@ -461,6 +498,195 @@ const nivelDeConjurador = computed(() => {
     if (['paladino', 'patrulheiro'].includes(slug)) return nv >= 4 ? nv - 3 : 0;
     return 0;
 });
+
+// Se a classe é conjuradora (com magias disponíveis no nível atual).
+const usaMagia = computed(() => nivelDeConjurador.value > 0);
+
+// Círculo máximo por classe/nível conforme PHB 3.5.
+const circuloMaximo = computed(() => {
+    const slug = classeSlug.value;
+    const nv = nivelPersonagem.value;
+    if (['clerigo', 'druida', 'mago', 'feiticeiro'].includes(slug)) {
+        // Full casters: 1° no 1°; +1 círculo a cada 2 níveis; 9° no 17°.
+        if (nv >= 17) return 9;
+        return Math.min(9, Math.max(0, Math.floor((nv - 1) / 2) + 1));
+    }
+    if (slug === 'bardo') {
+        // Bardo: 1° no 2°, 2° no 4°, ..., 6° no 16°.
+        if (nv < 2) return 0;
+        return Math.min(6, Math.floor((nv - 2) / 3) + 1);
+    }
+    if (['paladino', 'patrulheiro'].includes(slug)) {
+        // Paladino/Patrulheiro: 1° no 4°, 2° no 8°, 3° no 11°, 4° no 14°.
+        if (nv >= 14) return 4;
+        if (nv >= 11) return 3;
+        if (nv >= 8)  return 2;
+        if (nv >= 4)  return 1;
+        return 0;
+    }
+    return 0;
+});
+
+// Quantidade sugerida de magias/truques a selecionar no 1° nível.
+// Referência PHB 3.5 (Table 3-X spells known/prepared).
+const magiasSugeridasPorCirculo = computed(() => {
+    const slug = classeSlug.value;
+    const nv = nivelPersonagem.value;
+    const modInt = getMod(form.inteligencia_base);
+    const modSab = getMod(form.sabedoria_base);
+    const modCar = getMod(form.carisma_base);
+    const sugerido = {};
+
+    if (nv < 1 || !slug) return sugerido;
+
+    if (slug === 'feiticeiro') {
+        // Nível 1: 4 truques + 2 magias 1° conhecidas.
+        sugerido[0] = 4;
+        if (nv >= 1) sugerido[1] = 2;
+    } else if (slug === 'bardo') {
+        // Nível 1: 2 truques conhecidas; 1° só começa no 2°.
+        sugerido[0] = 2;
+        if (nv >= 2) sugerido[1] = 2;
+    } else if (slug === 'mago') {
+        // Grimório inicial: todos os truques + 3 magias 1° + INT-mod extras (mínimo 0).
+        sugerido[0] = props.magias.filter(m => magiaDeClasseNoCirculo(m, 'mago', 0)).length;
+        sugerido[1] = 3 + Math.max(0, modInt);
+    } else if (slug === 'clerigo') {
+        // Prepara diariamente: 3 truques + 1 magia 1° base (+SAB bonus se >= 12).
+        sugerido[0] = 3;
+        sugerido[1] = 1 + Math.max(0, modSab >= 1 ? 1 : 0);
+    } else if (slug === 'druida') {
+        // Similar ao clérigo.
+        sugerido[0] = 3;
+        sugerido[1] = 1 + Math.max(0, modSab >= 1 ? 1 : 0);
+    } else if (slug === 'paladino' && nv >= 4) {
+        sugerido[1] = 0 + Math.max(0, modSab >= 1 ? 1 : 0);
+    } else if (slug === 'patrulheiro' && nv >= 4) {
+        sugerido[1] = 0 + Math.max(0, modSab >= 1 ? 1 : 0);
+    }
+
+    return sugerido;
+});
+
+// Verifica se a magia é da classe no círculo especificado.
+const magiaDeClasseNoCirculo = (magia, classeSlugAlvo, circulo) => {
+    if (!magia.classes) return false;
+    const classe = props.classes.find(c => slugify(c.nome) === classeSlugAlvo);
+    if (!classe) return false;
+    return magia.classes.some(mc => mc.id === classe.id && (mc.pivot?.nivel ?? 0) === circulo);
+};
+
+// Magias disponíveis para a classe/nível, agrupadas por círculo.
+const magiasDisponiveisPorCirculo = computed(() => {
+    const grupos = {};
+    if (!usaMagia.value) return grupos;
+    const slug = classeSlug.value;
+    const max = circuloMaximo.value;
+    const classe = props.classes.find(c => c.id === form.classe_id);
+    if (!classe) return grupos;
+
+    for (const magia of (props.magias || [])) {
+        const associacao = (magia.classes || []).find(c => c.id === classe.id);
+        if (!associacao) continue;
+        const nivel = associacao.pivot?.nivel ?? -1;
+        if (nivel < 0 || nivel > max) continue;
+        (grupos[nivel] = grupos[nivel] || []).push(magia);
+    }
+    // Ordenar por nome dentro de cada círculo
+    Object.keys(grupos).forEach(k => grupos[k].sort((a, b) => a.nome.localeCompare(b.nome)));
+    return grupos;
+});
+
+const circulosDisponiveis = computed(() =>
+    Object.keys(magiasDisponiveisPorCirculo.value).map(Number).sort((a, b) => a - b)
+);
+
+const magiasSelecionadasPorCirculo = computed(() => {
+    const contagem = {};
+    for (const id of form.magias) {
+        const m = (props.magias || []).find(x => x.id === id);
+        if (!m) continue;
+        const classe = props.classes.find(c => c.id === form.classe_id);
+        if (!classe) continue;
+        const assoc = (m.classes || []).find(c => c.id === classe.id);
+        if (!assoc) continue;
+        const nv = assoc.pivot?.nivel ?? -1;
+        contagem[nv] = (contagem[nv] || 0) + 1;
+    }
+    return contagem;
+});
+
+// Retorna o círculo (nível) da magia para a classe atualmente selecionada.
+const circuloDaMagia = (magia) => {
+    const classe = props.classes.find(c => c.id === form.classe_id);
+    if (!classe) return -1;
+    const assoc = (magia.classes || []).find(c => c.id === classe.id);
+    return assoc?.pivot?.nivel ?? -1;
+};
+
+const toggleMagia = (id) => {
+    const idx = form.magias.indexOf(id);
+    if (idx >= 0) {
+        form.magias.splice(idx, 1);
+        return;
+    }
+    const magia = (props.magias || []).find(m => m.id === id);
+    if (!magia) return;
+    const circulo = circuloDaMagia(magia);
+    const limite = magiasSugeridasPorCirculo.value[circulo];
+    if (limite !== undefined && (magiasSelecionadasPorCirculo.value[circulo] || 0) >= limite) return;
+    form.magias.push(id);
+};
+
+// Grimório inicial do Mago (PHB 3.5, pág. 55): todas as magias de nível 0 disponíveis
+// + as 3 primeiras magias de 1° círculo (ordem alfabética). O bônus por INT vira teto
+// adicional; o jogador escolhe manualmente as extras dentro do limite.
+const aplicarGrimorioInicialMago = () => {
+    const truques = (magiasDisponiveisPorCirculo.value[0] || []).map(m => m.id);
+    const primeiroCirculo = (magiasDisponiveisPorCirculo.value[1] || []).slice(0, 3).map(m => m.id);
+    form.magias.splice(0, form.magias.length, ...truques, ...primeiroCirculo);
+};
+
+// Sub-aba (círculo) ativa no passo de magias.
+const circuloAtivo = ref(0);
+// Linha expandida com a descrição completa da magia.
+const magiaExpandida = ref(null);
+
+// Ao mudar de classe, zera magias (as listas são diferentes) e volta o círculo ativo pra base.
+// Se a nova classe for Mago, aplica o grimório inicial do PHB.
+watch(classeSlug, (slug) => {
+    form.magias.splice(0, form.magias.length);
+    circuloAtivo.value = 0;
+    if (slug === 'mago') {
+        nextTick(() => aplicarGrimorioInicialMago());
+    }
+});
+
+// Quando o limite diminuir (por queda de INT ou de nível), remove as últimas magias
+// adicionadas no círculo violado até respeitar o teto.
+watch(magiasSugeridasPorCirculo, (limites) => {
+    for (const [circuloStr, limite] of Object.entries(limites)) {
+        const circulo = Number(circuloStr);
+        let excedente = (magiasSelecionadasPorCirculo.value[circulo] || 0) - limite;
+        if (excedente <= 0) continue;
+        for (let i = form.magias.length - 1; i >= 0 && excedente > 0; i--) {
+            const m = (props.magias || []).find(x => x.id === form.magias[i]);
+            if (m && circuloDaMagia(m) === circulo) {
+                form.magias.splice(i, 1);
+                excedente--;
+            }
+        }
+    }
+}, { deep: true });
+
+// Se o círculo ativo não estiver mais na lista disponível, ajusta para o primeiro disponível.
+watch(circulosDisponiveis, (lista) => {
+    if (lista.length && !lista.includes(circuloAtivo.value)) {
+        circuloAtivo.value = lista[0];
+    }
+});
+
+const rotuloCirculo = (n) => (n === 0 ? 'Truques' : `${n}º círculo`);
 
 const talentosPorNome = computed(() => {
     const map = {};
@@ -812,17 +1038,19 @@ const contarPorCategoriaEquip = (cat) => {
 
 // ---------- Navegação ----------
 const podeAvancar = computed(() => {
-    if (step.value === 1) return !!form.versao && Number(form.nivel) >= 1 && Number(form.nivel) <= 20;
-    if (step.value === 2) return !!form.raca_id;
-    if (step.value === 3) return !!form.classe_id;
-    if (step.value === 4) {
+    const id = passoAtualId.value;
+    if (id === 'sistema')    return !!form.versao && Number(form.nivel) >= 1 && Number(form.nivel) <= 20;
+    if (id === 'raca')       return !!form.raca_id;
+    if (id === 'classe')     return !!form.classe_id;
+    if (id === 'atributos') {
         if (form.metodo_atributos === 'point_buy') return pontosRestantes.value === 0;
         return poolRolagens.value.length > 0 && attributes.every(a => atribsAtribuidos.value[a.key] !== undefined);
     }
-    if (step.value === 5) return pontosPericiaRestantes.value >= 0;
-    if (step.value === 6) return form.talentos.length === slotsTalento.value;
-    if (step.value === 7) return ouroRestante.value >= 0 && pesoTotal.value <= cargaPesadaMax.value;
-    if (step.value === 8) return !!form.nome_personagem?.trim() && !!form.nome_jogador?.trim() && !!form.tendencia_id;
+    if (id === 'pericias')   return pontosPericiaRestantes.value >= 0;
+    if (id === 'talentos')   return form.talentos.length === slotsTalento.value;
+    if (id === 'arsenal')    return ouroRestante.value >= 0 && pesoTotal.value <= cargaPesadaMax.value;
+    if (id === 'magias')     return true; // seleção de magias é opcional
+    if (id === 'identidade') return !!form.nome_personagem?.trim() && !!form.nome_jogador?.trim() && !!form.tendencia_id;
     return true;
 });
 
@@ -909,7 +1137,7 @@ const scrollTopo = () => {
     }
 };
 const nextStep = () => {
-    if (step.value < TOTAL_STEPS && podeAvancar.value) {
+    if (step.value < TOTAL_STEPS.value && podeAvancar.value) {
         step.value++;
         scrollTopo();
     }
@@ -963,7 +1191,7 @@ const restaurarRascunho = () => {
         if (snapshot.subAbaArmaduras) subAbaArmaduras.value = snapshot.subAbaArmaduras;
         if (snapshot.subAbaArmas) subAbaArmas.value = snapshot.subAbaArmas;
         if (snapshot.subAbaEquipamentos) subAbaEquipamentos.value = snapshot.subAbaEquipamentos;
-        if (snapshot.step) step.value = Math.min(TOTAL_STEPS, Math.max(1, Number(snapshot.step)));
+        if (snapshot.step) step.value = Math.min(TOTAL_STEPS.value, Math.max(1, Number(snapshot.step)));
         rascunhoRestaurado.value = true;
         return true;
     } catch (e) {
@@ -1043,7 +1271,7 @@ const submit = () => {
             <form @submit.prevent="submit" class="glass-parchment p-8 md:p-12 rounded-2xl shadow-2xl border border-parchment-400 relative overflow-hidden">
 
                 <!-- ============ PASSO 1: SISTEMA & NÍVEL ============ -->
-                <div v-if="step === 1" class="space-y-6">
+                <div v-if="passoAtualId === 'sistema'" class="space-y-6">
                     <div class="text-center max-w-2xl mx-auto mb-4">
                         <p class="font-lora italic text-parchment-800">
                             Escolha o sistema de regras e o nível de experiência inicial do seu herói. O sistema determina as fórmulas de dados, magias e habilidades disponíveis; o nível define quão veterano será o personagem no início da jornada.
@@ -1080,7 +1308,7 @@ const submit = () => {
                 </div>
 
                 <!-- ============ PASSO 2: RAÇA ============ -->
-                <div v-if="step === 2" class="space-y-8">
+                <div v-if="passoAtualId === 'raca'" class="space-y-8">
                     <div>
                         <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Raça</label>
                         <select v-model="form.raca_id"
@@ -1152,7 +1380,7 @@ const submit = () => {
                 </div>
 
                 <!-- ============ PASSO 3: CLASSE ============ -->
-                <div v-if="step === 3" class="space-y-8">
+                <div v-if="passoAtualId === 'classe'" class="space-y-8">
                     <div>
                         <label class="block font-cinzel font-bold text-parchment-900 mb-2 uppercase text-sm">Classe</label>
                         <select v-model="form.classe_id"
@@ -1228,7 +1456,7 @@ const submit = () => {
                 </div>
 
                 <!-- ============ PASSO 4: ATRIBUTOS ============ -->
-                <div v-if="step === 4" class="space-y-8">
+                <div v-if="passoAtualId === 'atributos'" class="space-y-8">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                         <button type="button" @click="form.metodo_atributos = 'four_d6'"
                             :class="['p-4 rounded-xl border-2 transition text-left', form.metodo_atributos === 'four_d6' ? 'border-blood-700 bg-blood-700/10 shadow-lg' : 'border-parchment-400 hover:border-parchment-600']">
@@ -1253,8 +1481,24 @@ const submit = () => {
                             <button type="button" @click="rolarPool" :disabled="rolando"
                                 class="px-10 py-4 bg-black text-white rounded-full font-cinzel font-bold shadow-2xl hover:bg-blood-900 transition border-2 border-blood-700 disabled:opacity-50">
                                 <i class="fa-solid" :class="rolando ? 'fa-sync fa-spin' : 'fa-dice-d20'"></i>
-                                {{ poolRolagens.length ? 'Rolar Novamente' : 'Realizar Ritual' }}
+                                {{ rolando ? 'Rolando...' : (poolRolagens.length ? 'Rolar Novamente' : 'Realizar Ritual') }}
                             </button>
+                        </div>
+
+                        <div class="max-w-2xl mx-auto">
+                            <DiceBowl ref="bowlRef" :max-dice="4" :sounds="['/audio/dice-roll.mp3']" />
+                            <div v-if="rolagemAtual" class="text-center mt-2 font-cinzel text-parchment-900 text-sm tracking-widest uppercase">
+                                Rolagem {{ rolagemAtual.indice }} de {{ rolagemAtual.total }}
+                                <span v-if="form.metodo_atributos === 'four_d6'" class="text-parchment-700 normal-case tracking-normal italic">
+                                    · 4d6, descarta o menor
+                                </span>
+                                <span v-else class="text-parchment-700 normal-case tracking-normal italic">
+                                    · 3d6
+                                </span>
+                            </div>
+                            <div v-else-if="!poolRolagens.length" class="text-center mt-2 font-lora italic text-parchment-700 text-sm">
+                                Clique em <strong>Realizar Ritual</strong> para invocar os dados. O servidor sela os resultados — a tigela apenas encena.
+                            </div>
                         </div>
 
                         <div v-if="poolRolagens.length" class="bg-parchment-200/40 rounded-xl p-6 border-2 border-parchment-400">
@@ -1338,7 +1582,7 @@ const submit = () => {
                 </div>
 
                 <!-- ============ PASSO 5: PERÍCIAS ============ -->
-                <div v-if="step === 5" class="space-y-6">
+                <div v-if="passoAtualId === 'pericias'" class="space-y-6">
                     <div v-if="!selectedClasse" class="p-6 bg-blood-700/10 border border-blood-700 rounded-lg font-lora italic text-center">
                         Escolha uma classe no passo 2 para calcular seus pontos de perícia.
                     </div>
@@ -1423,7 +1667,7 @@ const submit = () => {
                 </div>
 
                 <!-- ============ PASSO 6: TALENTOS ============ -->
-                <div v-if="step === 6" class="space-y-6">
+                <div v-if="passoAtualId === 'talentos'" class="space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
                         <div class="p-4 rounded-lg bg-parchment-200 border border-parchment-400">
                             <p class="text-[10px] uppercase font-cinzel opacity-60">Slots</p>
@@ -1481,7 +1725,7 @@ const submit = () => {
                 </div>
 
                 <!-- ============ PASSO 7: ARSENAL & PROVISÕES ============ -->
-                <div v-if="step === 7" class="space-y-6">
+                <div v-if="passoAtualId === 'arsenal'" class="space-y-6">
                     <div v-if="!selectedClasse" class="p-6 bg-blood-700/10 border border-blood-700 rounded-lg font-lora italic text-center">
                         Escolha uma classe no passo 3 para calcular seu ouro inicial.
                     </div>
@@ -1712,8 +1956,106 @@ const submit = () => {
                     </template>
                 </div>
 
+                <!-- ============ PASSO 8 (opcional): GRIMÓRIO ============ -->
+                <div v-if="passoAtualId === 'magias'" class="space-y-6">
+                    <div class="text-center max-w-2xl mx-auto mb-4">
+                        <p class="font-lora italic text-parchment-800">
+                            O grimório é a alma do conjurador. Escolha as magias que seu herói dominará no início da jornada — as listas variam por classe e círculo, e as sugestões seguem o Livro do Jogador 3.5.
+                        </p>
+                    </div>
+
+                    <!-- Painel de sugestões por círculo -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
+                        <div v-for="c in circulosDisponiveis" :key="'sug-' + c" class="p-3 rounded-lg bg-parchment-200 border border-parchment-400">
+                            <p class="text-[10px] uppercase font-cinzel opacity-60">{{ rotuloCirculo(c) }}</p>
+                            <p class="text-xl font-cinzel font-bold text-parchment-900">
+                                {{ magiasSelecionadasPorCirculo[c] || 0 }}<span v-if="magiasSugeridasPorCirculo[c] !== undefined" class="text-parchment-600 text-base"> / {{ magiasSugeridasPorCirculo[c] }}</span>
+                            </p>
+                            <p v-if="magiasSugeridasPorCirculo[c] === undefined" class="text-[10px] font-cinzel opacity-50">livre</p>
+                            <p v-else class="text-[10px] font-cinzel opacity-50">máximo</p>
+                        </div>
+                    </div>
+
+                    <div v-if="!circulosDisponiveis.length" class="p-6 bg-blood-700/10 border border-blood-700 rounded-lg font-lora italic text-center">
+                        Nenhum círculo de magia disponível para esta classe no nível atual.
+                    </div>
+
+                    <div v-else class="flex gap-6">
+                        <!-- Sub-abas laterais: círculos -->
+                        <div class="flex-shrink-0 w-40">
+                            <p class="font-cinzel text-xs font-bold uppercase tracking-widest text-parchment-700 mb-2 px-1">Círculo</p>
+                            <div class="flex flex-col gap-1">
+                                <button v-for="c in circulosDisponiveis" :key="'aba-' + c" type="button"
+                                    @click="circuloAtivo = c"
+                                    :class="['text-left px-3 py-2 rounded-lg font-cinzel text-xs font-bold transition-all border',
+                                        circuloAtivo === c ? 'bg-blood-700 text-parchment-100 border-blood-800 shadow-md' : 'bg-parchment-200/60 text-parchment-800 border-parchment-300 hover:bg-parchment-300']">
+                                    {{ rotuloCirculo(c) }}
+                                    <span v-if="magiasSelecionadasPorCirculo[c]" class="ml-1 text-[10px] bg-parchment-100/80 text-blood-800 rounded-full px-1.5">{{ magiasSelecionadasPorCirculo[c] }}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tabela de magias do círculo ativo -->
+                        <div class="flex-1 min-w-0">
+                            <v-card class="glass-parchment border border-parchment-400" elevation="2">
+                                <v-table class="bg-transparent" density="compact">
+                                    <thead class="bg-parchment-300/80 font-cinzel">
+                                        <tr>
+                                            <th class="text-left text-xs">Magia</th>
+                                            <th class="text-left text-xs">Escola</th>
+                                            <th class="text-left text-xs">Comp.</th>
+                                            <th class="text-left text-xs">Execução</th>
+                                            <th class="text-left text-xs">Alcance</th>
+                                            <th class="text-left text-xs">Duração</th>
+                                            <th class="text-left text-xs">Resist.</th>
+                                            <th class="text-center text-xs">Aprender</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="font-lora">
+                                        <template v-for="m in (magiasDisponiveisPorCirculo[circuloAtivo] || [])" :key="m.id">
+                                            <tr :class="['hover:bg-parchment-200/60 transition-colors cursor-pointer', form.magias.includes(m.id) ? 'bg-blood-700/5' : '']"
+                                                @click="magiaExpandida === m.id ? magiaExpandida = null : magiaExpandida = m.id">
+                                                <td class="font-bold font-cinzel text-sm">
+                                                    <i :class="['fa-solid mr-1 text-parchment-600 text-[10px]', magiaExpandida === m.id ? 'fa-chevron-down' : 'fa-chevron-right']"></i>
+                                                    {{ m.nome }}
+                                                </td>
+                                                <td class="text-xs italic">{{ m.escola }}</td>
+                                                <td class="text-xs">{{ m.componentes }}</td>
+                                                <td class="text-xs">{{ m.tempo_execucao }}</td>
+                                                <td class="text-xs">{{ m.alcance }}</td>
+                                                <td class="text-xs">{{ m.duracao }}</td>
+                                                <td class="text-xs">{{ m.teste_resistencia || '—' }}</td>
+                                                <td class="text-center" @click.stop>
+                                                    <input type="checkbox" :checked="form.magias.includes(m.id)"
+                                                        :disabled="!form.magias.includes(m.id) && magiasSugeridasPorCirculo[circuloAtivo] !== undefined && (magiasSelecionadasPorCirculo[circuloAtivo] || 0) >= magiasSugeridasPorCirculo[circuloAtivo]"
+                                                        @change="toggleMagia(m.id)"
+                                                        class="w-4 h-4 accent-blood-700 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed">
+                                                </td>
+                                            </tr>
+                                            <tr v-if="magiaExpandida === m.id" class="bg-parchment-100/60">
+                                                <td colspan="8" class="p-4 text-xs font-lora text-parchment-800 border-t border-parchment-300">
+                                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 mb-3">
+                                                        <p><strong class="font-cinzel uppercase text-[10px] text-parchment-700">Alvo/Área:</strong> {{ m.alvo_area_efeito || '—' }}</p>
+                                                        <p><strong class="font-cinzel uppercase text-[10px] text-parchment-700">Resist. à Magia:</strong> {{ m.resistencia_magia || '—' }}</p>
+                                                    </div>
+                                                    <p class="whitespace-pre-line leading-relaxed">{{ m.descricao }}</p>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                        <tr v-if="!(magiasDisponiveisPorCirculo[circuloAtivo] || []).length">
+                                            <td colspan="8" class="text-center text-parchment-600 italic p-6 font-lora">
+                                                Nenhuma magia cadastrada para este círculo.
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </v-table>
+                            </v-card>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ============ PASSO 8: IDENTIDADE & APARÊNCIA ============ -->
-                <div v-if="step === 8" class="space-y-6">
+                <div v-if="passoAtualId === 'identidade'" class="space-y-6">
                     <div class="text-center max-w-2xl mx-auto mb-4">
                         <p class="font-lora italic text-parchment-800">
                             Dê nome e rosto à sua alma forjada. O nome do herói ecoará em canções de taverna, a tendência guiará suas escolhas e a aparência será lembrada por aqueles que cruzarem seu caminho.

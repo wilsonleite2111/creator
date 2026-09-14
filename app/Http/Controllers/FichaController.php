@@ -12,6 +12,7 @@ use App\Models\Arma;
 use App\Models\Armadura;
 use App\Models\Equipamento;
 use App\Models\Talento;
+use App\Services\FichaPdfService;
 use Illuminate\Http\Request;
 
 use Inertia\Inertia;
@@ -43,6 +44,10 @@ class FichaController extends Controller
         $armas = Arma::all();
         $armaduras = Armadura::all();
         $equipamentos = Equipamento::all();
+        $magias = \App\Models\Magia::with(['classes' => fn ($q) => $q->select('classes.id')])
+            ->where('versao', '3.5')
+            ->orderBy('nome')
+            ->get();
 
         return inertia('Fichas/Create', [
             'racas' => $racas,
@@ -54,6 +59,7 @@ class FichaController extends Controller
             'armas' => $armas,
             'armaduras' => $armaduras,
             'equipamentos' => $equipamentos,
+            'magias' => $magias,
         ]);
     }
 
@@ -118,6 +124,8 @@ class FichaController extends Controller
             'xp_proximo' => 'required|integer',
             'talentos' => 'nullable|array',
             'talentos.*' => 'integer|exists:talentos,id',
+            'magias' => 'nullable|array',
+            'magias.*' => 'integer|exists:magias,id',
         ]);
 
         $validated['pv_atual'] = $validated['pv_max'];
@@ -134,6 +142,14 @@ class FichaController extends Controller
 
         if ($request->filled('talentos')) {
             $ficha->talentos()->sync($request->input('talentos', []));
+        }
+
+        if ($request->has('magias')) {
+            $sync = [];
+            foreach ($request->magias as $magia_id) {
+                $sync[$magia_id] = ['preparada' => false];
+            }
+            $ficha->magias()->sync($sync);
         }
 
         // Armas: aceita mapa { id: quantidade } (novo formato) ou array de IDs (compatibilidade).
@@ -221,9 +237,20 @@ class FichaController extends Controller
      */
     public function show(Ficha $ficha)
     {
-        $ficha->load(['raca', 'classe', 'tendencia', 'pericias']);
+        $ficha->load([
+            'raca',
+            'classe',
+            'tendencia',
+            'pericias',
+            'armas',
+            'armaduras',
+            'equipamentos',
+            'talentos',
+            'magias.classes',
+        ]);
+
         return inertia('Fichas/Show', [
-            'ficha' => $ficha
+            'ficha' => $ficha,
         ]);
     }
 
@@ -232,17 +259,28 @@ class FichaController extends Controller
      */
     public function edit(Ficha $ficha)
     {
-        $racas = Raca::where('versao', '3.5')->get();
-        $classes = Classe::where('versao', '3.5')->get();
+        $racas = Raca::where('versao', '3.5')->orderBy('nome')->get();
+        $classes = Classe::where('versao', '3.5')->orderBy('nome')->get();
         $tendencias = Tendencia::all();
-        $divindades = Divindade::where('versao', '3.5')->get();
-        $pericias = Pericia::where('versao', '3.5')->get();
-        $armas = Arma::all();
-        $armaduras = Armadura::all();
-        $equipamentos = Equipamento::all();
+        $divindades = Divindade::where('versao', '3.5')->orderBy('nome')->get();
+        $pericias = Pericia::where('versao', '3.5')->orderBy('nome')->get();
+        $talentos = Talento::where('versao', '3.5')->orderBy('tipo')->orderBy('nome')->get();
+        $armas = Arma::orderBy('nome')->get();
+        $armaduras = Armadura::orderBy('nome')->get();
+        $equipamentos = Equipamento::orderBy('nome')->get();
+        $magias = \App\Models\Magia::with(['classes' => fn ($q) => $q->select('classes.id')])
+            ->where('versao', '3.5')
+            ->orderBy('nome')
+            ->get();
 
-        // Carregar relações para o Vue
-        $ficha->load(['pericias', 'armas', 'armaduras', 'equipamentos']);
+        $ficha->load([
+            'pericias',
+            'armas',
+            'armaduras',
+            'equipamentos',
+            'talentos',
+            'magias',
+        ]);
 
         return Inertia::render('Fichas/Edit', [
             'ficha' => $ficha,
@@ -251,9 +289,11 @@ class FichaController extends Controller
             'tendencias' => $tendencias,
             'divindades' => $divindades,
             'pericias' => $pericias,
+            'talentos' => $talentos,
             'armas' => $armas,
             'armaduras' => $armaduras,
             'equipamentos' => $equipamentos,
+            'magias' => $magias,
         ]);
     }
 
@@ -316,34 +356,66 @@ class FichaController extends Controller
             'dinheiro_pp' => 'required|integer',
             'dinheiro_pl' => 'required|integer',
             'xp_proximo' => 'required|integer',
+            'talentos' => 'nullable|array',
+            'talentos.*' => 'integer|exists:talentos,id',
+            'magias' => 'nullable|array',
+            'magias.*' => 'integer|exists:magias,id',
         ]);
 
         $ficha->update($validated);
 
-        // Sincronizar Perícias
         $periciasData = [];
         if ($request->has('pericias')) {
             foreach ($request->pericias as $periciaId => $graduacoes) {
-                if ($graduacoes > 0) {
-                    $periciasData[$periciaId] = ['graduacoes' => $graduacoes];
+                if ((float) $graduacoes > 0) {
+                    $periciasData[$periciaId] = ['graduacoes' => (float) $graduacoes];
                 }
             }
         }
         $ficha->pericias()->sync($periciasData);
 
-        // Sincronizar Inventário
-        $ficha->armas()->sync($request->input('armas', []));
-        $ficha->armaduras()->sync($request->input('armaduras', []));
-        
-        $equipData = [];
-        if ($request->has('equipamentos')) {
-            foreach ($request->equipamentos as $itemId) {
-                $equipData[$itemId] = ['quantidade' => 1]; // Simplificado por enquanto
-            }
+        $ficha->talentos()->sync($request->input('talentos', []));
+
+        $magiasSync = [];
+        foreach ((array) $request->input('magias', []) as $magiaId) {
+            $magiasSync[(int) $magiaId] = ['preparada' => false];
         }
-        $ficha->equipamentos()->sync($equipData);
+        $ficha->magias()->sync($magiasSync);
+
+        $ficha->armas()->sync($this->buildInventorySync($request->input('armas'), ['esta_equipado' => true]));
+        $ficha->armaduras()->sync($this->buildInventorySync($request->input('armaduras'), ['esta_equipado' => true]));
+        $ficha->equipamentos()->sync($this->buildInventorySync($request->input('equipamentos'), []));
 
         return redirect()->route('fichas.show', $ficha)->with('success', 'Ficha atualizada com sucesso!');
+    }
+
+    private function buildInventorySync($input, array $extraPivot): array
+    {
+        if (!is_array($input) || empty($input)) {
+            return [];
+        }
+
+        $primeirasChaves = array_keys($input);
+        $ehMapa = !is_int($primeirasChaves[0] ?? null);
+        if (!$ehMapa) {
+            $ehMapa = collect($input)->every(fn ($v) => is_int($v) || (is_string($v) && ctype_digit($v)));
+        }
+
+        $sync = [];
+        if ($ehMapa) {
+            foreach ($input as $id => $qty) {
+                $q = (int) $qty;
+                if ($q > 0) {
+                    $sync[(int) $id] = array_merge(['quantidade' => $q], $extraPivot);
+                }
+            }
+        } else {
+            foreach ($input as $id) {
+                $sync[(int) $id] = array_merge(['quantidade' => 1], $extraPivot);
+            }
+        }
+
+        return $sync;
     }
 
     /**
@@ -353,5 +425,10 @@ class FichaController extends Controller
     {
         $ficha->delete();
         return redirect()->route('fichas.index')->with('success', 'Ficha removida do registro.');
+    }
+
+    public function pdf(Ficha $ficha, FichaPdfService $service)
+    {
+        return $service->generate($ficha);
     }
 }

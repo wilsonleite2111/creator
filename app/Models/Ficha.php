@@ -116,4 +116,11 @@ class Ficha extends Model
         return $this->belongsToMany(Talento::class, 'ficha_talento')
                     ->withTimestamps();
     }
+
+    public function magias()
+    {
+        return $this->belongsToMany(Magia::class, 'ficha_magia')
+                    ->withPivot(['preparada'])
+                    ->withTimestamps();
+    }
 }
