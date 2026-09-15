@@ -14,7 +14,8 @@ use App\Models\Equipamento;
 use App\Models\Talento;
 use App\Services\FichaPdfService;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class FichaController extends Controller
@@ -430,5 +431,62 @@ class FichaController extends Controller
     public function pdf(Ficha $ficha, FichaPdfService $service)
     {
         return $service->generate($ficha);
+    }
+
+    public function retrato(Ficha $ficha)
+    {
+        $racas = [
+            'Humano' => 'human', 'Anão' => 'dwarf', 'Elfo' => 'elf',
+            'Gnomo' => 'gnome', 'Halfling' => 'halfling', 'Meio-Elfo' => 'half-elf',
+            'Meio-Orc' => 'half-orc', 'Draconato' => 'dragonborn',
+        ];
+        $classes = [
+            'Bárbaro' => 'barbarian', 'Bardo' => 'bard', 'Clérigo' => 'cleric',
+            'Druida' => 'druid', 'Guerreiro' => 'fighter', 'Monge' => 'monk',
+            'Paladino' => 'paladin', 'Ranger' => 'ranger', 'Ladino' => 'rogue',
+            'Feiticeiro' => 'sorcerer', 'Mago' => 'wizard',
+        ];
+        $sexos = ['Masculino' => 'male', 'Feminino' => 'female', 'Outro' => 'non-binary'];
+
+        $ficha->load('raca', 'classe', 'armas');
+
+        $raca   = $racas[$ficha->raca?->nome ?? ''] ?? 'human';
+        $classe = $classes[$ficha->classe?->nome ?? ''] ?? 'adventurer';
+        $sexo   = $sexos[$ficha->sexo ?? ''] ?? 'person';
+        $altura = $ficha->altura ? "{$ficha->altura}m tall" : '';
+        $peso   = $ficha->peso ? "{$ficha->peso}kg" : '';
+        $olhos  = $ficha->olhos ? "{$ficha->olhos} eyes" : '';
+        $cabelos = $ficha->cabelos ? "{$ficha->cabelos} hair" : '';
+        $pele   = $ficha->pele ? "{$ficha->pele} skin" : '';
+
+        $armaName = $ficha->armas->firstWhere('pivot.esta_equipado', true)?->nome ?? null;
+
+        $parts = array_filter([
+            "Full body fantasy portrait of a {$raca} {$classe}, {$sexo}",
+            $altura, $peso, $olhos, $cabelos, $pele,
+            $armaName ? "wielding a {$armaName}" : null,
+            'standing pose, neutral background, original character design, painterly style, medieval fantasy art',
+        ]);
+
+        $prompt = implode(', ', $parts);
+        $url = 'https://image.pollinations.ai/prompt/' . rawurlencode($prompt)
+            . '?width=768&height=1152&model=flux&nologo=true';
+
+        // SSL cert unavailable on local Windows dev — verify only in production
+        $response = Http::withoutVerifying()->timeout(60)->get($url);
+
+        if (! $response->successful()) {
+            return redirect()->back()->with('error', 'Falha ao gerar o retrato. Tente novamente.');
+        }
+
+        $path = "retratos/{$ficha->id}.png";
+        Storage::disk('public')->put($path, $response->body());
+
+        $ficha->update([
+            'retrato_path'   => $path,
+            'retrato_prompt' => $prompt,
+        ]);
+
+        return redirect()->back()->with('success', 'Retrato forjado com sucesso!');
     }
 }

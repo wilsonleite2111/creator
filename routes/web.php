@@ -19,6 +19,7 @@ Route::resource('armas', App\Http\Controllers\ArmaController::class);
 Route::resource('armaduras', App\Http\Controllers\ArmaduraController::class);
 Route::resource('equipamentos', App\Http\Controllers\EquipamentoController::class);
 Route::get('fichas/{ficha}/pdf', [App\Http\Controllers\FichaController::class, 'pdf'])->name('fichas.pdf');
+Route::post('fichas/{ficha}/retrato', [App\Http\Controllers\FichaController::class, 'retrato'])->name('fichas.retrato');
 Route::resource('fichas', App\Http\Controllers\FichaController::class);
 
 Route::post('rolagens/atributos', [App\Http\Controllers\RolagemController::class, 'atributos'])->name('rolagens.atributos');

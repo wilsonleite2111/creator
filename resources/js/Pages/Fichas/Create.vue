@@ -166,10 +166,27 @@ const iconeFallback = (dict, nome, defaultIcon) => {
     return dict[slug] || defaultIcon;
 };
 
-const racaImagem   = computed(() => selectedRaca.value   ? `/images/racas/${slugify(selectedRaca.value.nome)}.png`   : null);
-const classeImagem = computed(() => selectedClasse.value ? `/images/classes/${slugify(selectedClasse.value.nome)}.png` : null);
+const racaImagensPasta = {
+    'anao':     encodeURI('/img/Raças base/Anão.jfif'),
+    'elfo':     encodeURI('/img/Raças base/Elfo.jfif'),
+    'gnomo':    encodeURI('/img/Raças base/Gnomo.jfif'),
+    'halfling': encodeURI('/img/Raças base/Halfling.jfif'),
+    'humano':   encodeURI('/img/Raças base/Humano.jfif'),
+    'meio-elfo': encodeURI('/img/Raças base/Meio-elfo.jfif'),
+    'meio-orc': encodeURI('/img/Raças base/Meio-orc.jfif'),
+};
+const racaImagem   = computed(() => selectedRaca.value ? (racaImagensPasta[slugify(selectedRaca.value.nome)] ?? null) : null);
+const classeImagem = computed(() => {
+    if (!selectedClasse.value) return null;
+    if (selectedRaca.value) {
+        const raca = selectedRaca.value.nome;
+        const classe = selectedClasse.value.nome;
+        return encodeURI(`/img/Raças base/${raca}Classes/${raca}${classe}.jfif`);
+    }
+    return null;
+});
 
-const racasComAvatar3D = ['humano'];
+const racasComAvatar3D = [];
 const classesComAvatar3D = [];
 const racaAvatar3DUrl = computed(() => {
     const slug = slugify(selectedRaca.value?.nome);
@@ -1339,11 +1356,8 @@ const submit = () => {
                                         </div>
                                     </template>
                                 </template>
-                                <div v-else class="absolute inset-0 flex items-center justify-center text-center px-6">
-                                    <div>
-                                        <i class="fa-solid fa-people-group text-8xl text-parchment-600/40 mb-4"></i>
-                                        <p class="font-cinzel text-parchment-700/60 italic">Escolha uma linhagem</p>
-                                    </div>
+                                <div v-else class="absolute inset-0">
+                                    <img :src="encodeURI('/img/Raças base/Todos.jfif')" alt="Escolha uma linhagem" class="w-full h-full object-cover" />
                                 </div>
                             </div>
                         </div>

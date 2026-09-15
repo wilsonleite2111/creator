@@ -65,7 +65,9 @@ class Ficha extends Model
         'notas_combate',
         'idiomas',
         'talentos_descricao',
-        'habilidades_especiais'
+        'habilidades_especiais',
+        'retrato_path',
+        'retrato_prompt',
     ];
 
     public function raca()

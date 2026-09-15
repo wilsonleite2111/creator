@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import AppLayout from '@/Layouts/AppLayout.vue';
 
 const props = defineProps({
@@ -183,6 +184,14 @@ const xpFaltando = computed(() =>
 );
 
 const openPrint = () => window.print();
+
+const forjandoRetrato = ref(false);
+const forjarRetrato = () => {
+    forjandoRetrato.value = true;
+    router.post(route('fichas.retrato', props.ficha.id), {}, {
+        onFinish: () => { forjandoRetrato.value = false; },
+    });
+};
 </script>
 
 <template>
@@ -220,6 +229,40 @@ const openPrint = () => window.print();
             </div>
 
             <div class="p-6 md:p-8 space-y-5">
+
+                <!-- Retrato -->
+                <section class="section-frame">
+                    <h2 class="section-title">Retrato</h2>
+                    <div class="p-4 flex flex-col md:flex-row items-center gap-6">
+                        <div class="flex-shrink-0">
+                            <img
+                                v-if="ficha.retrato_path"
+                                :src="'/storage/' + ficha.retrato_path"
+                                :alt="'Retrato de ' + ficha.nome_personagem"
+                                class="w-48 rounded border-2 border-parchment-900 shadow-lg"
+                            />
+                            <div v-else class="w-48 h-64 flex items-center justify-center border-2 border-dashed border-parchment-700 rounded text-parchment-700 font-lora text-sm italic text-center px-2">
+                                Nenhum retrato gerado
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-3">
+                            <p v-if="ficha.retrato_prompt" class="font-lora text-sm italic text-parchment-800 max-w-sm">
+                                {{ ficha.retrato_prompt }}
+                            </p>
+                            <button
+                                @click="forjarRetrato"
+                                :disabled="forjandoRetrato"
+                                class="bg-magic-purple text-white px-6 py-2 rounded font-cinzel shadow-md hover:opacity-90 transition disabled:opacity-50 disabled:cursor-wait w-fit"
+                            >
+                                <i class="fa-solid fa-wand-magic-sparkles mr-2"></i>
+                                {{ forjandoRetrato ? 'Forjando...' : (ficha.retrato_path ? 'Regenerar Retrato' : 'Forjar Retrato') }}
+                            </button>
+                            <p class="text-xs text-parchment-700 font-lora italic max-w-xs">
+                                Imagem gerada por IA a partir das características do personagem. Pode levar até 30 segundos.
+                            </p>
+                        </div>
+                    </div>
+                </section>
 
                 <!-- Identidade -->
                 <section class="section-frame">
