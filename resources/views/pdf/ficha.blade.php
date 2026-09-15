@@ -1,742 +1,833 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Ficha — {{ $ficha->nome_personagem }}</title>
-    <style>
-        @page { margin: 9mm 9mm 9mm 9mm; }
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'DejaVu Serif', serif;
-            font-size: 8.5pt;
-            color: #2a2118;
-            margin: 0;
-            background: #fbf7ec;
-        }
-        h1, h2, h3, h4 { margin: 0; padding: 0; }
-        table { width: 100%; border-collapse: collapse; }
-        td, th { padding: 2px 4px; vertical-align: top; }
+<meta charset="UTF-8">
+<title>Ficha — {{ $ficha->nome_personagem }}</title>
+<style>
+@page { margin: 6mm; size: A4 portrait; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'DejaVu Sans', sans-serif; font-size: 7pt; color: #000; background: #fff; }
+table { border-collapse: collapse; width: 100%; }
+td, th { vertical-align: top; padding: 0; }
+.page-break { page-break-before: always; }
 
-        .banner {
-            background: #1e2a3d;
-            color: #f5e6b8;
-            padding: 7px 12px;
-            margin-bottom: 5px;
-            border: 1px solid #8a6b1a;
-            border-left: 4px solid #8a6b1a;
-            border-right: 4px solid #8a6b1a;
-        }
-        .banner h1 {
-            font-size: 19pt;
-            letter-spacing: 4px;
-            font-variant: small-caps;
-            font-family: 'DejaVu Serif', serif;
-        }
-        .banner .subtitle {
-            font-size: 8.5pt;
-            margin-top: 2px;
-            letter-spacing: 2px;
-            color: #d9c78a;
-            font-variant: small-caps;
-        }
+/* Header sections — black background white text */
+.sec {
+    background: #000;
+    color: #fff;
+    font-weight: bold;
+    font-size: 6pt;
+    text-transform: uppercase;
+    padding: 1px 3px;
+    letter-spacing: 0.3px;
+}
+/* Tiny labels above fields */
+.lbl {
+    font-size: 4.5pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: block;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+}
+/* Field with underline for manual fill */
+.field {
+    border-bottom: 0.5pt solid #000;
+    min-height: 9pt;
+    display: block;
+}
+/* Standard data cell border */
+.brd { border: 0.7pt solid #000; }
+/* Large values */
+.val-lg { font-size: 12pt; font-weight: bold; text-align: center; }
+/* Medium values */
+.val-md { font-size: 9pt; font-weight: bold; text-align: center; }
+/* Normal table values */
+.val { font-size: 7pt; text-align: center; }
+/* Section inner padding */
+.inner { padding: 1px 2px; }
 
-        .section {
-            border: 0.6px solid #8a6b1a;
-            background: #fbf7ec;
-            margin-bottom: 4px;
-        }
-        .section-title {
-            background: #1e2a3d;
-            color: #f5e6b8;
-            font-size: 7.5pt;
-            font-weight: bold;
-            padding: 2px 7px;
-            letter-spacing: 2px;
-            font-variant: small-caps;
-            border-bottom: 1px solid #8a6b1a;
-        }
-        .section-body { padding: 5px 6px; }
+/* ---- PAGE 1 TITLE BLOCK ---- */
+.title-table td { border: 0.7pt solid #000; padding: 2px 3px; }
+.char-name { font-size: 10pt; font-weight: bold; }
+.dnd-brand { font-size: 9pt; font-weight: bold; text-align: right; font-variant: small-caps; letter-spacing: 1px; }
+.ficha-label { font-size: 7pt; font-weight: bold; text-align: right; text-transform: uppercase; letter-spacing: 1px; }
 
-        .kv td.k {
-            width: 22%;
-            color: #1e2a3d;
-            font-weight: bold;
-            font-size: 6.8pt;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .kv td.v {
-            border-bottom: 0.4px dotted #b8a672;
-            font-size: 8pt;
-        }
+/* ---- IDENTITY BAR ---- */
+.id-bar td { border: 0.7pt solid #000; padding: 1px 3px; text-align: center; min-width: 20pt; }
+.id-bar .id-val { font-size: 7pt; font-weight: bold; border-bottom: 0.5pt solid #000; min-height: 8pt; display: block; }
 
-        .attr-grid td {
-            border: 0.6px solid #8a6b1a;
-            text-align: center;
-            padding: 3px 2px;
-            width: 16.6%;
-        }
-        .attr-grid .attr-name {
-            background: #1e2a3d;
-            color: #f5e6b8;
-            font-weight: bold;
-            font-size: 7.5pt;
-            letter-spacing: 1.5px;
-        }
-        .attr-grid .attr-score {
-            font-size: 14pt;
-            font-weight: bold;
-            padding: 2px 0;
-            background: #fbf7ec;
-        }
-        .attr-grid .attr-mod {
-            font-size: 10pt;
-            color: #8a6b1a;
-            font-weight: bold;
-            background: #f2ead2;
-        }
+/* ---- ATTRIBUTES ---- */
+.attr-hdr { background: #000; color: #fff; font-size: 5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px 2px; border: 0.7pt solid #000; }
+.attr-name-cell { background: #000; color: #fff; text-align: center; border: 0.7pt solid #000; padding: 1px 2px; line-height: 1.2; }
+.attr-abbr { font-size: 9pt; font-weight: bold; display: block; }
+.attr-full { font-size: 4pt; display: block; }
+.attr-val { border: 0.7pt solid #000; text-align: center; font-size: 12pt; font-weight: bold; padding: 2px; }
+.attr-mod { border: 0.7pt solid #000; text-align: center; font-size: 8pt; font-weight: bold; padding: 1px; }
+.attr-temp { border: 0.7pt solid #000; min-width: 18pt; padding: 1px; }
 
-        .vitals td {
-            width: 25%;
-            text-align: center;
-            border: 0.6px solid #8a6b1a;
-            padding: 4px 2px;
-        }
-        .vitals .vital-label {
-            background: #1e2a3d;
-            color: #f5e6b8;
-            font-size: 7pt;
-            letter-spacing: 1.5px;
-            font-variant: small-caps;
-        }
-        .vitals .vital-value {
-            font-size: 14pt;
-            font-weight: bold;
-            color: #2a2118;
-        }
+/* ---- COMBAT BLOCK ---- */
+.combat-label { background: #000; color: #fff; font-size: 5pt; font-weight: bold; text-transform: uppercase; padding: 1px 3px; }
 
-        .breakdown {
-            width: 100%;
-            font-size: 6.5pt;
-            margin-top: 3px;
-        }
-        .breakdown td { border: 0.4px solid #b8a672; text-align: center; padding: 1px; }
-        .breakdown .lbl { background: #f2ead2; color: #1e2a3d; font-weight: bold; font-variant: small-caps; letter-spacing: 0.5px; }
+/* ---- SAVES ---- */
+.saves-hdr { background: #000; color: #fff; font-size: 5pt; font-weight: bold; text-transform: uppercase; text-align: center; border: 0.7pt solid #000; padding: 1px 2px; }
+.saves-row td { border: 0.7pt solid #000; text-align: center; padding: 1px 2px; font-size: 6.5pt; }
+.saves-name { text-align: left !important; font-size: 6pt; font-weight: bold; }
 
-        .ca-derived td {
-            border: 0.5px solid #8a6b1a;
-            padding: 3px 4px;
-            text-align: center;
-        }
-        .ca-derived .lbl {
-            background: #f2ead2;
-            font-size: 6.8pt;
-            font-variant: small-caps;
-            letter-spacing: 1px;
-            color: #1e2a3d;
-            font-weight: bold;
-        }
-        .ca-derived .val { font-size: 11pt; font-weight: bold; }
+/* ---- ATTACK BONUS ROWS ---- */
+.atk-row td { border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt; text-align: center; }
+.atk-lbl { background: #000; color: #fff; font-weight: bold; text-transform: uppercase; font-size: 5pt; text-align: left !important; padding: 1px 3px !important; }
+.atk-total { font-size: 9pt; font-weight: bold; }
 
-        .saves th, .saves td { border: 0.5px solid #8a6b1a; padding: 2px 3px; text-align: center; font-size: 7.5pt; }
-        .saves th { background: #1e2a3d; color: #f5e6b8; font-variant: small-caps; letter-spacing: 1px; }
-        .saves .save-total { font-size: 10pt; font-weight: bold; background: #f2ead2; color: #8a6b1a; }
+/* ---- WEAPONS ---- */
+.wpn-hdr td { background: #000; color: #fff; font-size: 5.5pt; font-weight: bold; text-transform: uppercase; padding: 1px 3px; border: 0.7pt solid #000; }
+.wpn-row td { border: 0.7pt solid #000; padding: 1px 2px; font-size: 6.5pt; }
+.wpn-lbl-row td { border: 0.7pt solid #000; padding: 0px 2px; }
 
-        .combat-line { display: table; width: 100%; border-collapse: collapse; margin-bottom: 2px; }
-        .combat-line > .cell { display: table-cell; border: 0.5px solid #8a6b1a; padding: 2px 4px; text-align: center; font-size: 7.5pt; }
-        .combat-line .cell.lbl { background: #1e2a3d; color: #f5e6b8; font-variant: small-caps; letter-spacing: 1px; font-weight: bold; width: 22%; text-align: left; padding-left: 8px; }
-        .combat-line .cell.tot { font-size: 10pt; font-weight: bold; width: 11.3%; background: #f2ead2; color: #8a6b1a; }
+/* ---- ARMOR ---- */
+.arm-row td { border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt; }
+.arm-lbl { font-size: 4.5pt; font-weight: bold; text-transform: uppercase; display: block; }
+.arm-val { font-size: 7pt; font-weight: bold; display: block; border-bottom: 0.5pt solid #000; min-height: 9pt; }
 
-        .items th, .items td { border: 0.5px solid #8a6b1a; padding: 2px 4px; font-size: 7.5pt; }
-        .items th { background: #1e2a3d; color: #f5e6b8; font-variant: small-caps; letter-spacing: 1px; }
-        .items tr:nth-child(even) td { background: #f9f2df; }
+/* ---- SKILLS ---- */
+.sk-hdr td { background: #000; color: #fff; font-size: 5pt; font-weight: bold; text-transform: uppercase; text-align: center; border: 0.7pt solid #000; padding: 1px 1px; }
+.sk-row td { border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; padding: 0px 1px; font-size: 6pt; vertical-align: middle; }
+.sk-row-filled { background: #f0f0f0; }
+.sk-name { text-align: left; }
+.sk-center { text-align: center; }
+.sk-underline { border-bottom: 0.4pt solid #000; min-height: 7pt; display: block; }
 
-        .skills th, .skills td { border: 0.4px solid #8a6b1a; padding: 1.6px 3px; font-size: 7pt; }
-        .skills th { background: #1e2a3d; color: #f5e6b8; font-variant: small-caps; letter-spacing: 1px; }
-        .skills td.num { text-align: center; }
-        .skills td.total { font-weight: bold; color: #8a6b1a; background: #f2ead2; }
-        .skills tr:nth-child(even) td { background: #f9f2df; }
-        .skills tr:nth-child(even) td.total { background: #eee1b8; }
+/* ---- PV BOX ---- */
+.pv-box { border: 1pt solid #000; text-align: center; padding: 2px; margin: 1px; }
+.pv-big { font-size: 14pt; font-weight: bold; }
 
-        .spell-level {
-            border: 0.4px solid #8a6b1a;
-            padding: 3px 5px;
-            margin-bottom: 2px;
-            background: #fbf7ec;
-        }
-        .spell-level .lv {
-            background: #4a2966;
-            color: #f5e6b8;
-            padding: 1px 6px;
-            font-variant: small-caps;
-            font-weight: bold;
-            letter-spacing: 1px;
-            font-size: 7.5pt;
-            display: inline-block;
-            margin-right: 4px;
-        }
-        .spell-level .count {
-            font-size: 6.5pt;
-            color: #6b5a3d;
-            font-style: italic;
-        }
-        .spell-level .list {
-            font-size: 7pt;
-            margin-top: 2px;
-            line-height: 1.3;
-        }
+/* ---- CA BLOCK ---- */
+.ca-main { font-size: 14pt; font-weight: bold; }
+.ca-eq { font-size: 7pt; font-weight: bold; }
+.ca-comp td { border: 0.7pt solid #000; text-align: center; padding: 1px; }
+.ca-comp .clbl { font-size: 4pt; font-weight: bold; text-transform: uppercase; display: block; }
+.ca-comp .cval { font-size: 7pt; font-weight: bold; display: block; }
 
-        .money-row td { border: 0.6px solid #8a6b1a; text-align: center; width: 33.3%; padding: 4px; }
-        .money-row .coin-label { background: #f2ead2; font-size: 7pt; font-variant: small-caps; letter-spacing: 1px; color: #1e2a3d; font-weight: bold; }
-        .money-row .coin-value { font-size: 12pt; font-weight: bold; color: #8a6b1a; }
+/* ---- XP ---- */
+.xp-row td { border: 0.7pt solid #000; text-align: center; padding: 2px 3px; }
 
-        .load-row td { border: 0.5px solid #8a6b1a; text-align: center; padding: 3px; font-size: 7.5pt; }
-        .load-row .load-label { background: #1e2a3d; color: #f5e6b8; font-variant: small-caps; letter-spacing: 1px; }
-        .load-row .load-val { font-weight: bold; color: #8a6b1a; }
+/* ---- TALENTS P2 ---- */
+.tal-name { font-size: 7pt; font-weight: bold; }
+.tal-tipo { font-size: 5.5pt; font-style: italic; }
+.tal-benef { font-size: 6pt; line-height: 1.2; }
+.tal-blank { border-bottom: 0.4pt solid #000; height: 9pt; }
 
-        .prose {
-            font-size: 7.5pt;
-            line-height: 1.35;
-            white-space: pre-wrap;
-        }
+/* ---- SPELLS P2 ---- */
+.spell-row td { border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt; }
+.spell-lv { font-size: 5.5pt; font-weight: bold; text-transform: uppercase; display: block; }
 
-        .card-talent {
-            border-left: 3px solid #8a6b1a;
-            padding: 2px 6px;
-            margin-bottom: 3px;
-            background: #f9f2df;
-        }
-        .card-talent .name {
-            color: #1e2a3d;
-            font-weight: bold;
-            font-size: 8pt;
-        }
-        .card-talent .tipo {
-            font-size: 6.5pt;
-            color: #8a6b1a;
-            font-style: italic;
-            font-variant: small-caps;
-            letter-spacing: 0.5px;
-        }
-        .card-talent .benef {
-            font-size: 7pt;
-            margin-top: 1px;
-            line-height: 1.25;
-        }
+/* ---- MONEY ---- */
+.money-cell { border: 0.7pt solid #000; text-align: center; padding: 2px; }
+.money-lbl { font-size: 4.5pt; font-weight: bold; text-transform: uppercase; display: block; }
+.money-val { font-size: 10pt; font-weight: bold; display: block; }
 
-        .card-deity {
-            background: #f2ead2;
-            border: 0.5px solid #8a6b1a;
-            padding: 5px 7px;
-        }
-        .card-deity .deity-name {
-            color: #1e2a3d;
-            font-weight: bold;
-            font-size: 10pt;
-            font-variant: small-caps;
-            letter-spacing: 1px;
-        }
-        .card-deity .deity-note {
-            font-size: 7pt;
-            font-style: italic;
-            color: #6b5a3d;
-        }
+/* ---- EQUIPMENT P2 ---- */
+.eq-row td { border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt; }
+.eq-blank { border-bottom: 0.4pt solid #000; height: 8pt; }
 
-        .page-break { page-break-before: always; }
-        .small { font-size: 7pt; }
-        .muted { color: #6b5a3d; font-style: italic; }
-        .center { text-align: center; }
-        .right { text-align: right; }
-        .bold { font-weight: bold; }
-        .gold { color: #8a6b1a; }
-        .ink { color: #1e2a3d; }
-        .h-fill { height: 100%; }
-    </style>
+/* Outer border around entire columns */
+.col-border { border: 0.7pt solid #000; }
+</style>
 </head>
 <body>
 
-<div class="banner">
-    <h1>{{ $ficha->nome_personagem ?: '—' }}</h1>
-    <div class="subtitle">
-        {{ optional($ficha->classe)->nome ?: '—' }}
-        &nbsp;Nível {{ $ficha->nivel }}
-        &nbsp;·&nbsp;
-        {{ optional($ficha->raca)->nome ?: '—' }}
-        &nbsp;·&nbsp;
-        {{ optional($ficha->tendencia)->nome ?: '—' }}
-        @if($ficha->divindade)
-            &nbsp;·&nbsp; Devoto(a) de {{ $ficha->divindade }}
-        @endif
-    </div>
-</div>
+{{-- ===== PÁGINA 1 ===== --}}
 
-<table cellspacing="0" cellpadding="0"><tr>
-<td style="width: 61%; padding-right: 4px;">
+{{-- TÍTULO --}}
+<table class="title-table" cellspacing="0" style="margin-bottom: 2px;">
+<tr>
+    <td style="width: 42%;">
+        <span class="lbl">Nome do Personagem</span>
+        <span class="char-name">{{ $ficha->nome_personagem ?: '—' }}</span>
+    </td>
+    <td style="width: 33%;">
+        <span class="lbl">Jogador</span>
+        <span style="font-size: 8pt; font-weight: bold;">{{ $ficha->nome_jogador ?: '—' }}</span>
+    </td>
+    <td style="width: 25%; text-align: right; vertical-align: middle;">
+        <span class="dnd-brand">Dungeons &amp; Dragons<sup style="font-size:5pt;">®</sup></span>
+    </td>
+</tr>
+<tr>
+    <td>
+        <span class="lbl">Classe</span>
+        <span style="font-size: 7.5pt; font-weight: bold;">{{ optional($ficha->classe)->nome ?: '—' }}</span>
+    </td>
+    <td>
+        <span class="lbl">Raça / Tendência / Divindade</span>
+        <span style="font-size: 7pt;">{{ optional($ficha->raca)->nome ?: '—' }} &nbsp;·&nbsp; {{ optional($ficha->tendencia)->nome ?: '—' }} &nbsp;·&nbsp; {{ $ficha->divindade ?: '—' }}</span>
+    </td>
+    <td style="text-align: right; vertical-align: bottom;">
+        <span class="ficha-label">Ficha de Personagem</span>
+    </td>
+</tr>
+</table>
 
-    <div class="section">
-        <div class="section-title">Identidade</div>
-        <div class="section-body">
-            <table class="kv">
-                <tr>
-                    <td class="k">Jogador</td><td class="v">{{ $ficha->nome_jogador ?: '—' }}</td>
-                    <td class="k">Tamanho</td><td class="v">{{ $ficha->tamanho ?: '—' }}</td>
-                </tr>
-                <tr>
-                    <td class="k">Idade</td><td class="v">{{ $ficha->idade ?: '—' }}</td>
-                    <td class="k">Sexo</td><td class="v">{{ $ficha->sexo ?: '—' }}</td>
-                </tr>
-                <tr>
-                    <td class="k">Altura</td><td class="v">{{ $ficha->altura ? $ficha->altura . ' m' : '—' }}</td>
-                    <td class="k">Peso</td><td class="v">{{ $ficha->peso ? $ficha->peso . ' kg' : '—' }}</td>
-                </tr>
-                <tr>
-                    <td class="k">Olhos</td><td class="v">{{ $ficha->olhos ?: '—' }}</td>
-                    <td class="k">Cabelos</td><td class="v">{{ $ficha->cabelos ?: '—' }}</td>
-                </tr>
-                <tr>
-                    <td class="k">Pele</td><td class="v">{{ $ficha->pele ?: '—' }}</td>
-                    <td class="k">Deslocamento</td><td class="v">{{ $ficha->deslocamento ?: '—' }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+{{-- BARRA DE IDENTIDADE --}}
+<table class="id-bar" cellspacing="0" style="margin-bottom: 2px;">
+<tr>
+    <td style="width: 8%;">
+        <span class="lbl">Nível</span>
+        <span class="id-val">{{ $ficha->nivel }}</span>
+    </td>
+    <td style="width: 10%;">
+        <span class="lbl">Tamanho</span>
+        <span class="id-val">{{ $ficha->tamanho ?: '—' }}</span>
+    </td>
+    <td style="width: 8%;">
+        <span class="lbl">Idade</span>
+        <span class="id-val">{{ $ficha->idade ?: '—' }}</span>
+    </td>
+    <td style="width: 8%;">
+        <span class="lbl">Sexo</span>
+        <span class="id-val">{{ $ficha->sexo ?: '—' }}</span>
+    </td>
+    <td style="width: 12%;">
+        <span class="lbl">Altura</span>
+        <span class="id-val">{{ $ficha->altura ? $ficha->altura . ' m' : '—' }}</span>
+    </td>
+    <td style="width: 10%;">
+        <span class="lbl">Peso</span>
+        <span class="id-val">{{ $ficha->peso ? $ficha->peso . ' kg' : '—' }}</span>
+    </td>
+    <td style="width: 15%;">
+        <span class="lbl">Olhos</span>
+        <span class="id-val">{{ $ficha->olhos ?: '—' }}</span>
+    </td>
+    <td style="width: 15%;">
+        <span class="lbl">Cabelo</span>
+        <span class="id-val">{{ $ficha->cabelos ?: '—' }}</span>
+    </td>
+    <td style="width: 14%;">
+        <span class="lbl">Pele</span>
+        <span class="id-val">{{ $ficha->pele ?: '—' }}</span>
+    </td>
+</tr>
+</table>
 
-    <div class="section">
-        <div class="section-title">Atributos</div>
-        <div class="section-body">
-            <table class="attr-grid" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="attr-name">FOR</td>
-                    <td class="attr-name">DES</td>
-                    <td class="attr-name">CON</td>
-                    <td class="attr-name">INT</td>
-                    <td class="attr-name">SAB</td>
-                    <td class="attr-name">CAR</td>
-                </tr>
-                <tr>
-                    <td class="attr-score">{{ $ficha->forca_base }}</td>
-                    <td class="attr-score">{{ $ficha->destreza_base }}</td>
-                    <td class="attr-score">{{ $ficha->constituicao_base }}</td>
-                    <td class="attr-score">{{ $ficha->inteligencia_base }}</td>
-                    <td class="attr-score">{{ $ficha->sabedoria_base }}</td>
-                    <td class="attr-score">{{ $ficha->carisma_base }}</td>
-                </tr>
-                <tr>
-                    <td class="attr-mod">{{ sprintf('%+d', $mods['forca']) }}</td>
-                    <td class="attr-mod">{{ sprintf('%+d', $mods['destreza']) }}</td>
-                    <td class="attr-mod">{{ sprintf('%+d', $mods['constituicao']) }}</td>
-                    <td class="attr-mod">{{ sprintf('%+d', $mods['inteligencia']) }}</td>
-                    <td class="attr-mod">{{ sprintf('%+d', $mods['sabedoria']) }}</td>
-                    <td class="attr-mod">{{ sprintf('%+d', $mods['carisma']) }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+{{-- CORPO PRINCIPAL: coluna esq 60% / col dir 40% --}}
+<table cellspacing="0" cellpadding="0" style="margin-bottom: 0;">
+<tr>
 
-    <div class="section">
-        <div class="section-title">Testes de Resistência</div>
-        <div class="section-body">
-            <table class="saves" cellspacing="0" cellpadding="0">
+{{-- ===== COLUNA ESQUERDA ===== --}}
+<td style="width: 60%; padding-right: 2px; vertical-align: top;">
+
+    {{-- LINHA SUPERIOR: ATRIBUTOS + COMBATE --}}
+    <table cellspacing="0" cellpadding="0" style="margin-bottom: 2px;">
+    <tr>
+
+    {{-- ATRIBUTOS 38% --}}
+    <td style="width: 38%; vertical-align: top; padding-right: 2px;">
+        <table cellspacing="0" cellpadding="0">
+        {{-- Cabeçalho de colunas --}}
+        <tr>
+            <td class="attr-hdr" style="width: 22%;">&nbsp;</td>
+            <td class="attr-hdr" style="width: 18%;">Valor<br>Hab.</td>
+            <td class="attr-hdr" style="width: 16%;">Mod.</td>
+            <td class="attr-hdr" style="width: 22%;">Val.<br>Temp.</td>
+            <td class="attr-hdr" style="width: 22%;">Mod.<br>Temp.</td>
+        </tr>
+        @php
+        $atributos = [
+            ['abbr' => 'FOR', 'nome' => 'Força',        'key' => 'forca'],
+            ['abbr' => 'DES', 'nome' => 'Destreza',     'key' => 'destreza'],
+            ['abbr' => 'CON', 'nome' => 'Constituição',  'key' => 'constituicao'],
+            ['abbr' => 'INT', 'nome' => 'Inteligência',  'key' => 'inteligencia'],
+            ['abbr' => 'SAB', 'nome' => 'Sabedoria',    'key' => 'sabedoria'],
+            ['abbr' => 'CAR', 'nome' => 'Carisma',      'key' => 'carisma'],
+        ];
+        $campoAtrib = [
+            'forca' => 'forca_base', 'destreza' => 'destreza_base',
+            'constituicao' => 'constituicao_base', 'inteligencia' => 'inteligencia_base',
+            'sabedoria' => 'sabedoria_base', 'carisma' => 'carisma_base',
+        ];
+        @endphp
+        @foreach($atributos as $at)
+        <tr style="border-bottom: 0.5pt solid #000;">
+            <td class="attr-name-cell">
+                <span class="attr-abbr">{{ $at['abbr'] }}</span>
+                <span class="attr-full">{{ $at['nome'] }}</span>
+            </td>
+            <td class="attr-val">{{ (int) $ficha->{$campoAtrib[$at['key']]} }}</td>
+            <td class="attr-mod">{{ sprintf('%+d', $mods[$at['key']]) }}</td>
+            <td class="attr-temp">&nbsp;</td>
+            <td class="attr-temp">&nbsp;</td>
+        </tr>
+        @endforeach
+        </table>
+    </td>
+
+    {{-- COMBATE 62% --}}
+    <td style="width: 62%; vertical-align: top;">
+        <table cellspacing="0" cellpadding="0" style="width: 100%;">
+
+        {{-- PV + Deslocamento --}}
+        <tr>
+            <td colspan="6" style="border: 0.7pt solid #000; padding: 1px 2px;">
+                <table cellspacing="0" cellpadding="0" style="width: 100%;">
                 <tr>
-                    <th style="width: 22%;">Teste</th>
-                    <th>Total</th>
-                    <th>Base</th>
-                    <th>Hab.</th>
-                    <th>Mág.</th>
-                    <th>Diverso</th>
+                    <td style="width: 38%; border-right: 0.5pt solid #000; padding: 1px 3px;">
+                        <span class="lbl">Total — Pontos de Vida</span>
+                        <table cellspacing="0" cellpadding="0"><tr>
+                            <td style="background:#000; color:#fff; font-weight:bold; font-size:7pt; padding: 1px 3px; border: 0.7pt solid #000;">PV</td>
+                            <td style="font-size:14pt; font-weight:bold; padding: 0 4px;">{{ $ficha->pv_max }}</td>
+                        </tr></table>
+                    </td>
+                    <td style="width: 28%; border-right: 0.5pt solid #000; padding: 1px 3px;">
+                        <span class="lbl">Dano / PV Atuais</span>
+                        <span class="field">{{ $ficha->pv_atual }}</span>
+                    </td>
+                    <td style="width: 17%; border-right: 0.5pt solid #000; padding: 1px 3px;">
+                        <span class="lbl">Dado de Vida</span>
+                        <span style="font-size: 8pt; font-weight: bold;">d{{ optional($ficha->classe)->dado_vida ?: '—' }}</span>
+                    </td>
+                    <td style="width: 17%; padding: 1px 3px; background: #000; color: #fff; text-align: center;">
+                        <span class="lbl" style="color:#fff;">Desloc.</span>
+                        <span style="font-size: 8pt; font-weight: bold;">{{ $ficha->deslocamento ?: '—' }}</span>
+                    </td>
                 </tr>
-                @foreach(['fortitude' => 'Fortitude', 'reflexos' => 'Reflexos', 'vontade' => 'Vontade'] as $k => $label)
-                    <tr>
-                        <td style="text-align: left; font-weight: bold; color: #1e2a3d;">{{ $label }}</td>
-                        <td class="save-total">{{ sprintf('%+d', $saves[$k]['total']) }}</td>
-                        <td>{{ sprintf('%+d', $saves[$k]['base']) }}</td>
-                        <td>{{ sprintf('%+d', $saves[$k]['hab']) }}</td>
-                        <td>{{ sprintf('%+d', $saves[$k]['magia']) }}</td>
-                        <td>{{ sprintf('%+d', $saves[$k]['misc']) }}</td>
-                    </tr>
-                @endforeach
-            </table>
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="section-title">Combate</div>
-        <div class="section-body">
-            <div class="combat-line">
-                <div class="cell lbl">BAB</div>
-                <div class="cell tot">{{ sprintf('%+d', $ficha->bab) }}</div>
-                <div class="cell lbl">Iniciativa</div>
-                <div class="cell tot">{{ sprintf('%+d', $iniciativa) }}</div>
-                <div class="cell lbl">Agarrar</div>
-                <div class="cell tot">{{ sprintf('%+d', $agarrar) }}</div>
-            </div>
-            <div class="combat-line">
-                <div class="cell lbl">Corpo a Corpo</div>
-                <div class="cell tot">{{ sprintf('%+d', $atkCorpo) }}</div>
-                <div class="cell lbl">Distância</div>
-                <div class="cell tot">{{ sprintf('%+d', $atkDist) }}</div>
-                <div class="cell lbl">Desloc.</div>
-                <div class="cell tot" style="font-size: 8pt;">{{ $ficha->deslocamento ?: '—' }}</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="section-title">Armas &amp; Ataques</div>
-        <div class="section-body">
-            @if($ficha->armas->isEmpty())
-                <div class="muted small">Nenhuma arma registrada.</div>
-            @else
-                <table class="items" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <th style="text-align:left;">Nome</th>
-                        <th>Dano (M)</th>
-                        <th>Crítico</th>
-                        <th>Alcance</th>
-                        <th>Tipo</th>
-                        <th>Categoria</th>
-                        <th>Peso</th>
-                    </tr>
-                    @foreach($ficha->armas as $a)
-                        <tr>
-                            <td style="text-align:left;">
-                                <span class="bold ink">{{ $a->nome }}</span>@if(($a->pivot->quantidade ?? 1) > 1)
-                                    <span class="muted small"> ×{{ $a->pivot->quantidade }}</span>
-                                @endif
-                            </td>
-                            <td class="center">{{ $a->dano_m ?: $a->dano_p ?: '—' }}</td>
-                            <td class="center">{{ $a->critico ?: '—' }}</td>
-                            <td class="center">{{ $a->alcance ?: '—' }}</td>
-                            <td class="center">{{ $a->tipo ?: '—' }}</td>
-                            <td class="center">{{ $a->categoria ?: '—' }}</td>
-                            <td class="center">{{ $a->peso ? $a->peso . 'kg' : '—' }}</td>
-                        </tr>
-                    @endforeach
                 </table>
-            @endif
-        </div>
-    </div>
+            </td>
+        </tr>
 
-    @if($ficha->notas_combate)
-    <div class="section">
-        <div class="section-title">Notas de Combate</div>
-        <div class="section-body prose">{{ mb_substr($ficha->notas_combate, 0, 800) }}{{ mb_strlen($ficha->notas_combate) > 800 ? '…' : '' }}</div>
-    </div>
-    @endif
+        {{-- CA --}}
+        <tr>
+            <td colspan="6" style="border: 0.7pt solid #000; padding: 1px 2px;">
+                <table cellspacing="0" cellpadding="0" style="width: 100%;">
+                <tr>
+                    <td style="width: 22%; background: #000; color: #fff; text-align: center; padding: 2px; border-right: 0.5pt solid #fff; vertical-align: middle;">
+                        <span style="font-size: 6pt; font-weight: bold; text-transform: uppercase; display:block;">CA</span>
+                        <span style="font-size: 13pt; font-weight: bold;">{{ $caTotal }}</span>
+                    </td>
+                    <td style="width: 5%; text-align: center; vertical-align: middle; font-size: 8pt; font-weight: bold; padding: 0 2px;">= 10 +</td>
+                    <td style="width: 73%; padding: 1px;">
+                        <table class="ca-comp" cellspacing="0" cellpadding="0" style="width:100%;">
+                        <tr>
+                            <td style="width: 20%;"><span class="clbl">Bôn. Armadura</span><span class="cval">{{ sprintf('%+d', (int)$ficha->ca_armadura) }}</span></td>
+                            <td style="width: 16%;"><span class="clbl">Bôn. Escudo</span><span class="cval">{{ sprintf('%+d', (int)$ficha->ca_escudo) }}</span></td>
+                            <td style="width: 15%;"><span class="clbl">Mod. DES</span><span class="cval">{{ sprintf('%+d', $mods['destreza']) }}</span></td>
+                            <td style="width: 15%;"><span class="clbl">Mod. Tam.</span><span class="cval">{{ sprintf('%+d', (int)$ficha->ca_tamanho) }}</span></td>
+                            <td style="width: 17%;"><span class="clbl">Natural</span><span class="cval">{{ sprintf('%+d', (int)$ficha->ca_natural) }}</span></td>
+                            <td style="width: 17%;"><span class="clbl">Deflexão</span><span class="cval">{{ sprintf('%+d', (int)$ficha->ca_deflexao) }}</span></td>
+                        </tr>
+                        </table>
+                    </td>
+                </tr>
+                </table>
+            </td>
+        </tr>
+
+        {{-- CA derivada + Iniciativa --}}
+        <tr>
+            <td colspan="3" style="border: 0.7pt solid #000; padding: 1px 3px; width: 26%;">
+                <span class="lbl">CA Total</span>
+                <span style="font-size: 9pt; font-weight: bold; display: block;">{{ $caTotal }}</span>
+            </td>
+            <td style="border: 0.7pt solid #000; padding: 1px 3px; width: 22%;">
+                <span class="lbl">CA Toque</span>
+                <span style="font-size: 9pt; font-weight: bold; display: block;">{{ $caToque }}</span>
+            </td>
+            <td style="border: 0.7pt solid #000; padding: 1px 3px; width: 26%;">
+                <span class="lbl">CA Surpreso</span>
+                <span style="font-size: 9pt; font-weight: bold; display: block;">{{ $caSurpreso }}</span>
+            </td>
+            <td style="border: 0.7pt solid #000; padding: 1px 3px; width: 26%; background: #000; color: #fff; text-align: center;">
+                <span class="lbl" style="color:#fff;">Iniciativa</span>
+                <span style="font-size: 9pt; font-weight: bold; display: block;">{{ sprintf('%+d', $iniciativa) }}</span>
+                <span style="font-size: 4pt; display: block; color: #ccc;">= Mod. DES {{ sprintf('%+d', $mods['destreza']) }}</span>
+            </td>
+        </tr>
+
+        {{-- BAB + Agarrar --}}
+        <tr>
+            <td colspan="3" style="border: 0.7pt solid #000; padding: 1px 3px; width: 50%;">
+                <span style="background:#000;color:#fff;font-size:5pt;font-weight:bold;text-transform:uppercase;padding:0 2px;">Base de Ataque</span>
+                <span style="font-size: 10pt; font-weight: bold; display: block;">{{ sprintf('%+d', (int)$ficha->bab) }}</span>
+            </td>
+            <td colspan="3" style="border: 0.7pt solid #000; padding: 1px 3px;">
+                <span class="lbl">Agarrar</span>
+                <span style="font-size: 10pt; font-weight: bold; display: block;">{{ sprintf('%+d', $agarrar) }}</span>
+            </td>
+        </tr>
+
+        </table>
+    </td>
+
+    </tr>
+    </table>
+
+    {{-- TESTES DE RESISTÊNCIA --}}
+    <table cellspacing="0" cellpadding="0" style="margin-bottom: 2px; width: 100%;">
+    <tr>
+        <td class="saves-hdr" style="width: 22%;">Teste de Resistência</td>
+        <td class="saves-hdr" style="width: 10%;">Total</td>
+        <td class="saves-hdr" style="width: 13%;">Teste Base</td>
+        <td class="saves-hdr" style="width: 14%;">Mod. Hab.</td>
+        <td class="saves-hdr" style="width: 14%;">Mod. Mágico</td>
+        <td class="saves-hdr" style="width: 14%;">Mod. Variado</td>
+        <td class="saves-hdr" style="width: 13%;">Mod. Temp.</td>
+    </tr>
+    @php
+    $saveRows = [
+        'fortitude' => 'Fortitude (CON)',
+        'reflexos'  => 'Reflexos (DES)',
+        'vontade'   => 'Vontade (SAB)',
+    ];
+    @endphp
+    @foreach($saveRows as $k => $label)
+    <tr class="saves-row">
+        <td class="saves-name" style="border: 0.7pt solid #000; padding: 1px 3px; font-size: 6pt; font-weight: bold;">{{ $label }}</td>
+        <td style="border: 0.7pt solid #000; text-align: center; font-size: 8pt; font-weight: bold;">{{ sprintf('%+d', $saves[$k]['total']) }}</td>
+        <td style="border: 0.7pt solid #000; text-align: center; font-size: 7pt;">{{ sprintf('%+d', $saves[$k]['base']) }}</td>
+        <td style="border: 0.7pt solid #000; text-align: center; font-size: 7pt;">{{ sprintf('%+d', $saves[$k]['hab']) }}</td>
+        <td style="border: 0.7pt solid #000; text-align: center; font-size: 7pt;">{{ sprintf('%+d', $saves[$k]['magia']) }}</td>
+        <td style="border: 0.7pt solid #000; text-align: center; font-size: 7pt;">{{ sprintf('%+d', $saves[$k]['misc']) }}</td>
+        <td style="border: 0.7pt solid #000;">&nbsp;</td>
+    </tr>
+    @endforeach
+    </table>
+
+    {{-- BÔNUS DE ATAQUE CORPO A CORPO --}}
+    <table class="atk-row" cellspacing="0" cellpadding="0" style="margin-bottom: 2px; width: 100%;">
+    <tr>
+        <td class="atk-lbl" style="width: 30%;">Bônus de Ataque Corpo a Corpo</td>
+        <td class="atk-total" style="width: 10%;">{{ sprintf('%+d', $atkCorpo) }}</td>
+        <td style="width: 5%; font-size: 6pt; text-align: center;">=</td>
+        <td style="width: 13%;"><span class="lbl">BBA</span>{{ sprintf('%+d', (int)$ficha->bab) }}</td>
+        <td style="width: 13%;"><span class="lbl">Mod. FOR</span>{{ sprintf('%+d', $mods['forca']) }}</td>
+        <td style="width: 13%;"><span class="lbl">Tamanho</span>{{ sprintf('%+d', (int)$ficha->ca_tamanho) }}</td>
+        <td style="width: 13%;"><span class="lbl">Variado</span><span class="field">&nbsp;</span></td>
+        <td style="width: 13%;"><span class="lbl">Temp.</span><span class="field">&nbsp;</span></td>
+    </tr>
+    </table>
+
+    {{-- BÔNUS DE ATAQUE DISTÂNCIA --}}
+    <table class="atk-row" cellspacing="0" cellpadding="0" style="margin-bottom: 2px; width: 100%;">
+    <tr>
+        <td class="atk-lbl" style="width: 30%;">Bônus de Ataque à Distância</td>
+        <td class="atk-total" style="width: 10%;">{{ sprintf('%+d', $atkDist) }}</td>
+        <td style="width: 5%; font-size: 6pt; text-align: center;">=</td>
+        <td style="width: 13%;"><span class="lbl">BBA</span>{{ sprintf('%+d', (int)$ficha->bab) }}</td>
+        <td style="width: 13%;"><span class="lbl">Mod. DES</span>{{ sprintf('%+d', $mods['destreza']) }}</td>
+        <td style="width: 13%;"><span class="lbl">Tamanho</span>{{ sprintf('%+d', (int)$ficha->ca_tamanho) }}</td>
+        <td style="width: 13%;"><span class="lbl">Variado</span><span class="field">&nbsp;</span></td>
+        <td style="width: 13%;"><span class="lbl">Temp.</span><span class="field">&nbsp;</span></td>
+    </tr>
+    </table>
+
+    {{-- ARMAS (3 slots) --}}
+    @php
+    $armasList = $ficha->armas->values();
+    $armaPad   = 3;
+    @endphp
+    @for($wi = 0; $wi < $armaPad; $wi++)
+    @php $arma = $armasList->get($wi); @endphp
+    {{-- header da arma --}}
+    <table class="wpn-hdr" cellspacing="0" cellpadding="0" style="width: 100%; margin-top: 2px;">
+    <tr>
+        <td colspan="5">
+            @if($arma)
+                ARMA — {{ $arma->nome }}@if(($arma->pivot->quantidade ?? 1) > 1) (×{{ $arma->pivot->quantidade }})@endif
+            @else
+                ARMA
+            @endif
+        </td>
+    </tr>
+    </table>
+    {{-- linha 1: ataque, dano, crítico --}}
+    <table class="wpn-row" cellspacing="0" cellpadding="0" style="width: 100%;">
+    <tr>
+        <td style="width: 34%;">
+            <span class="lbl">Bônus de Ataque Total</span>
+            @if($arma)
+                @php
+                $isRanged = $arma->categoria && (stripos($arma->categoria, 'Distância') !== false || stripos($arma->categoria, 'Projétil') !== false || stripos($arma->categoria, 'Projetil') !== false);
+                $atkArma = $isRanged ? $atkDist : $atkCorpo;
+                @endphp
+                <span style="font-size: 9pt; font-weight: bold;">{{ sprintf('%+d', $atkArma) }}</span>
+            @else
+                <span class="field">&nbsp;</span>
+            @endif
+        </td>
+        <td style="width: 33%;">
+            <span class="lbl">Dano</span>
+            @if($arma)<span style="font-size: 8pt; font-weight: bold;">{{ $arma->dano_m ?: ($arma->dano_p ?: '—') }}</span>@else<span class="field">&nbsp;</span>@endif
+        </td>
+        <td style="width: 33%;">
+            <span class="lbl">Decisivo (Crítico)</span>
+            @if($arma)<span style="font-size: 8pt; font-weight: bold;">{{ $arma->critico ?: '—' }}</span>@else<span class="field">&nbsp;</span>@endif
+        </td>
+    </tr>
+    </table>
+    {{-- linha 2: alcance, peso, tamanho, tipo, especiais --}}
+    <table class="wpn-row" cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr>
+        <td style="width: 18%;"><span class="lbl">Alcance</span>@if($arma){{ $arma->alcance ?: '—' }}@else<span class="field">&nbsp;</span>@endif</td>
+        <td style="width: 16%;"><span class="lbl">Peso</span>@if($arma){{ $arma->peso ? $arma->peso . ' kg' : '—' }}@else<span class="field">&nbsp;</span>@endif</td>
+        <td style="width: 14%;"><span class="lbl">Tamanho</span>@if($arma){{ $arma->tamanho ?: '—' }}@else<span class="field">&nbsp;</span>@endif</td>
+        <td style="width: 14%;"><span class="lbl">Tipo</span>@if($arma){{ $arma->tipo ?: '—' }}@else<span class="field">&nbsp;</span>@endif</td>
+        <td style="width: 38%;"><span class="lbl">Propriedades Especiais</span>@if($arma){{ $arma->categoria ?: '—' }}@else<span class="field">&nbsp;</span>@endif</td>
+    </tr>
+    </table>
+    @endfor
+
+    {{-- ARMADURA (primeira não-escudo) --}}
+    @php
+    $armaduraPrincipal = $ficha->armaduras->first(fn($a) => !str_contains(strtolower($a->tipo ?? ''), 'escudo'));
+    $escudo = $ficha->armaduras->first(fn($a) => str_contains(strtolower($a->tipo ?? ''), 'escudo'));
+    @endphp
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-top: 2px;">
+    <tr><td class="sec" colspan="5">Armadura / Item de Proteção</td></tr>
+    </table>
+    <table class="arm-row" cellspacing="0" cellpadding="0" style="width: 100%;">
+    <tr>
+        <td style="width: 30%;"><span class="arm-lbl">Tipo</span><span class="arm-val">{{ $armaduraPrincipal ? $armaduraPrincipal->nome : '' }}</span></td>
+        <td style="width: 20%;"><span class="arm-lbl">Bônus de Armadura</span><span class="arm-val">{{ $armaduraPrincipal ? sprintf('%+d', (int)$armaduraPrincipal->bonus_ca) : '' }}</span></td>
+        <td style="width: 20%;"><span class="arm-lbl">Penalidade por Arm.</span><span class="arm-val">{{ $armaduraPrincipal ? (int)$armaduraPrincipal->penalidade_armadura : '' }}</span></td>
+        <td style="width: 15%;"><span class="arm-lbl">Bôn. Máx. DES</span><span class="arm-val">{{ $armaduraPrincipal ? (is_null($armaduraPrincipal->destreza_max) ? '—' : $armaduraPrincipal->destreza_max) : '' }}</span></td>
+        <td style="width: 15%;"><span class="arm-lbl">Falha Arcana</span><span class="arm-val">{{ $armaduraPrincipal ? (is_null($armaduraPrincipal->falha_arcana) ? '—' : $armaduraPrincipal->falha_arcana . '%') : '' }}</span></td>
+    </tr>
+    <tr>
+        <td><span class="arm-lbl">Deslocamento</span><span class="arm-val">&nbsp;</span></td>
+        <td><span class="arm-lbl">Peso</span><span class="arm-val">{{ $armaduraPrincipal && $armaduraPrincipal->peso ? $armaduraPrincipal->peso . ' kg' : '' }}</span></td>
+        <td colspan="3"><span class="arm-lbl">Propriedades Especiais</span><span class="arm-val">&nbsp;</span></td>
+    </tr>
+    </table>
+
+    {{-- ESCUDO --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-top: 2px;">
+    <tr><td class="sec" colspan="4">Escudo / Item de Proteção</td></tr>
+    </table>
+    <table class="arm-row" cellspacing="0" cellpadding="0" style="width: 100%;">
+    <tr>
+        <td style="width: 25%;"><span class="arm-lbl">Bônus de Armadura</span><span class="arm-val">{{ $escudo ? sprintf('%+d', (int)$escudo->bonus_ca) : '' }}</span></td>
+        <td style="width: 25%;"><span class="arm-lbl">Peso</span><span class="arm-val">{{ $escudo && $escudo->peso ? $escudo->peso . ' kg' : '' }}</span></td>
+        <td style="width: 25%;"><span class="arm-lbl">Falha Arcana</span><span class="arm-val">{{ $escudo ? (is_null($escudo->falha_arcana) ? '—' : $escudo->falha_arcana . '%') : '' }}</span></td>
+        <td style="width: 25%;"><span class="arm-lbl">Penalidade por Arm.</span><span class="arm-val">{{ $escudo ? (int)$escudo->penalidade_armadura : '' }}</span></td>
+    </tr>
+    <tr>
+        <td colspan="4"><span class="arm-lbl">Propriedades Especiais</span><span class="arm-val">&nbsp;</span></td>
+    </tr>
+    </table>
+
+    {{-- MUNIÇÃO --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-top: 2px;">
+    <tr><td class="sec" colspan="2">Munição</td></tr>
+    </table>
+    <table class="arm-row" cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr>
+        <td style="width: 60%;"><span class="arm-lbl">Tipo</span><span class="arm-val">&nbsp;</span></td>
+        <td style="width: 40%;"><span class="arm-lbl">Quantidade</span><span class="arm-val">&nbsp;</span></td>
+    </tr>
+    </table>
 
 </td>
-<td style="width: 39%;">
 
-    <div class="section">
-        <div class="section-title">Sinais Vitais</div>
-        <div class="section-body">
-            <table class="vitals" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="vital-label">PV Máx.</td>
-                    <td class="vital-label">PV Atual</td>
-                    <td class="vital-label">CA Total</td>
-                    <td class="vital-label">XP</td>
-                </tr>
-                <tr>
-                    <td class="vital-value">{{ $ficha->pv_max }}</td>
-                    <td class="vital-value">{{ $ficha->pv_atual }}</td>
-                    <td class="vital-value">{{ $caTotal }}</td>
-                    <td class="vital-value" style="font-size: 9pt;">{{ number_format((int) $ficha->xp_atual, 0, ',', '.') }}</td>
-                </tr>
-            </table>
+{{-- ===== COLUNA DIREITA — PERÍCIAS ===== --}}
+<td style="width: 40%; vertical-align: top;">
+    @php
+    $gradMax = ($ficha->nivel ?? 1) + 3;
+    $gradMaxFora = (int) floor($gradMax / 2);
 
-            <table class="ca-derived" cellspacing="0" cellpadding="0" style="margin-top: 4px;">
-                <tr>
-                    <td class="lbl">CA Toque</td>
-                    <td class="val">{{ $caToque }}</td>
-                    <td class="lbl">CA Surpreso</td>
-                    <td class="val">{{ $caSurpreso }}</td>
-                </tr>
-            </table>
+    // Mapa de abreviação de habilidade → chave de $mods
+    $mapaHab = [
+        'FOR' => 'forca', 'DES' => 'destreza', 'CON' => 'constituicao',
+        'INT' => 'inteligencia', 'SAB' => 'sabedoria', 'CAR' => 'carisma',
+    ];
 
-            <table class="breakdown" cellspacing="0" cellpadding="0" style="margin-top: 3px;">
-                <tr>
-                    <td class="lbl">Armad.</td>
-                    <td class="lbl">Escudo</td>
-                    <td class="lbl">Des</td>
-                    <td class="lbl">Tam</td>
-                    <td class="lbl">Nat.</td>
-                    <td class="lbl">Defl.</td>
-                    <td class="lbl">Div.</td>
-                </tr>
-                <tr>
-                    <td>{{ sprintf('%+d', $ficha->ca_armadura) }}</td>
-                    <td>{{ sprintf('%+d', $ficha->ca_escudo) }}</td>
-                    <td>{{ sprintf('%+d', $mods['destreza']) }}</td>
-                    <td>{{ sprintf('%+d', $ficha->ca_tamanho) }}</td>
-                    <td>{{ sprintf('%+d', $ficha->ca_natural) }}</td>
-                    <td>{{ sprintf('%+d', $ficha->ca_deflexao) }}</td>
-                    <td>{{ sprintf('%+d', $ficha->ca_misc) }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
+    // Indexar perícias do personagem pelo nome (lowercase) para lookup rápido
+    $periciasPJ = $pericias->keyBy(fn($p) => mb_strtolower($p['nome']));
+    @endphp
 
-    <div class="section">
-        <div class="section-title">Armaduras &amp; Escudo</div>
-        <div class="section-body">
-            @if($ficha->armaduras->isEmpty())
-                <div class="muted small">Sem proteções vestidas.</div>
-            @else
-                <table class="items" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <th style="text-align:left;">Nome</th>
-                        <th>Bônus</th>
-                        <th>Máx Des</th>
-                        <th>Penal.</th>
-                        <th>Falha</th>
-                        <th>Peso</th>
-                    </tr>
-                    @foreach($ficha->armaduras as $a)
-                        <tr>
-                            <td style="text-align:left;"><span class="bold ink">{{ $a->nome }}</span></td>
-                            <td class="center">{{ sprintf('%+d', (int) $a->bonus_ca) }}</td>
-                            <td class="center">{{ is_null($a->destreza_max) ? '—' : $a->destreza_max }}</td>
-                            <td class="center">{{ (int) $a->penalidade_armadura }}</td>
-                            <td class="center">{{ is_null($a->falha_arcana) ? '—' : $a->falha_arcana . '%' }}</td>
-                            <td class="center">{{ $a->peso ? $a->peso . 'kg' : '—' }}</td>
-                        </tr>
-                    @endforeach
-                </table>
-            @endif
-        </div>
-    </div>
+    <table cellspacing="0" cellpadding="0" style="width: 100%;">
+    <tr>
+        <td class="sec" colspan="7">Perícias &nbsp; Graduação Máx.: {{ $gradMax }} / {{ $gradMaxFora }}</td>
+    </tr>
+    {{-- Subheader --}}
+    <tr>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 6%;">OC</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; padding: 1px 2px; width: 38%;">Nome da Perícia</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 9%;">Hab.</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 13%;">Mod.<br>Perícia</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 11%;">Mod.<br>Hab.</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 11%;">Grad.</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 12%;">Mod.<br>Var.</td>
+    </tr>
 
-    @if($ficha->divindade)
-    <div class="section">
-        <div class="section-title">Devoção</div>
-        <div class="section-body">
-            <div class="card-deity">
-                <div class="deity-name">{{ $ficha->divindade }}</div>
-                <div class="deity-note">Sob a tutela desta divindade, {{ $ficha->nome_personagem ?: 'este herói' }} caminha por Faerûn.</div>
-            </div>
-        </div>
-    </div>
-    @endif
+    @foreach($todasPericias as $tp)
+    @php
+    $chaveAbr = strtoupper(substr($tp->habilidade_chave ?? '', 0, 3));
+    $modKey   = $mapaHab[$chaveAbr] ?? null;
+    $modHab   = $modKey ? $mods[$modKey] : 0;
+    $lookup   = $periciasPJ->get(mb_strtolower($tp->nome));
+    $temGrad  = $lookup && $lookup['grad'] > 0;
+    $rowStyle = $temGrad ? 'background: #f0f0f0;' : '';
+    @endphp
+    <tr style="{{ $rowStyle }}">
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; text-align: center; padding: 0 1px; font-size: 7pt; vertical-align: middle;">□</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; padding: 0 2px; font-size: 5.5pt; vertical-align: middle;">{{ $tp->nome }}</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; text-align: center; padding: 0 1px; font-size: 5.5pt; font-weight: bold; vertical-align: middle;">{{ $chaveAbr }}</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; text-align: center; padding: 0 1px; font-size: 6.5pt; font-weight: bold; vertical-align: middle;">
+            @if($lookup){{ sprintf('%+d', $lookup['total']) }}@else<span class="sk-underline">&nbsp;</span>@endif
+        </td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; text-align: center; padding: 0 1px; font-size: 6pt; vertical-align: middle;">{{ sprintf('%+d', $modHab) }}</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; text-align: center; padding: 0 1px; font-size: 6pt; vertical-align: middle;">
+            @if($lookup && $lookup['grad'] > 0){{ number_format($lookup['grad'], 1, ',', '') }}@else&nbsp;@endif
+        </td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; text-align: center; padding: 0 1px; vertical-align: middle;">&nbsp;</td>
+    </tr>
+    @endforeach
 
-    <div class="section">
-        <div class="section-title">Idiomas Conhecidos</div>
-        <div class="section-body prose">{{ $ficha->idiomas ?: 'Comum' }}</div>
-    </div>
+    {{-- Borda inferior da tabela --}}
+    <tr><td colspan="7" style="border-top: 0.7pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; height: 1pt;"></td></tr>
+    </table>
 
-    <div class="section">
-        <div class="section-title">Aparência</div>
-        <div class="section-body prose">@php
-            $aparencia = collect([
-                $ficha->tamanho ? 'Estatura ' . strtolower($ficha->tamanho) : null,
-                $ficha->altura ? $ficha->altura . 'm de altura' : null,
-                $ficha->peso ? $ficha->peso . 'kg' : null,
-                $ficha->olhos ? 'olhos ' . strtolower($ficha->olhos) : null,
-                $ficha->cabelos ? 'cabelos ' . strtolower($ficha->cabelos) : null,
-                $ficha->pele ? 'pele ' . strtolower($ficha->pele) : null,
-            ])->filter()->implode(', ');
-        @endphp{{ $aparencia ? ucfirst($aparencia) . '.' : 'Sem descrição registrada.' }}</div>
-    </div>
+</td>
+</tr>
+</table>
 
-</td></tr></table>
-
+{{-- ===== PÁGINA 2 ===== --}}
 <div class="page-break"></div>
 
-<div class="banner">
-    <h1 style="font-size: 13pt;">Perícias · Talentos · Grimório · Tesouros</h1>
-</div>
+<table cellspacing="0" cellpadding="0" style="margin-bottom: 0;">
+<tr>
 
-<table cellspacing="0" cellpadding="0"><tr>
-<td style="width: 54%; padding-right: 4px;">
+{{-- ===== COL ESQ P2: 55% ===== --}}
+<td style="width: 55%; padding-right: 2px; vertical-align: top;">
 
-    <div class="section">
-        <div class="section-title">Perícias ({{ $pericias->count() }})</div>
-        <div class="section-body">
-            @if($pericias->isEmpty())
-                <div class="muted small">Nenhuma perícia com graduações.</div>
+    {{-- PONTOS DE EXPERIÊNCIA --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec" colspan="3">Pontos de Experiência</td></tr>
+    <tr class="xp-row">
+        <td style="border: 0.7pt solid #000; width: 33%; padding: 2px 3px;">
+            <span class="lbl">XP Atual</span>
+            <span style="font-size: 9pt; font-weight: bold; display: block;">{{ number_format((int)$ficha->xp_atual, 0, ',', '.') }}</span>
+        </td>
+        <td style="border: 0.7pt solid #000; width: 33%; padding: 2px 3px;">
+            <span class="lbl">Próximo Nível</span>
+            <span style="font-size: 9pt; font-weight: bold; display: block;">{{ number_format((int)$ficha->xp_proximo, 0, ',', '.') }}</span>
+        </td>
+        <td style="border: 0.7pt solid #000; width: 34%; padding: 2px 3px;">
+            <span class="lbl">Faltam</span>
+            <span style="font-size: 9pt; font-weight: bold; display: block;">{{ number_format(max(0, (int)$ficha->xp_proximo - (int)$ficha->xp_atual), 0, ',', '.') }}</span>
+        </td>
+    </tr>
+    </table>
+
+    {{-- EQUIPAMENTO (armaduras completo) --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec" colspan="6">Equipamento (Armaduras e Escudos)</td></tr>
+    <tr>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; padding: 1px 2px; width: 28%;">Nome</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 12%;">Tipo</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 12%;">Bônus CA</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 12%;">Penal.</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 12%;">Peso</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 24%;">Prop. Especiais</td>
+    </tr>
+    @php $eqPad = 5; $eqCount = $ficha->armaduras->count(); @endphp
+    @foreach($ficha->armaduras as $ea)
+    <tr>
+        <td style="border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt;">{{ $ea->nome }}</td>
+        <td style="border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt; text-align: center;">{{ $ea->tipo ?: '—' }}</td>
+        <td style="border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt; text-align: center;">{{ sprintf('%+d', (int)$ea->bonus_ca) }}</td>
+        <td style="border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt; text-align: center;">{{ (int)$ea->penalidade_armadura }}</td>
+        <td style="border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt; text-align: center;">{{ $ea->peso ? $ea->peso . ' kg' : '—' }}</td>
+        <td style="border: 0.7pt solid #000; padding: 1px 2px; font-size: 6pt;">&nbsp;</td>
+    </tr>
+    @endforeach
+    @for($ei = $eqCount; $ei < $eqPad; $ei++)
+    <tr>
+        <td style="border: 0.7pt solid #000; height: 10pt;">&nbsp;</td>
+        <td style="border: 0.7pt solid #000;">&nbsp;</td>
+        <td style="border: 0.7pt solid #000;">&nbsp;</td>
+        <td style="border: 0.7pt solid #000;">&nbsp;</td>
+        <td style="border: 0.7pt solid #000;">&nbsp;</td>
+        <td style="border: 0.7pt solid #000;">&nbsp;</td>
+    </tr>
+    @endfor
+    </table>
+
+    {{-- OUTROS ITENS (equipamentos) --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec" colspan="4">Outros Itens</td></tr>
+    <tr>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; padding: 1px 2px; width: 45%;">Item</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 10%;">Qtd</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 12%;">Peso</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; padding: 1px 2px; width: 33%;">Categoria</td>
+    </tr>
+    @php $itemPad = 15; $itemCount = $ficha->equipamentos->count(); @endphp
+    @foreach($ficha->equipamentos as $it)
+    <tr>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; padding: 0 2px; font-size: 6pt; height: 9pt;">{{ $it->nome }}</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; text-align: center; font-size: 6pt;">{{ $it->pivot->quantidade ?? 1 }}</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; text-align: center; font-size: 6pt;">{{ $it->peso ? $it->peso . ' kg' : '—' }}</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; padding: 0 2px; font-size: 6pt;">{{ $it->categoria ?: '—' }}</td>
+    </tr>
+    @endforeach
+    @for($ii = $itemCount; $ii < $itemPad; $ii++)
+    <tr>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; height: 9pt;">&nbsp;</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000;">&nbsp;</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000;">&nbsp;</td>
+        <td style="border-bottom: 0.3pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000;">&nbsp;</td>
+    </tr>
+    @endfor
+    <tr><td colspan="4" style="border-top: 0.7pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; height: 1pt;"></td></tr>
+    </table>
+
+    {{-- PESO TOTAL --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr>
+        <td style="border: 0.7pt solid #000; padding: 2px 4px; width: 60%;">
+            <span class="lbl">Total de Peso Carregado</span>
+            <span style="font-size: 9pt; font-weight: bold;">{{ number_format($pesoTotal, 1, ',', '.') }} kg</span>
+        </td>
+        <td style="border: 0.7pt solid #000; padding: 2px 4px; width: 40%;">
+            <span class="lbl">Ouro em Bolsa</span>
+            <span style="font-size: 9pt; font-weight: bold;">{{ number_format((float)($ficha->ouro ?? 0), 2, ',', '.') }} PO</span>
+        </td>
+    </tr>
+    </table>
+
+    {{-- CARGA --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec" colspan="3">Capacidade de Carga (kg)</td></tr>
+    <tr>
+        <td style="border: 0.7pt solid #000; text-align: center; padding: 1px; width: 33%;">
+            <span class="lbl">Leve</span>
+            <span style="font-size: 7pt; font-weight: bold; display: block;">{{ $cargas['leve'] }}</span>
+        </td>
+        <td style="border: 0.7pt solid #000; text-align: center; padding: 1px; width: 33%;">
+            <span class="lbl">Média</span>
+            <span style="font-size: 7pt; font-weight: bold; display: block;">{{ $cargas['media'] }}</span>
+        </td>
+        <td style="border: 0.7pt solid #000; text-align: center; padding: 1px; width: 34%;">
+            <span class="lbl">Pesada</span>
+            <span style="font-size: 7pt; font-weight: bold; display: block;">{{ $cargas['pesada'] }}</span>
+        </td>
+    </tr>
+    <tr>
+        <td style="border: 0.7pt solid #000; text-align: center; padding: 1px;">
+            <span class="lbl">Levantar (cabeça)</span>
+            <span style="font-size: 7pt; font-weight: bold; display: block;">{{ $cargas['levantarCabeca'] }}</span>
+        </td>
+        <td style="border: 0.7pt solid #000; text-align: center; padding: 1px;">
+            <span class="lbl">Levantar (solo)</span>
+            <span style="font-size: 7pt; font-weight: bold; display: block;">{{ $cargas['levantarSolo'] }}</span>
+        </td>
+        <td style="border: 0.7pt solid #000; text-align: center; padding: 1px;">
+            <span class="lbl">Arrastar</span>
+            <span style="font-size: 7pt; font-weight: bold; display: block;">{{ $cargas['arrastar'] }}</span>
+        </td>
+    </tr>
+    </table>
+
+    {{-- DINHEIRO --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec" colspan="4">Dinheiro</td></tr>
+    <tr>
+        <td class="money-cell" style="width: 25%;"><span class="money-lbl">PC</span><span class="money-val">{{ (int)$ficha->dinheiro_pc }}</span></td>
+        <td class="money-cell" style="width: 25%;"><span class="money-lbl">PP</span><span class="money-val">{{ (int)$ficha->dinheiro_pp }}</span></td>
+        <td class="money-cell" style="width: 25%;"><span class="money-lbl">PO</span><span class="money-val">{{ (int)($ficha->ouro ?? 0) }}</span></td>
+        <td class="money-cell" style="width: 25%;"><span class="money-lbl">PL</span><span class="money-val">{{ (int)$ficha->dinheiro_pl }}</span></td>
+    </tr>
+    </table>
+
+    {{-- IDIOMAS --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec">Idiomas</td></tr>
+    <tr>
+        <td style="border: 0.7pt solid #000; padding: 2px 4px; font-size: 6.5pt; min-height: 16pt;">{{ $ficha->idiomas ?: 'Comum' }}</td>
+    </tr>
+    </table>
+
+</td>
+
+{{-- ===== COL DIR P2: 45% ===== --}}
+<td style="width: 45%; vertical-align: top;">
+
+    {{-- TALENTOS --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec">Talentos e Dons ({{ $ficha->talentos->count() }})</td></tr>
+    <tr>
+        <td style="border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; padding: 2px 3px;">
+            @foreach($ficha->talentos as $t)
+            <div style="margin-bottom: 3px; border-bottom: 0.4pt solid #ccc; padding-bottom: 2px;">
+                <span class="tal-name">{{ $t->nome }}</span>
+                @if($t->tipo)<span class="tal-tipo"> — {{ $t->tipo }}</span>@endif
+                @if($t->beneficio)<div class="tal-benef">{{ mb_substr($t->beneficio, 0, 250) }}{{ mb_strlen($t->beneficio) > 250 ? '…' : '' }}</div>@endif
+            </div>
+            @endforeach
+            @php $talentosPad = max(0, 8 - $ficha->talentos->count()); @endphp
+            @for($ti = 0; $ti < $talentosPad; $ti++)
+            <div class="tal-blank">&nbsp;</div>
+            @endfor
+        </td>
+    </tr>
+    <tr><td style="border-bottom: 0.7pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; height: 1pt;"></td></tr>
+    </table>
+
+    {{-- HABILIDADES ESPECIAIS --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec">Habilidades Especiais</td></tr>
+    <tr>
+        <td style="border: 0.7pt solid #000; padding: 2px 3px; font-size: 6pt; min-height: 30pt; white-space: pre-wrap;">{{ $ficha->habilidades_especiais ? mb_substr($ficha->habilidades_especiais, 0, 600) : '' }}</td>
+    </tr>
+    @if(!$ficha->habilidades_especiais)
+    @for($hi = 0; $hi < 3; $hi++)
+    <tr><td style="border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; border-bottom: 0.4pt solid #000; height: 9pt;">&nbsp;</td></tr>
+    @endfor
+    <tr><td style="border-bottom: 0.7pt solid #000; border-left: 0.7pt solid #000; border-right: 0.7pt solid #000; height: 1pt;"></td></tr>
+    @endif
+    </table>
+
+    {{-- MAGIAS --}}
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec" colspan="4">Magias — Grimório / Escola de Especialização</td></tr>
+    <tr>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 10%;">Nível</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 16%;">Magias Con.</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; text-align: center; padding: 1px; width: 14%;">Espaços/Dia</td>
+        <td style="background: #d0d0d0; border: 0.7pt solid #000; font-size: 4.5pt; font-weight: bold; text-transform: uppercase; padding: 1px 2px; width: 60%;">Magias</td>
+    </tr>
+    @php $totalMagias = collect($magiasPorNivel)->sum(fn($c) => $c->count()); @endphp
+    @foreach($magiasPorNivel as $nivel => $magias)
+    <tr>
+        <td style="border: 0.7pt solid #000; text-align: center; padding: 1px; font-size: 7pt; font-weight: bold; vertical-align: middle;">{{ $nivel }}</td>
+        <td style="border: 0.7pt solid #000; text-align: center; padding: 1px; font-size: 6.5pt; vertical-align: middle;">@if($magias->isNotEmpty()){{ $magias->count() }}@else&nbsp;@endif</td>
+        <td style="border: 0.7pt solid #000; padding: 1px; vertical-align: middle;"><span class="field">&nbsp;</span></td>
+        <td style="border: 0.7pt solid #000; padding: 1px 2px; font-size: 5.5pt; vertical-align: middle; min-height: 9pt;">
+            @if($magias->isNotEmpty())
+                {{ mb_substr($magias->pluck('nome')->implode(', '), 0, 150) }}{{ mb_strlen($magias->pluck('nome')->implode(', ')) > 150 ? '…' : '' }}
             @else
-                <table class="skills" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <th style="text-align:left;">Perícia</th>
-                        <th>Hab.</th>
-                        <th>Total</th>
-                        <th>Grad.</th>
-                        <th>Mod.</th>
-                    </tr>
-                    @foreach($pericias as $p)
-                        <tr>
-                            <td>{{ $p['nome'] }}</td>
-                            <td class="num">{{ $p['chave'] ?: '—' }}</td>
-                            <td class="num total">{{ sprintf('%+d', $p['total']) }}</td>
-                            <td class="num">{{ rtrim(rtrim(number_format($p['grad'], 1, ',', ''), '0'), ',') ?: '0' }}</td>
-                            <td class="num">{{ sprintf('%+d', $p['mod']) }}</td>
-                        </tr>
-                    @endforeach
-                </table>
+                &nbsp;
             @endif
-        </div>
-    </div>
+        </td>
+    </tr>
+    @endforeach
+    </table>
 
-    <div class="section">
-        <div class="section-title">Talentos ({{ $ficha->talentos->count() }})</div>
-        <div class="section-body">
-            @if($ficha->talentos->isEmpty())
-                <div class="muted small">Sem talentos adquiridos.</div>
-            @else
-                @foreach($ficha->talentos as $t)
-                    <div class="card-talent">
-                        <span class="name">{{ $t->nome }}</span>
-                        @if($t->tipo)
-                            <span class="tipo"> · {{ $t->tipo }}</span>
-                        @endif
-                        @if($t->beneficio)
-                            <div class="benef">{{ mb_substr($t->beneficio, 0, 400) }}{{ mb_strlen($t->beneficio) > 400 ? '…' : '' }}</div>
-                        @endif
-                    </div>
-                @endforeach
-            @endif
-        </div>
-    </div>
-
-    @if($ficha->habilidades_especiais)
-    <div class="section">
-        <div class="section-title">Habilidades Especiais</div>
-        <div class="section-body prose">{{ mb_substr($ficha->habilidades_especiais, 0, 1500) }}{{ mb_strlen($ficha->habilidades_especiais) > 1500 ? '…' : '' }}</div>
-    </div>
+    {{-- NOTAS DE COMBATE / OBSERVAÇÕES --}}
+    @if($ficha->notas_combate)
+    <table cellspacing="0" cellpadding="0" style="width: 100%; margin-bottom: 2px;">
+    <tr><td class="sec">Notas de Combate</td></tr>
+    <tr><td style="border: 0.7pt solid #000; padding: 2px 3px; font-size: 6pt; white-space: pre-wrap;">{{ mb_substr($ficha->notas_combate, 0, 500) }}</td></tr>
+    </table>
     @endif
 
 </td>
-<td style="width: 46%;">
+</tr>
+</table>
 
-    <div class="section">
-        <div class="section-title">Grimório de Magias</div>
-        <div class="section-body">
-            @php $totalMagias = collect($magiasPorNivel)->sum(fn($c) => $c->count()); @endphp
-            @if($totalMagias === 0)
-                <div class="muted small">Sem magias conhecidas.</div>
-            @else
-                @foreach($magiasPorNivel as $nivel => $magias)
-                    @if($magias->isNotEmpty())
-                        <div class="spell-level">
-                            <span class="lv">Nível {{ $nivel }}</span>
-                            <span class="count">({{ $magias->count() }} {{ $magias->count() === 1 ? 'magia' : 'magias' }})</span>
-                            <div class="list">
-                                @foreach($magias as $m)
-                                    <span>{{ $m->nome }}@if($m->escola) <span class="muted">({{ substr($m->escola, 0, 3) }})</span>@endif@if(!$loop->last) &middot; @endif</span>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-                <div class="small muted center" style="margin-top: 4px;">
-                    Total de {{ $totalMagias }} {{ $totalMagias === 1 ? 'magia registrada' : 'magias registradas' }}.
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="section-title">Equipamentos ({{ $ficha->equipamentos->count() }})</div>
-        <div class="section-body">
-            @if($ficha->equipamentos->isEmpty())
-                <div class="muted small">Sem equipamentos registrados.</div>
-            @else
-                <table class="skills" cellspacing="0" cellpadding="0">
-                    <tr>
-                        <th style="text-align:left;">Item</th>
-                        <th>Categoria</th>
-                        <th>Qtd</th>
-                        <th>Peso</th>
-                    </tr>
-                    @foreach($ficha->equipamentos as $e)
-                        <tr>
-                            <td>{{ $e->nome }}</td>
-                            <td class="num">{{ $e->categoria ?: '—' }}</td>
-                            <td class="num">{{ $e->pivot->quantidade ?? 1 }}</td>
-                            <td class="num">{{ $e->peso ? $e->peso . 'kg' : '—' }}</td>
-                        </tr>
-                    @endforeach
-                </table>
-            @endif
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="section-title">Bolsa &amp; Riqueza</div>
-        <div class="section-body">
-            <table class="money-row" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="coin-label">Peças de Cobre</td>
-                    <td class="coin-label">Peças de Prata</td>
-                    <td class="coin-label">Peças de Ouro</td>
-                </tr>
-                <tr>
-                    <td class="coin-value">{{ (int) $ficha->dinheiro_pc }}</td>
-                    <td class="coin-value">{{ (int) $ficha->dinheiro_pp }}</td>
-                    <td class="coin-value">{{ (int) $ficha->dinheiro_pl }}</td>
-                </tr>
-            </table>
-            @if($ficha->ouro)
-                <div class="small center" style="margin-top: 3px;">
-                    <span class="muted">Ouro em bolsa:</span> <span class="bold gold">{{ number_format((float) $ficha->ouro, 2, ',', '.') }} PO</span>
-                </div>
-            @endif
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="section-title">Capacidade de Carga (kg)</div>
-        <div class="section-body">
-            <table class="load-row" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="load-label">Leve</td>
-                    <td class="load-label">Média</td>
-                    <td class="load-label">Pesada</td>
-                </tr>
-                <tr>
-                    <td class="load-val">{{ $cargas['leve'] }}</td>
-                    <td class="load-val">{{ $cargas['media'] }}</td>
-                    <td class="load-val">{{ $cargas['pesada'] }}</td>
-                </tr>
-                <tr>
-                    <td class="load-label">Levantar</td>
-                    <td class="load-label">Do Chão</td>
-                    <td class="load-label">Arrastar</td>
-                </tr>
-                <tr>
-                    <td class="load-val">{{ $cargas['levantarCabeca'] }}</td>
-                    <td class="load-val">{{ $cargas['levantarSolo'] }}</td>
-                    <td class="load-val">{{ $cargas['arrastar'] }}</td>
-                </tr>
-            </table>
-            <div class="small center" style="margin-top: 3px;">
-                <span class="muted">Peso equipado:</span> <span class="bold gold">{{ number_format($pesoTotal, 1, ',', '.') }} kg</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="section">
-        <div class="section-title">Jornada de Experiência</div>
-        <div class="section-body">
-            <table class="skills" cellspacing="0" cellpadding="0">
-                <tr>
-                    <th>XP Atual</th>
-                    <th>Próximo Nível</th>
-                    <th>Faltam</th>
-                </tr>
-                <tr>
-                    <td class="num total">{{ number_format((int) $ficha->xp_atual, 0, ',', '.') }}</td>
-                    <td class="num">{{ number_format((int) $ficha->xp_proximo, 0, ',', '.') }}</td>
-                    <td class="num">{{ number_format(max(0, (int) $ficha->xp_proximo - (int) $ficha->xp_atual), 0, ',', '.') }}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-
-</td></tr></table>
-
-<div style="text-align: center; font-size: 6.5pt; color: #6b5a3d; margin-top: 6px; letter-spacing: 2px; font-variant: small-caps;">
-    Forjada no Salão dos Heróis &nbsp;·&nbsp; Forja de Almas
+<div style="text-align: center; font-size: 5pt; color: #888; margin-top: 4px; letter-spacing: 1px; text-transform: uppercase;">
+    Forja de Almas &nbsp;·&nbsp; Ficha de Personagem D&amp;D 3.5
 </div>
 
 </body>

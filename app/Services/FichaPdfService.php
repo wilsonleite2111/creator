@@ -151,6 +151,8 @@ class FichaPdfService
             $pesoTotal += ((float) ($e->peso ?? 0)) * ((int) ($e->pivot->quantidade ?? 1));
         }
 
+        $todasPericias = \App\Models\Pericia::orderBy('nome')->get();
+
         return [
             'ficha'          => $ficha,
             'mods'           => $mods,
@@ -163,6 +165,7 @@ class FichaPdfService
             'atkDist'        => $atkDist,
             'agarrar'        => $agarrar,
             'pericias'       => $pericias,
+            'todasPericias'  => $todasPericias,
             'magiasPorNivel' => $magiasPorNivel,
             'cargas'         => $cargas,
             'pesoTotal'      => $pesoTotal,
